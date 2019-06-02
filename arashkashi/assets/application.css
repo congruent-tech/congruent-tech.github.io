@@ -1,0 +1,229 @@
+html, body, div, span, applet, object, iframe, h1, h2, h3, h4, h5, h6, p, blockquote,
+pre, a, abbr, acronym, address, big, cite, code, del, dfn, em, img, ins, kbd,
+q, s, samp, small, strike, strong, sub, sup, tt, var, b, u, i, center, dl, dt,
+dd, ol, ul, li, fieldset, form, label, legend, table, caption, tbody, tfoot,
+thead, tr, th, td, article, aside, canvas, details, embed, figure, figcaption,
+footer, header, hgroup, menu, nav, output, ruby, section, summary, time,
+mark, audio, video {
+    margin: 0;
+    padding: 0;
+    border: 0;
+    font-size: 100%;
+    font: inherit;
+    vertical-align: baseline
+}
+
+body {
+    line-height: 1
+}
+
+ol, ul {
+    list-style: none
+}
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0
+}
+
+caption, th, td {
+    text-align: left;
+    font-weight: normal;
+    vertical-align: middle
+}
+
+q, blockquote {
+    quotes: none
+}
+
+q:before, q:after, blockquote:before, blockquote:after {
+    content: "";
+    content: none
+}
+
+a img {
+    border: none
+}
+
+article, aside, details, figcaption, figure, footer, header, hgroup,
+menu, nav, section, summary {
+    display: block
+}
+
+section, header, footer, nav, article, aside, figure {
+    display: block;
+    width: 100%
+}
+
+mark, time, meter, progress {
+    display: inline
+}
+
+#header {
+    margin: 2em auto;
+    border-bottom: 1px solid #333
+}
+
+#header h1 {
+    font-size: 2em;
+    margin-top: 20px;
+    font-weight: bold
+}
+
+#header h2 {
+    margin: 0.5em auto;
+    font-weight: 300
+}
+
+#header img {
+    border-radius: 75px;
+    height: 150px;
+    width: 150px;
+    margin: 0 auto;
+    display: block
+}
+
+p {
+    margin-top: 1em
+}
+
+#apps ul {
+    margin-top: 0.5em;
+    margin-bottom: 2em;
+    margin: 2em auto;
+    width: 100%;
+    font: 14px helvetica neue, helvetica, arial, sans-serif
+}
+
+#apps ul li {
+    border-radius: 20px;
+    float: left;
+    display: block;
+    width: 25%;
+    height: 120px;
+    margin-bottom: 2em
+}
+
+#apps ul a {
+    display: block;
+    width: 100px;
+    height: 120px;
+    line-height: 0;
+    margin: 0 auto;
+    text-decoration: none
+}
+
+#apps ul a span {
+    display: block;
+    width: 100px;
+    height: 10px;
+    font-weight: bold;
+    text-align: center;
+    line-height: 1em;
+    padding: 8px 0 0
+}
+
+#apps ul a:hover {
+    border: 0
+}
+
+#apps ul img {
+    border-radius: 20px;
+    height: 100px;
+    width: 100px;
+    position: relative;
+    z-index: -2;
+    box-shadow: 0 0 3px rgba(0, 0, 0, 0.3), inset 0 0 2px rgba(0, 0, 0, 0.5), inset 0 1px 0 rgba(255, 255, 255, 0.25)
+}
+
+#hire {
+    padding: 5px 10px;
+    background-color: #FFFF99
+}
+
+#erik-links {
+    margin-top: 2em
+}
+
+#erik-links ul {
+    margin: 1em auto;
+    width: 40%;
+    font-size: 14px
+}
+
+#erik-links ul li {
+    float: left;
+    display: block;
+    width: 20%;
+    text-align: center
+}
+
+#erik-links ul li a {
+    color: #333333
+}
+
+html {
+    max-width: 750px;
+    padding: 0 25px;
+    margin-left: auto;
+    margin-right: auto
+}
+
+body {
+    background-color: #ffffff;
+    color: #333333;
+    font: 18px helvetica neue, helvetica, arial, sans-serif;
+    line-height: 175%;
+    font-weight: 300;
+    width: 100%;
+    margin-left: auto;
+    margin-right: auto
+}
+
+a {
+    color: #3399CC;
+    font-weight: bold;
+    text-decoration: none
+}
+
+h1 {
+    text-align: center
+}
+
+h2 {
+    margin-top: 1em;
+    margin-bottom: 0.5em;
+    font-weight: bold;
+    font-size: 1.2em;
+    text-align: center
+}
+
+footer {
+    display: block;
+    width: 100%;
+    font-size: 12px;
+    margin-top: 1em
+}
+
+.bold {
+    font-weight: bold
+}
+
+.center {
+    text-align: center
+}
+
+.disclaimer {
+    font-size: 0.5em;
+    text-align: center;
+    line-height: 1.2em
+}
+
+.clearfix::after {
+    content: "";
+    display: table;
+    clear: both
+}
+
+
+
