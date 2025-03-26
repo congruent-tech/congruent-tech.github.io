@@ -1,0 +1,77 @@
+/* Light Mode Color Variables */
+:root {
+    --background-color: #FFFFFF; /* White */
+    --text-color: #1F2937; /* Dark gray text */
+    --primary-color: #1D4ED8; /* Blue (used in the header) */
+    --secondary-color: #F3F4F6; /* Light gray */
+    --accent-yellow: #FFB900; /* Yellow accent color */
+    --accent-green: #4CAF50; /* Green accent color */
+    --accent-brown: #6A4E23; /* Brown accent color */
+  }
+  
+  /* Dark Mode Color Variables */
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --background-color: #1F2937; /* Dark gray */
+      --text-color: #F9FAFB; /* Light text for dark mode */
+      --primary-color: #2563EB; /* Darker blue */
+      --secondary-color: #374151; /* Dark gray for secondary */
+      --accent-yellow: #FBC02D; /* Darker yellow for dark mode */
+      --accent-green: #388E3C; /* Darker green */
+      --accent-brown: #3E2723; /* Darker brown */
+    }
+  }
+  
+  /* Apply background and text color */
+  body {
+    background-color: var(--background-color);
+    color: var(--text-color);
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+  }
+  
+  /* Primary Button */
+  button {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+  }
+  
+  button:hover {
+    background-color: var(--accent-green); /* Change on hover */
+  }
+  
+  /* Footer */
+  footer {
+    background-color: var(--secondary-color);
+    padding: 20px;
+    text-align: center;
+    margin-top: 20px;
+  }
+  
+  /* Accent Elements */
+  .accent-yellow {
+    color: var(--accent-yellow);
+  }
+  
+  .accent-green {
+    color: var(--accent-green);
+  }
+  
+  .accent-brown {
+    color: var(--accent-brown);
+  }
+  
+  /* Links */
+  a {
+    color: var(--primary-color);
+    text-decoration: none;
+  }
+  
+  a:hover {
+    color: var(--accent-yellow);
+  }
