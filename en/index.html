@@ -1,0 +1,211 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iOS Developer - Freelancer - Mac OS - SEO Services - Berlin | Congruent Tech</title>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9VZ3QYV0Y"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag(){dataLayer.push(arguments);}
+        gtag('js', new Date());
+
+        gtag('config', 'G-N9VZ3QYV0Y');
+    </script>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="/assets/js/slideshow.js" defer></script>
+    <script src="/assets/js/menuButton.js" defer></script>
+    <script src="/assets/js/debug-box.js" defer></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+        }
+    </style>
+</head>
+
+<body class="bg-gray-100 flex flex-col min-h-screen">
+    <nav class="bg-white shadow-md">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <!-- SVG Icon -->
+                    <svg class="w-8 h-8 mr-2" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                        <circle cx="50" cy="20" r="8" fill="black" /> <!-- Top dot -->
+                        <path d="M 20 40 Q 35 20, 50 40 T 80 40" stroke="black" stroke-width="6" fill="transparent" />
+                        <!-- Wavy line -->
+                        <line x1="20" y1="60" x2="80" y2="60" stroke="black" stroke-width="6" /> <!-- Equals sign -->
+                    </svg>
+                    <h3 class=" text-lg font-bold text-gray-900">
+                        Congruent Tech. UG
+                    </h3>
+                </div>
+                <div class="hidden md:flex space-x-6 items-center">
+                    <a href="/en/" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
+                    <a href="/en/services" class="text-gray-700 hover:text-blue-600 font-medium">Services</a>
+                    <a href="/en/about-us" class="text-gray-700 hover:text-blue-600 font-medium">About Us</a>
+                </div>
+                <div class="md:hidden flex items-center">
+                    <button id="menu-button" class="text-gray-700 hover:text-gray-900 focus:outline-none">
+                        <img id="hamburger-icon" src="/assets/svg/hamburger.svg" class="h-8 w-8" alt="Menu Icon">
+                        <img id="close-icon" src="/assets/svg/close.svg" class="h-8 w-8 hidden" alt="Close Icon">
+                    </button>
+                </div>
+            </div>
+        </div>
+        <div id="mobile-menu" class="hidden md:hidden">
+            <a href="/en" class="block py-2 px-4 text-gray-700 hover:bg-gray-200">Home</a>
+            <a href="/en/services" class="block py-2 px-4 text-gray-700 hover:bg-gray-200">Services</a>
+            <a href="/en/about-us" class="block py-2 px-4 text-gray-700 hover:bg-gray-200">About Us</a>
+        </div>
+    </nav>
+
+    <main class="flex-1">
+        <div class="w-full relative mx-auto px-4 md:px-24 lg:px-48 mb-4 mt-4">
+    <div class="relative mx-8">
+        <!-- Slides Container -->
+        <div class="overflow-hidden rounded-xl bg-white shadow-lg">
+            <div id="slides" class="flex transition-transform duration-500 ease-in-out">
+                <!-- Slide 1 -->
+                <div class="w-full flex-shrink-0 flex flex-col items-center justify-center h-72 px-6 text-center">
+                    <h2 class="text-3xl font-bold text-black mb-2">iOS &amp; macOS Development</h2>
+                    <p class="text-gray-600 text-base max-w-xl">
+                        Build fast, elegant, and secure Apple ecosystem apps tailored for your business with Swift &amp; SwiftUI.
+                    </p>
+                </div>
+                <!-- Slide 2 -->
+                <div class="w-full flex-shrink-0 flex flex-col items-center justify-center h-72 px-6 text-center">
+                    <h2 class="text-3xl font-bold text-black mb-2">SEO Services</h2>
+                    <p class="text-gray-600 text-base max-w-xl">
+                        Improve your online visibility with technical SEO audits, performance tuning, and ranking strategy.
+                    </p>
+                </div>
+                <!-- Slide 3 -->
+                <div class="w-full flex-shrink-0 flex flex-col items-center justify-center h-72 px-6 text-center">
+                    <h2 class="text-3xl font-bold text-black mb-2">ERP Solutions for Small Businesses</h2>
+                    <p class="text-gray-600 text-base max-w-xl">
+                        Automate and scale operations using lightweight ERP platforms for inventory, sales, and finance.
+                    </p>
+                </div>
+                <!-- Slide 4 -->
+                <div class="w-full flex-shrink-0 flex flex-col items-center justify-center h-72 px-6 text-center">
+                    <h2 class="text-3xl font-bold text-black mb-2">AI Tool Development</h2>
+                    <p class="text-gray-600 text-base max-w-xl">
+                        We build intelligent AI tools to automate workflows, extract insights, and drive innovation.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- Left and Right Arrows -->
+        <button onclick="prevSlide()" class="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-[125%] opacity-25 hover:opacity-100 transition">
+            <img src="/assets/svg/left-arrow-button.svg" alt="Previous Slide" class="w-8 h-8" />
+        </button>
+        <button onclick="nextSlide()" class="absolute top-1/2 right-0 transform -translate-y-1/2 translate-x-[125%] opacity-25 hover:opacity-100 transition">
+            <img src="/assets/svg/right-arrow-button.svg" alt="Previous Slide" class="w-8 h-8" />
+        </button>
+        <!-- Navigation Dots -->
+        <div id="navigation-dots" class=" space-x-2 py-2 left-1/2 mx-auto w-max">
+        </div>
+    </div>
+</div>
+<div class="relative mx-auto px-8 md:px-24 lg:px-48">
+    <h1 class="text-4xl font-bold tracking-tight mb-6 mt-4">Unique Value Proposition</h1>
+    <p>Congruent Tech brings extensive experience across multiple domains, delivering scalable and adaptable solutions that minimize costs. Staying true to the company name, our approach focuses on creating solutions that are in harmony with the customer’s needs. We prioritize a deep understanding of client requirements, crafting cost-effective and tailored solutions that balance innovation with practicality.</p>
+
+    <h2 class="text-2xl font-bold mt-6">Industries &amp; Sectors of Expertise</h2>
+    <p>Congruent Tech has significant experience across multiple industries, leveraging iOS and macOS technologies to create tailored solutions:</p>
+    <ul class="list-disc list-inside mt-2">
+        <li><strong>Finance</strong> – Secure and efficient banking and fintech applications.</li>
+        <li><strong>Healthcare</strong> – Medical and health-tech solutions for better patient care and data management.</li>
+        <li><strong>Gaming</strong> – Engaging and high-performance mobile games.</li>
+        <li><strong>Entertainment</strong> – Media streaming and content distribution apps.</li>
+        <li><strong>Research &amp; Academia</strong> – Specialized software for data analysis, automation, and educational tools.</li>
+        <li><strong>Enterprise &amp; Business Solutions</strong> – Internal tools for workflow optimization and productivity.</li>
+    </ul>
+
+    <h2 class="text-2xl font-bold mt-6">Portfolio: Featured Projects</h2>
+    <p>Our past projects emphasize:</p>
+    <ul class="list-disc list-inside mt-2">
+        <li><strong>Data-Intensive Applications</strong> – Advanced data processing and visualization.</li>
+        <li><strong>Standard UI &amp; UX Best Practices</strong> – Intuitive interfaces for user engagement.</li>
+        <li><strong>Market Demand for Data Analysis &amp; Intelligence</strong> – Machine learning and automation for business insights.</li>
+    </ul>
+
+    <h2 class="text-2xl font-bold mt-6">Real-World Use Cases</h2>
+    <ul class="list-disc list-inside mt-2">
+        <li><strong>Delivery Automation</strong> – AI-powered scheduling for optimized dispatching.</li>
+        <li><strong>Enterprise Data Dashboards</strong> – Real-time data analysis and visualization tools.</li>
+        <li><strong>Healthcare Monitoring Solutions</strong> – Patient tracking apps to support medical decision-making.</li>
+        <li><strong>SEO &amp; Web Analytics</strong> – Tools for SEO audits and performance tracking.</li>
+    </ul>
+
+    <h2 class="text-2xl font-bold mt-6">Technical Stack &amp; Tools</h2>
+    
+    <h3 class="text-xl font-semibold mt-4">Programming Languages &amp; Frameworks</h3>
+    <ul class="list-disc list-inside mt-2">
+        <li>Swift &amp; SwiftUI – Modern development for iOS/macOS.</li>
+        <li>Objective-C – Maintaining legacy systems.</li>
+        <li>SwiftData &amp; Core Data – Database management and persistence.</li>
+        <li>CloudKit – Apple ecosystem cloud sync and storage.</li>
+    </ul>
+
+    <h3 class="text-xl font-semibold mt-4">Machine Learning &amp; AI</h3>
+    <ul class="list-disc list-inside mt-2">
+        <li>Core ML – AI insights and automation.</li>
+        <li>Vision Framework – Image processing and detection.</li>
+    </ul>
+
+    <h3 class="text-xl font-semibold mt-4">Networking &amp; APIs</h3>
+    <ul class="list-disc list-inside mt-2">
+        <li>URLSession &amp; Combine – Asynchronous networking.</li>
+        <li>GraphQL &amp; RESTful APIs – Data integration and communication.</li>
+    </ul>
+
+    <h3 class="text-xl font-semibold mt-4">Automation &amp; Development Tools</h3>
+    <ul class="list-disc list-inside mt-2">
+        <li>CI/CD Pipelines – Streamlined deployments and testing.</li>
+        <li>Xcode Instruments – Performance monitoring.</li>
+        <li>TestFlight – Beta testing and feedback.</li>
+    </ul>
+
+    <h3 class="text-xl font-semibold mt-4">SEO &amp; Web Optimization Tools</h3>
+    <ul class="list-disc list-inside mt-2">
+        <li>Google Analytics &amp; Search Console – SEO visibility tracking.</li>
+        <li>Ahrefs &amp; SEMrush – Competitive SEO research.</li>
+        <li>PageSpeed Insights – Web and mobile performance audits.</li>
+    </ul>
+
+    <h2 class="text-xl font-bold mt-6">Get in Touch</h2>
+    <p>Let’s discuss how our services can benefit your business. Contact us at 
+        <a href="mailto:arashkashi@gmail.com" class="text-blue-500 hover:underline">here</a>.
+    </p>
+</div>
+
+    </main>
+    <!-- Navigation Arrows (Now Outside) -->
+
+</body>
+
+<footer class="bg-white mt-12 border-t">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center">
+        <div class="flex items-center space-x-4">
+            <img src="/assets/svg/FlaggevonBerlin.svg" alt="Berlin Flag" class="h-5 w-5">
+            <span class="text-gray-700">Berlin · <span class="font-bold">Niederschönhausen</span></span>
+        </div>
+        <div class="flex space-x-6 mt-4 md:mt-0">
+            <a href="/en/impressum" class="text-gray-600 hover:underline">Impressum</a>
+            <a href="/en/datenschutzer" class="text-gray-600 hover:underline">Datenschutz</a>
+            <a href="/barrierefreiheit" class="text-gray-600 hover:underline">Erklärung zur Barrierefreiheit</a>
+        </div>
+        <div class="flex space-x-4 mt-4 md:mt-0">
+            <a href="https://stackoverflow.com/users/2833860/congruent-tech-ug" target="_blank" rel="nofollow">
+                <img src="/assets/svg/logo-stackoverflow.svg" alt="stackoverflow" class="w-24 h-auto md:w-28 lg:w-32">
+            </a>
+        </div>
+    </div>
+</footer>
+
+</html>
