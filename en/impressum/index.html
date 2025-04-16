@@ -12,7 +12,7 @@
         function gtag(){dataLayer.push(arguments);}
         gtag('js', new Date());
 
-        gtag('config', 'G-N9VZ3QYV0Y');
+        gtag('config', 'G-N9VZ3QYV0Y', { 'anonymize_ip': true });
     </script>
 
     <script src="https://cdn.tailwindcss.com"></script>
@@ -26,6 +26,44 @@
         }
     </style>
 </head>
+
+<!-- Cookie Banner -->
+<div id="cookie-banner" class="fixed bottom-0 w-full bg-gray-100 text-center p-4 shadow" style="z-index:999;">
+  Diese Website verwendet Cookies (Google Analytics). Durch Klick auf „OK“ stimmen Sie zu.
+  <button onclick="acceptCookies()" class="ml-4 bg-blue-500 text-white px-4 py-1 rounded">OK</button>
+</div>
+
+<!-- GA Script Stored Until Consent -->
+<script id="ga-script" type="text/plain">
+  // Load GA JS
+  var gaScriptTag = document.createElement('script');
+  gaScriptTag.async = true;
+  gaScriptTag.src = "https://www.googletagmanager.com/gtag/js?id=G-N9VZ3QYV0Y"; // replace with your ID
+  document.head.appendChild(gaScriptTag);
+
+  // GA Init
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  gtag('js', new Date());
+  gtag('config', 'G-N9VZ3QYV0Y', { 'anonymize_ip': true }); // replace with your ID
+</script>
+
+<!-- Consent Handling -->
+<script>
+  function acceptCookies() {
+    document.cookie = "cookieConsent=analytics;path=/";
+    document.getElementById('cookie-banner').style.display = 'none';
+    const rawScript = document.getElementById('ga-script');
+    const execScript = document.createElement('script');
+    execScript.innerHTML = rawScript.innerHTML;
+    document.body.appendChild(execScript);
+  }
+
+  // Auto-load GA if consent previously given
+  if (document.cookie.includes("cookieConsent=analytics")) {
+    acceptCookies();
+  }
+</script>
 
 <body class="bg-gray-100 flex flex-col min-h-screen">
     <nav class="bg-white shadow-md">
