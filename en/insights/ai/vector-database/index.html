@@ -1,121 +1,99 @@
 <html lang="en">
-
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Intro to Vector Search</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Intro to Vector Search</title>
 
-    <!-- Google tag (gtag.js) 
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-N9VZ3QYV0Y"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag(){dataLayer.push(arguments);}
-        gtag('js', new Date());
-
-        gtag('config', 'G-N9VZ3QYV0Y', { 'anonymize_ip': true });
-    </script>
-    -->
-
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="/assets/js/slideshow.js" defer></script>
-    <script src="/assets/js/menuButton.js" defer></script>
-    <script src="/assets/js/debug-box.js" defer></script>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
-    <style>
-        body {
-            font-family: 'Roboto', sans-serif;
-        }
-    </style>
-    <link rel="icon" href="/assets/JPEG/congruent_32.jpg" type="image/jpeg">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/assets/css/insight.css" /> <!-- Downloaded theme -->
+  <link rel="icon" href="/assets/JPEG/congruent_32.jpg" type="image/jpeg" />
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+    }
+    main.markdown-body {
+      max-width: 768px;
+      margin: 2rem auto;
+      padding: 0 1rem;
+    }
+  </style>
 </head>
 
-<!-- Cookie Banner -->
-<div id="cookie-banner" class="fixed inset-0 bg-white/80 backdrop-blur-sm z-50 flex items-center justify-center">
-  <div class="bg-white shadow-xl p-6 rounded-xl text-center max-w-lg w-full mx-4">
-    <p class="text-lg font-semibold mb-4">
-  Diese Website verwendet Cookies (Google Analytics), um Ihr Nutzungserlebnis besser zu verstehen und unseren Service zu verbessern. <br>
-  This website uses cookies (Google Analytics) to better understand how you interact with it and to improve our services accordingly.
-</p>
-    <button onclick="acceptCookies()" class="bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700">
-      OK
-    </button>
-  </div>
-</div>
-
-<!-- GA Script Stored Until Consent -->
-<script id="ga-script" type="text/plain">
-  // Load GA JS
-  var gaScriptTag = document.createElement('script');
-  gaScriptTag.async = true;
-  gaScriptTag.src = "https://www.googletagmanager.com/gtag/js?id=G-N9VZ3QYV0Y";
-  document.head.appendChild(gaScriptTag);
-
-  // GA Init
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){ dataLayer.push(arguments); }
-  gtag('js', new Date());
-  gtag('config', 'G-N9VZ3QYV0Y', { 'anonymize_ip': true });
-</script>
-
-<!-- Consent Handling -->
-<script>
-  function acceptCookies() {
-    document.cookie = "cookieConsent=analytics;path=/";
-    document.getElementById('cookie-banner').style.display = 'none';
-    const rawScript = document.getElementById('ga-script');
-    const execScript = document.createElement('script');
-    execScript.innerHTML = rawScript.innerHTML;
-    document.body.appendChild(execScript);
-  }
-
-  // Auto-load GA if consent previously given
-  if (document.cookie.includes("cookieConsent=analytics")) {
-    acceptCookies();
-  }
-</script>
-
 <body class="bg-gray-100 flex flex-col min-h-screen">
-    <nav class="sticky top-0 z-40 bg-white shadow-md">
-  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-    <div class="flex justify-between h-16">
-      <div class="flex items-center">
-        <img src="/assets/svg/congruent.svg" alt="Congruent Logo" class="w-8 h-8 mr-2" />
-        <h3 class="text-lg font-bold text-gray-900">Congruent Tech. UG</h3>
-      </div>
-      <div class="hidden md:flex space-x-6 items-center">
-        <a href="/en/" class="text-gray-700 hover:text-blue-600 font-medium">Home</a>
-        <a href="/en/services" class="text-gray-700 hover:text-blue-600 font-medium">Services</a>
-        <a href="/en/insights" class="text-gray-700 hover:text-blue-600 font-medium">Insights</a>
-        <a href="/en/about-us" class="text-gray-700 hover:text-blue-600 font-medium">About Us</a>
-        <a href="/en/contact-us" class="text-gray-700 hover:text-blue-600 font-medium">Contact Us</a>
-      </div>
-      <div class="md:hidden flex items-center">
-        <button id="menu-button" class="text-gray-700 hover:text-gray-900 focus:outline-none">
-          <img id="hamburger-icon" src="/assets/svg/hamburger.svg" class="h-8 w-8" alt="Menu Icon">
-          <img id="close-icon" src="/assets/svg/close.svg" class="h-8 w-8 hidden" alt="Close Icon">
-        </button>
-      </div>
-    </div>
-  </div>
-  <div id="mobile-menu" class="hidden md:hidden">
-    <a href="/en" class="block py-2 px-4 text-gray-700 hover:bg-gray-200">Home</a>
-    <a href="/en/services" class="block py-2 px-4 text-gray-700 hover:bg-gray-200">Services</a>
-    <a href="/en/insights" class="block py-2 px-4 text-gray-700 hover:bg-gray-200">Insights</a>
-    <a href="/en/about-us" class="block py-2 px-4 text-gray-700 hover:bg-gray-200">About Us</a>
-    <a href="/en/contact-us" class="block py-2 px-4 text-gray-700 hover:bg-gray-200">Contact Us</a>
-  </div>
-</nav>
 
-    <main class="flex-1">
-        <h1 id="vector-database">Vector Database</h1>
+  <!-- No nav bar here -->
+  <main class="flex-1 markdown-body">
+    <h1 id="intro-to-vector-search">Intro to Vector Search</h1>
+
+<p>Modern search systems are evolving. Instead of matching <strong>keywords</strong>, vector search enables machines to understand <strong>meaning</strong>. It powers the core of AI tools like ChatGPT, Notion AI, and advanced recommendation systems.</p>
+
+<hr />
+
+<h2 id="-what-is-vector-search">🔍 What Is Vector Search?</h2>
+
+<p>Vector search converts both queries and documents into numerical vectors using models like:</p>
+
+<ul>
+  <li><strong>Word2Vec</strong></li>
+  <li><strong>BERT</strong></li>
+  <li><strong>OpenAI embeddings</strong></li>
+</ul>
+
+<p>These vectors are then compared using cosine similarity or distance metrics.</p>
+
+<hr />
+
+<h2 id="-why-it-matters">🚀 Why It Matters</h2>
+
+<p>Unlike traditional search, vector search:</p>
+
+<ul>
+  <li>Understands <strong>context</strong> and <strong>synonyms</strong></li>
+  <li>Finds semantically similar content</li>
+  <li>Enables smarter results for natural language queries</li>
+</ul>
+
+<hr />
+
+<h2 id="-use-cases">🧠 Use Cases</h2>
+
+<p>You’ll find vector search behind:</p>
+
+<ul>
+  <li>Semantic document search</li>
+  <li>LLM retrieval-augmented generation (RAG)</li>
+  <li>E-commerce “similar products”</li>
+  <li>Smart assistants and chatbots</li>
+</ul>
+
+<hr />
+
+<h2 id="-common-tools">🧰 Common Tools</h2>
+
+<p>Popular vector databases include:</p>
+
+<ul>
+  <li><strong>Pinecone</strong></li>
+  <li><strong>Weaviate</strong></li>
+  <li><strong>Faiss</strong></li>
+  <li><strong>Qdrant</strong></li>
+</ul>
+
+<hr />
+
+<h2 id="-final-thoughts">📝 Final Thoughts</h2>
+
+<p>This placeholder post shows how your insight articles can be structured—clear, helpful, and SEO-friendly. More in-depth guides and examples are coming soon!</p>
+
+<hr />
+
+<p><em>Stay tuned for real-world tutorials on how to integrate vector search in your own products.</em></p>
 
 
-    </main>
-    <!-- Navigation Arrows (Now Outside) -->
+  </main>
 
-</body>
-
-<footer class="bg-white mt-12 border-t">
+  <footer class="bg-white mt-12 border-t">
   <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center">
     <div class="flex items-center space-x-4">
       <img src="/assets/svg/FlaggevonBerlin.svg" alt="Berlin Flag" class="h-5 w-5">
@@ -133,5 +111,5 @@
     </div>
   </div>
 </footer>
-
+</body>
 </html>
