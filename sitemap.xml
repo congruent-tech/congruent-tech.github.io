@@ -13,10 +13,10 @@
 <loc>https://congruent-tech.github.io/en/impressum/</loc>
 </url>
 <url>
-<loc>https://congruent-tech.github.io/en/contact-us/</loc>
+<loc>https://congruent-tech.github.io/arashkashi/</loc>
 </url>
 <url>
-<loc>https://congruent-tech.github.io/arashkashi/</loc>
+<loc>https://congruent-tech.github.io/en/services/AI/</loc>
 </url>
 <url>
 <loc>https://congruent-tech.github.io/en/services/</loc>
@@ -28,9 +28,12 @@
 <loc>https://congruent-tech.github.io/</loc>
 </url>
 <url>
-<loc>https://congruent-tech.github.io/en/services/AI/</loc>
+<loc>https://congruent-tech.github.io/en/contact-us/</loc>
 </url>
 <url>
 <loc>https://congruent-tech.github.io/en/insights/</loc>
+</url>
+<url>
+<loc>https://congruent-tech.github.io/en/insights/ai/vector-database/</loc>
 </url>
 </urlset>
