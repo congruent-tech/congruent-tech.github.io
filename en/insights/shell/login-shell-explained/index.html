@@ -111,6 +111,95 @@
 
 <hr />
 
+<h1 id="but-why-do-people-say-zshrc-doesnt-run-during-ssh">But! Why Do People Say <code class="language-plaintext highlighter-rouge">.zshrc</code> Doesn’t Run During SSH?</h1>
+
+<p>This is a common source of confusion when working with remote servers via SSH.</p>
+
+<hr />
+
+<h2 id="typical-ssh-session">Typical SSH Session</h2>
+
+<p>When you run:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh user@host
+</code></pre></div></div>
+
+<p>You get:</p>
+<ul>
+  <li>A <strong>login shell</strong> ✅</li>
+  <li>An <strong>interactive shell</strong> ✅</li>
+</ul>
+
+<p><strong>Result:</strong><br />
+Both <code class="language-plaintext highlighter-rouge">.zprofile</code> and <code class="language-plaintext highlighter-rouge">.zshrc</code> are executed.</p>
+
+<hr />
+
+<h2 id="when-zshrc-does-not-run">When <code class="language-plaintext highlighter-rouge">.zshrc</code> Does Not Run</h2>
+
+<p>When you run a <strong>remote command</strong> with SSH, like:</p>
+
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh user@host <span class="s2">"echo </span><span class="nv">$PATH</span><span class="s2">"</span>
+</code></pre></div></div>
+
+<p>You get:</p>
+<ul>
+  <li>A <strong>login shell</strong> ✅</li>
+  <li>But <strong>not</strong> an <strong>interactive shell</strong> ❌</li>
+</ul>
+
+<p><strong>Result:</strong></p>
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">.zprofile</code> runs ✅</li>
+  <li><code class="language-plaintext highlighter-rouge">.zshrc</code> does <strong>not</strong> run ❌</li>
+</ul>
+
+<hr />
+
+<h2 id="summary-table-1">Summary Table</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Command</th>
+      <th>Login Shell</th>
+      <th>Interactive Shell</th>
+      <th><code class="language-plaintext highlighter-rouge">.zprofile</code></th>
+      <th><code class="language-plaintext highlighter-rouge">.zshrc</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ssh user@host</code></td>
+      <td>✅</td>
+      <td>✅</td>
+      <td>✅</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ssh user@host "echo $PATH"</code></td>
+      <td>✅</td>
+      <td>❌</td>
+      <td>✅</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td><code class="language-plaintext highlighter-rouge">ssh -t user@host "zsh -i"</code></td>
+      <td>✅</td>
+      <td>✅ (forced)</td>
+      <td>✅</td>
+      <td>✅</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<p>✅ So yes — in a <strong>typical SSH terminal session</strong>, <code class="language-plaintext highlighter-rouge">.zshrc</code> <strong>does run</strong>.<br />
+❌ But in <strong>SSH remote command execution</strong>, it <strong>does not</strong>.</p>
+
+<p>Keep your environment setup in <code class="language-plaintext highlighter-rouge">.zprofile</code>, and reserve <code class="language-plaintext highlighter-rouge">.zshrc</code> for interactive-only configs like aliases and prompts.</p>
+
 <h2 id="best-practice">Best Practice</h2>
 
 <ul>
