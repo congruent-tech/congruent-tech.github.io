@@ -1,0 +1,143 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>What Is a Login Shell? Understand Shell Startup on Terminal.app</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/insight.css" /> <!-- Downloaded theme -->
+    <link rel="icon" href="/assets/JPEG/congruent_32.jpg" type="image/jpeg" />
+</head>
+
+<body class="bg-gray-100 flex flex-col min-h-screen w-full">
+    <main class="flex-1 px-4 markdown-body">
+        <h1 id="what-is-a-login-shell-with-examples">What Is a Login Shell? (With Examples)</h1>
+
+<p>Understanding the difference between login and non-login shells is essential when configuring your shell environment correctly — especially for tools like <code class="language-plaintext highlighter-rouge">pyenv</code>.</p>
+
+<hr />
+
+<h2 id="definition">Definition</h2>
+
+<p>A <strong>login shell</strong> is a shell session that acts as if you just logged into the system. It reads specific config files like <code class="language-plaintext highlighter-rouge">.zprofile</code> or <code class="language-plaintext highlighter-rouge">.bash_profile</code>, which are used to set environment variables and paths.</p>
+
+<hr />
+
+<h2 id="examples-of-login-shells">Examples of Login Shells</h2>
+
+<h3 id="1-opening-terminalapp-first-window">1. <strong>Opening Terminal.app (first window)</strong></h3>
+<ul>
+  <li>Treated as a <strong>login + interactive shell</strong></li>
+  <li>Loads: <code class="language-plaintext highlighter-rouge">.zprofile</code> and <code class="language-plaintext highlighter-rouge">.zshrc</code></li>
+</ul>
+
+<h3 id="2-ssh-into-a-remote-server">2. <strong>SSH into a remote server</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>ssh user@host
+</code></pre></div></div>
+<ul>
+  <li>Loads: <code class="language-plaintext highlighter-rouge">.zprofile</code> (Zsh) or <code class="language-plaintext highlighter-rouge">.bash_profile</code> (Bash)</li>
+  <li>Useful for setting up your environment remotely</li>
+</ul>
+
+<h3 id="3-explicit-login-shell-using-zsh--l">3. <strong>Explicit login shell using <code class="language-plaintext highlighter-rouge">zsh -l</code></strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zsh <span class="nt">-l</span>
+</code></pre></div></div>
+<ul>
+  <li>Loads: <code class="language-plaintext highlighter-rouge">.zprofile</code> only</li>
+  <li>Good for testing login shell behavior</li>
+</ul>
+
+<hr />
+
+<h2 id="not-login-shells">Not Login Shells</h2>
+
+<h3 id="1-run-zsh-without--l">1. <strong>Run <code class="language-plaintext highlighter-rouge">zsh</code> without <code class="language-plaintext highlighter-rouge">-l</code></strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>zsh
+</code></pre></div></div>
+<ul>
+  <li>This is an <strong>interactive</strong>, but <strong>not a login</strong>, shell</li>
+  <li>Loads: <code class="language-plaintext highlighter-rouge">.zshrc</code> only</li>
+</ul>
+
+<h3 id="2-running-a-shell-script">2. <strong>Running a shell script</strong></h3>
+<div class="language-bash highlighter-rouge"><div class="highlight"><pre class="highlight"><code>./myscript.sh
+</code></pre></div></div>
+<ul>
+  <li>May invoke a <strong>non-login, non-interactive</strong> shell</li>
+  <li>Doesn’t load <code class="language-plaintext highlighter-rouge">.zprofile</code> or <code class="language-plaintext highlighter-rouge">.zshrc</code></li>
+</ul>
+
+<hr />
+
+<h2 id="summary-table">Summary Table</h2>
+
+<table>
+  <thead>
+    <tr>
+      <th>Action</th>
+      <th>Login Shell?</th>
+      <th>Loads <code class="language-plaintext highlighter-rouge">.zprofile</code></th>
+      <th>Loads <code class="language-plaintext highlighter-rouge">.zshrc</code></th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Open Terminal.app (first time)</td>
+      <td>✅ Yes</td>
+      <td>✅</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td>SSH into server</td>
+      <td>✅ Yes</td>
+      <td>✅</td>
+      <td>❌</td>
+    </tr>
+    <tr>
+      <td>Run <code class="language-plaintext highlighter-rouge">zsh</code></td>
+      <td>❌ No</td>
+      <td>❌</td>
+      <td>✅</td>
+    </tr>
+    <tr>
+      <td>Run <code class="language-plaintext highlighter-rouge">zsh -l</code></td>
+      <td>✅ Yes</td>
+      <td>✅</td>
+      <td>❌</td>
+    </tr>
+  </tbody>
+</table>
+
+<hr />
+
+<h2 id="best-practice">Best Practice</h2>
+
+<ul>
+  <li>Put <strong>environment setup</strong> (like <code class="language-plaintext highlighter-rouge">PYENV_ROOT</code>, <code class="language-plaintext highlighter-rouge">PATH</code>) in <code class="language-plaintext highlighter-rouge">.zprofile</code></li>
+  <li>Put <strong>interactive features</strong> (like aliases, shell prompts) in <code class="language-plaintext highlighter-rouge">.zshrc</code></li>
+</ul>
+
+<p>This ensures consistent behavior across all terminal types and scripts.</p>
+
+    </main>
+</body>
+<footer class="bg-white border-t">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center">
+    <div class="flex items-center space-x-4">
+      <img src="/assets/svg/FlaggevonBerlin.svg" alt="Berlin Flag" class="h-5 w-5">
+      <span class="text-gray-700">Berlin · <span class="font-bold">Niederschönhausen</span></span>
+    </div>
+    <div class="flex space-x-6 mt-4 md:mt-0">
+      <a href="/en/impressum" class="text-gray-600 hover:underline">Impressum</a>
+      <a href="/en/datenschutzer" class="text-gray-600 hover:underline">Datenschutz</a>
+      <a href="/barrierefreiheit" class="text-gray-600 hover:underline">Erklärung zur Barrierefreiheit</a>
+    </div>
+    <div class="flex space-x-4 mt-4 md:mt-0">
+      <a href="https://stackoverflow.com/users/2833860/congruent-tech-ug" target="_blank" rel="nofollow">
+        <img src="/assets/svg/logo-stackoverflow.svg" alt="stackoverflow" class="w-24 h-auto md:w-28 lg:w-32">
+      </a>
+    </div>
+  </div>
+</footer>
+</html>
