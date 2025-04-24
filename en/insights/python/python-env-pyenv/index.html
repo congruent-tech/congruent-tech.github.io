@@ -1,0 +1,79 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Why We Chose pyenv for Python Projects</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/assets/css/insight.css" /> <!-- Downloaded theme -->
+    <link rel="icon" href="/assets/JPEG/congruent_32.jpg" type="image/jpeg" />
+</head>
+
+<body class="bg-gray-100 flex flex-col min-h-screen w-full">
+    <main class="flex-1 px-4 markdown-body">
+        <h1 id="-why-we-chose-pyenv-for-python-projects">🐍 Why We Chose <code class="language-plaintext highlighter-rouge">pyenv</code> for Python Projects</h1>
+
+<p>We evaluated popular Python environment tools, their histories, and the core problems they were designed to solve — then made a deliberate choice based on our needs.</p>
+
+<hr />
+
+<h2 id="-what-history-taught-us">📜 What History Taught Us</h2>
+
+<ul>
+  <li><strong>Pre-2007</strong>: Global package installs caused conflicts and breakage.</li>
+  <li><strong>2007</strong>: <code class="language-plaintext highlighter-rouge">virtualenv</code> introduced isolation to solve this.</li>
+  <li><strong>2012</strong>: Python 3.3+ introduced <code class="language-plaintext highlighter-rouge">venv</code> — a simpler, built-in version of <code class="language-plaintext highlighter-rouge">virtualenv</code>.</li>
+  <li><strong>2010s</strong>: <code class="language-plaintext highlighter-rouge">pyenv</code> came along to solve a deeper problem — managing multiple <strong>Python versions</strong>, not just environments.</li>
+</ul>
+
+<hr />
+
+<h2 id="️-why-we-didnt-choose-venv-despite-being-newer">⚖️ Why We Didn’t Choose <code class="language-plaintext highlighter-rouge">venv</code> (Despite Being Newer)</h2>
+
+<ul>
+  <li><code class="language-plaintext highlighter-rouge">venv</code> is simple and built-in, but it <strong>uses the system Python</strong>.</li>
+  <li>That means no control over which Python version you’re using.</li>
+  <li>You can’t easily switch between Python 3.7, 3.10, or 3.11 for different projects.</li>
+  <li>You also can’t install new versions without affecting your global environment.</li>
+</ul>
+
+<hr />
+
+<h2 id="-why-we-chose-pyenv--venv">✅ Why We Chose <code class="language-plaintext highlighter-rouge">pyenv + venv</code></h2>
+
+<ul>
+  <li>We wanted <strong>complete isolation</strong> — both for packages <em>and</em> for the interpreter itself.</li>
+  <li><code class="language-plaintext highlighter-rouge">pyenv</code> lets us install and pin any Python version locally per project.</li>
+  <li>When combined with <code class="language-plaintext highlighter-rouge">venv</code>, it gives us a clean, reproducible setup that doesn’t interfere with global tools or other projects.</li>
+</ul>
+
+<hr />
+
+<h2 id="-final-word">🔚 Final Word</h2>
+
+<p>While <code class="language-plaintext highlighter-rouge">venv</code> is great for basic isolation, we needed full control and independence.<br />
+That’s why we chose the power combo:<br />
+👉 <strong><code class="language-plaintext highlighter-rouge">pyenv</code> for managing Python versions + <code class="language-plaintext highlighter-rouge">venv</code> for isolated environments.</strong></p>
+
+    </main>
+</body>
+<footer class="bg-white border-t">
+  <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 flex flex-col md:flex-row justify-between items-center">
+    <div class="flex items-center space-x-4">
+      <img src="/assets/svg/FlaggevonBerlin.svg" alt="Berlin Flag" class="h-5 w-5">
+      <span class="text-gray-700">Berlin · <span class="font-bold">Niederschönhausen</span></span>
+    </div>
+    <div class="flex space-x-6 mt-4 md:mt-0">
+      <a href="/en/impressum" class="text-gray-600 hover:underline">Impressum</a>
+      <a href="/en/datenschutzer" class="text-gray-600 hover:underline">Datenschutz</a>
+      <a href="/barrierefreiheit" class="text-gray-600 hover:underline">Erklärung zur Barrierefreiheit</a>
+    </div>
+    <div class="flex space-x-4 mt-4 md:mt-0">
+      <a href="https://stackoverflow.com/users/2833860/congruent-tech-ug" target="_blank" rel="nofollow">
+        <img src="/assets/svg/logo-stackoverflow.svg" alt="stackoverflow" class="w-24 h-auto md:w-28 lg:w-32">
+      </a>
+    </div>
+  </div>
+</footer>
+</html>
