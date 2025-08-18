@@ -1,0 +1,14 @@
+---
+permalink: /arashkashi/index.html
+layout: none
+---
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta http-equiv="refresh" content="0; url=/en/" />
+    <link rel="canonical" href="/en/" />
+  </head>
+  <body>
+    <p>Redirecting to <a href="/en/">/en/</a>...</p>
+  </body>
+</html>

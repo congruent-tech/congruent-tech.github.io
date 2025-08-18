@@ -1,0 +1,20 @@
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>{{ page.title }}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ site.baseurl }}/assets/css/insight.css" /> <!-- Downloaded theme -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/rouge/3.26.0/css/github.min.css" rel="stylesheet">
+    <link rel="icon" href="{{ site.baseurl }}/assets/JPEG/congruent_32.jpg" type="image/jpeg" />
+</head>
+
+<body class="bg-gray-100 flex flex-col min-h-screen w-full">
+    <main class="flex-1 px-4 markdown-body">
+        {{ content }}
+    </main>
+</body>
+{% include footer-main-en.html %}
+</html>

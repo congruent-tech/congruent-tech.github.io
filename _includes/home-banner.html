@@ -1,0 +1,47 @@
+<div class="w-full relative mx-auto px-4 md:px-24 lg:px-48 mb-4 mt-4">
+    <div class="relative mx-8">
+        <!-- Slides Container -->
+        <div class="overflow-hidden rounded-xl bg-white shadow-lg">
+            <div id="slides" class="flex transition-transform duration-500 ease-in-out">
+                <!-- Slide 1 -->
+                <div class="w-full flex-shrink-0 flex flex-col items-center justify-center h-72 px-6 text-center">
+                    <h2 class="text-3xl font-bold text-black mb-2">iOS & macOS Development</h2>
+                    <p class="text-gray-600 text-base max-w-xl">
+                        Build fast, elegant, and secure Apple ecosystem apps tailored for your business with Swift & SwiftUI.
+                    </p>
+                </div>
+                <!-- Slide 2 -->
+                <div class="w-full flex-shrink-0 flex flex-col items-center justify-center h-72 px-6 text-center">
+                    <h2 class="text-3xl font-bold text-black mb-2">SEO Services</h2>
+                    <p class="text-gray-600 text-base max-w-xl">
+                        Improve your online visibility with technical SEO audits, performance tuning, and ranking strategy.
+                    </p>
+                </div>
+                <!-- Slide 3 -->
+                <div class="w-full flex-shrink-0 flex flex-col items-center justify-center h-72 px-6 text-center">
+                    <h2 class="text-3xl font-bold text-black mb-2">ERP Solutions for Small Businesses</h2>
+                    <p class="text-gray-600 text-base max-w-xl">
+                        Automate and scale operations using lightweight ERP platforms for inventory, sales, and finance.
+                    </p>
+                </div>
+                <!-- Slide 4 -->
+                <div class="w-full flex-shrink-0 flex flex-col items-center justify-center h-72 px-6 text-center">
+                    <h2 class="text-3xl font-bold text-black mb-2">AI Tool Development</h2>
+                    <p class="text-gray-600 text-base max-w-xl">
+                        We build intelligent AI tools to automate workflows, extract insights, and drive innovation.
+                    </p>
+                </div>
+            </div>
+        </div>
+        <!-- Left and Right Arrows -->
+        <button onclick="prevSlide()" class="absolute top-1/2 left-0 transform -translate-y-1/2 -translate-x-[125%] opacity-25 hover:opacity-100 transition">
+            <img src="{{ site.baseurl }}/assets/svg/left-arrow-button.svg" alt="Previous Slide" class="w-8 h-8">
+        </button>
+        <button onclick="nextSlide()" class="absolute top-1/2 right-0 transform -translate-y-1/2 translate-x-[125%] opacity-25 hover:opacity-100 transition">
+            <img src="{{ site.baseurl }}/assets/svg/right-arrow-button.svg" alt="Previous Slide" class="w-8 h-8">
+        </button>
+        <!-- Navigation Dots -->
+        <div id="navigation-dots" class=" space-x-2 py-2 left-1/2 mx-auto w-max">
+        </div>
+    </div>
+</div>
