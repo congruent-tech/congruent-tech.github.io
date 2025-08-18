@@ -1,0 +1,89 @@
+/* ================================
+   Design System Variables
+   ================================ */
+
+/* Light Mode Color Variables */
+:root {
+  /* Brand Colors */
+  --brand-primary: #1D4ED8;      /* Congruent Blue */
+  --brand-secondary: #FFB900;    /* German Engineering Yellow */
+  
+  /* Core Colors */
+  --color-background: #FFFFFF;
+  --color-surface: #F3F4F6;
+  --color-text-primary: #1F2937;
+  --color-text-secondary: #4B5563;
+  --color-text-muted: #9CA3AF;
+  
+  /* Accent Colors */
+  --accent-success: #4CAF50;
+  --accent-warning: #FFB900;
+  --accent-error: #DC2626;
+  --accent-info: #1D4ED8;
+  --accent-craft: #6A4E23;       /* Traditional craftsmanship */
+  
+  /* Interactive States */
+  --interactive-default: var(--brand-primary);
+  --interactive-hover: var(--brand-secondary);
+  --interactive-active: var(--accent-success);
+  --interactive-focus: var(--brand-primary);
+  
+  /* Spacing Scale */
+  --space-xs: 0.25rem;    /* 4px */
+  --space-sm: 0.5rem;     /* 8px */
+  --space-md: 1rem;       /* 16px */
+  --space-lg: 1.5rem;     /* 24px */
+  --space-xl: 2rem;       /* 32px */
+  --space-2xl: 2.5rem;    /* 40px */
+  --space-3xl: 3rem;      /* 48px */
+  
+  /* Typography Scale */
+  --text-xs: 0.75rem;     /* 12px */
+  --text-sm: 0.875rem;    /* 14px */
+  --text-base: 1rem;      /* 16px */
+  --text-lg: 1.125rem;    /* 18px */
+  --text-xl: 1.25rem;     /* 20px */
+  --text-2xl: 1.5rem;     /* 24px */
+  --text-3xl: 1.875rem;   /* 30px */
+  --text-4xl: 2.25rem;    /* 36px */
+  
+  /* Font Weights */
+  --weight-thin: 100;
+  --weight-light: 300;
+  --weight-normal: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+  
+  /* Shadows */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+  
+  /* Borders */
+  --border-radius-sm: 0.375rem;
+  --border-radius-md: 0.5rem;
+  --border-radius-lg: 0.75rem;
+  --border-radius-xl: 1rem;
+  
+  /* Transitions */
+  --transition-fast: 150ms ease-in-out;
+  --transition-normal: 300ms ease-in-out;
+  --transition-slow: 500ms ease-in-out;
+}
+
+/* Dark Mode Color Variables */
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #1F2937;
+    --color-surface: #374151;
+    --color-text-primary: #F9FAFB;
+    --color-text-secondary: #E5E7EB;
+    --color-text-muted: #9CA3AF;
+    
+    --brand-primary: #2563EB;      /* Slightly brighter for dark mode */
+    --accent-warning: #FBC02D;     /* Darker yellow for dark mode */
+    --accent-success: #388E3C;     /* Darker green */
+    --accent-craft: #3E2723;       /* Darker brown */
+  }
+}

@@ -1,0 +1,83 @@
+/* ================================
+   Congruent Tech Design System
+   Main CSS Entry Point
+   ================================ */
+
+/* Foundation Layer */
+@import '01-foundation/reset.css';
+@import '01-foundation/variables.css';
+@import '01-foundation/typography.css';
+
+/* Layout Layer */
+@import '02-layout/site-structure.css';
+
+/* Component Layer */
+@import '03-components/slideshow.css';
+@import '03-components/navigation.css';
+
+/* Preserve existing colors.css and insight.css */
+@import 'colors.css';
+@import 'insight.css';
+
+/* ================================
+   Extracted Inline Styles
+   (Maintaining current appearance)
+   ================================ */
+
+/* Body and HTML base styles */
+html,
+body {
+  min-height: 100vh;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  background-color: var(--color-surface, #F3F4F6);
+}
+
+/* Main content area */
+main {
+  flex: 1;
+}
+
+/* Cookie Banner Styles (extracted from default.html) */
+#cookie-banner {
+  position: fixed;
+  inset: 0;
+  background-color: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(8px);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+#cookie-banner .banner-content {
+  background-color: white;
+  box-shadow: var(--shadow-lg);
+  padding: var(--space-lg);
+  border-radius: var(--border-radius-xl);
+  text-align: center;
+  max-width: 32rem;
+  width: 100%;
+  margin: var(--space-md);
+}
+
+#cookie-banner p {
+  font-size: var(--text-lg);
+  font-weight: var(--weight-semibold);
+  margin-bottom: var(--space-md);
+}
+
+#cookie-banner button {
+  background-color: var(--brand-primary);
+  color: white;
+  padding: var(--space-sm) var(--space-lg);
+  border-radius: var(--border-radius-sm);
+  transition: background-color var(--transition-fast);
+}
+
+#cookie-banner button:hover {
+  background-color: var(--interactive-hover);
+}

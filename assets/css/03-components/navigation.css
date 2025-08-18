@@ -1,0 +1,56 @@
+/* ================================
+   Navigation Component Styles
+   ================================ */
+
+/* Mobile menu toggle */
+#menu-button {
+  display: block;
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: var(--space-sm);
+  border-radius: var(--border-radius-sm);
+  transition: background-color var(--transition-fast);
+}
+
+#menu-button:hover {
+  background-color: var(--color-surface);
+}
+
+#menu-button:focus {
+  outline: 2px solid var(--interactive-focus);
+  outline-offset: 2px;
+}
+
+/* Mobile menu */
+#mobile-menu {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: white;
+  z-index: 40;
+  padding: var(--space-lg);
+  transform: translateX(-100%);
+  transition: transform var(--transition-normal);
+}
+
+#mobile-menu.open {
+  transform: translateX(0);
+}
+
+#mobile-menu.hidden {
+  display: none;
+}
+
+/* Hide mobile menu on larger screens */
+@media (min-width: 768px) {
+  #menu-button {
+    display: none;
+  }
+  
+  #mobile-menu {
+    display: none !important;
+  }
+}

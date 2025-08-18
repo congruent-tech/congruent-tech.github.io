@@ -1,0 +1,48 @@
+/* ================================
+   Site Layout Structure
+   ================================ */
+
+/* Site-wide layout container */
+.site-container {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* Main content wrapper */
+.site-main {
+  flex: 1;
+  padding: var(--space-md);
+}
+
+/* Content width constraints */
+.content-wrapper {
+  max-width: 80rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content-narrow {
+  max-width: 36rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.content-wide {
+  max-width: 72rem;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Responsive layout adjustments */
+@media (min-width: 768px) {
+  .site-main {
+    padding: var(--space-lg);
+  }
+}
+
+@media (min-width: 1024px) {
+  .site-main {
+    padding: var(--space-xl);
+  }
+}
