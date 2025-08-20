@@ -70,6 +70,26 @@
   --transition-fast: 150ms ease-in-out;
   --transition-normal: 300ms ease-in-out;
   --transition-slow: 500ms ease-in-out;
+  
+  /* Congruent Dark Color Palette for Technical Content */
+  --congruent-dark-bg-primary: #242424;
+  --congruent-dark-bg-secondary: #2a2a2a;
+  --congruent-dark-bg-tertiary: #303030;
+  --congruent-dark-bg-code: #1e1e1e;
+  --congruent-dark-fg-primary: #f7f7f7;
+  --congruent-dark-fg-secondary: #d0d0d0;
+  --congruent-dark-fg-muted: #888888;
+  --congruent-dark-blue: #96cbfe;
+  --congruent-dark-green: #a8ff60;
+  --congruent-dark-yellow: #ffd700;
+  --congruent-dark-red: #ff6c60;
+  --congruent-dark-purple: #ff73fd;
+  --congruent-dark-cyan: #c6c5fe;
+  --congruent-dark-orange: #ffb054;
+  --congruent-dark-comment: #666666;
+  --congruent-dark-selection: #3d4147;
+  --congruent-dark-border: #404040;
+  --congruent-dark-hover: #353535;
 }
 
 /* Dark Mode Color Variables */

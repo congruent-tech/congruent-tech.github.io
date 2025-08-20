@@ -10,10 +10,12 @@
 
 /* Layout Layer */
 @import '02-layout/site-structure.css';
+@import '02-layout/footer.css';
 
 /* Component Layer */
 @import '03-components/slideshow.css';
 @import '03-components/navigation.css';
+@import '03-components/markdown-enhanced.css';
 
 /* Preserve existing colors.css and insight.css */
 @import 'colors.css';

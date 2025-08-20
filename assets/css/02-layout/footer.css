@@ -1,0 +1,45 @@
+/* ================================
+   Footer Layout Styling
+   ================================ */
+
+footer {
+  box-shadow: 0 -4px 6px -1px rgba(0, 0, 0, 0.1), 0 -2px 4px -1px rgba(0, 0, 0, 0.06);
+  border-top: 2px solid #d1d5db;
+  background-color: #ffffff;
+  position: relative;
+}
+
+/* Add a subtle gradient effect above the footer */
+footer::before {
+  content: "";
+  position: absolute;
+  top: -10px;
+  left: 0;
+  right: 0;
+  height: 10px;
+  background: linear-gradient(to bottom, rgba(255, 255, 255, 0), rgba(255, 255, 255, 0.9));
+  pointer-events: none;
+}
+
+/* Enhance footer text styling - make text much more readable */
+footer .text-gray-700 {
+  color: #374151 !important;
+  font-weight: var(--weight-medium);
+}
+
+footer .text-gray-600 {
+  color: #4b5563 !important;
+  transition: var(--transition-fast);
+  font-weight: var(--weight-normal);
+}
+
+footer .text-gray-600:hover {
+  color: var(--congruent-dark-blue) !important;
+  font-weight: var(--weight-medium);
+}
+
+/* Enhance the location text specifically */
+footer span.font-bold {
+  color: #1f2937 !important;
+  font-weight: var(--weight-bold) !important;
+}
