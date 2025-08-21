@@ -18,7 +18,14 @@
     <script src="{{ site.baseurl }}/assets/js/slideshow.js" defer></script>
     <script src="{{ site.baseurl }}/assets/js/menuButton.js" defer></script>
     <script src="{{ site.baseurl }}/assets/js/debug-box.js" defer></script>
+    <script src="{{ site.baseurl }}/assets/js/seo-analyzer.js" defer></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet">
+    
+    <!-- JSON-LD Structured Data -->
+    {% include json-ld-organization.html %}
+    {% if page.url contains '/services' %}
+        {% include json-ld-services.html %}
+    {% endif %}
     <style>
         body {
             font-family: 'Nunito', sans-serif;
