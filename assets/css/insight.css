@@ -380,6 +380,7 @@
 .markdown-body p {
   margin-top: 0;
   margin-bottom: 10px;
+  color: var(--fgColor-default);
 }
 
 .markdown-body blockquote {
@@ -394,6 +395,7 @@
   margin-top: 0;
   margin-bottom: 0;
   padding-left: 2em;
+  color: var(--fgColor-default);
 }
 
 .markdown-body ol ol,
@@ -612,6 +614,7 @@
 
 .markdown-body li>p {
   margin-top: var(--base-size-16);
+  color: var(--fgColor-default);
 }
 
 .markdown-body li+li {
