@@ -16,7 +16,6 @@ permalink: /en/insights/
   {% assign vector_db_posts = insights | where_exp: "p", "p.url contains '/vector-database/'" %}
   {% assign iot_posts = insights | where_exp: "p", "p.url contains '/iot/'" %}
   {% assign ai_posts = insights | where_exp: "p", "p.url contains '/ai/'" %}
-  {% assign crossplatform_posts = insights | where_exp: "p", "p.url contains '/cross-platform/'" %}
   {% assign seo_posts = insights | where_exp: "p", "p.url contains '/seo-web/'" %}
   
   <!-- Topics Grid -->
@@ -178,51 +177,6 @@ permalink: /en/insights/
           <h2 class="text-xl font-bold text-gray-700">AI & Machine Learning</h2>
         </div>
         <p class="text-gray-500 mb-4">Advanced AI integration and development guides</p>
-        <p class="text-sm text-gray-400 italic">Coming soon...</p>
-      </div>
-    </div>
-    {% endif %}
-    
-    <!-- Cross-Platform Development Card -->
-    {% if crossplatform_posts.size > 0 %}
-    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200">
-      <div class="p-6">
-        <div class="flex items-center mb-4">
-          <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-3">
-            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-            </svg>
-          </div>
-          <h2 class="text-xl font-bold text-gray-900">Cross-Platform Development</h2>
-        </div>
-        <p class="text-gray-600 mb-4">Flutter, React Native, and mobile development</p>
-        <div class="space-y-2">
-          {% for post in crossplatform_posts limit:3 %}
-          <a href="{{ post.url }}" class="block text-blue-600 hover:text-blue-800 hover:underline text-sm">
-            → {{ post.title }}
-          </a>
-          {% endfor %}
-        </div>
-        {% if crossplatform_posts.size > 3 %}
-        <p class="mt-3 text-sm text-gray-500">
-          +{{ crossplatform_posts.size | minus: 3 }} more articles
-        </p>
-        {% endif %}
-      </div>
-    </div>
-    {% else %}
-    <!-- Cross-Platform Development (Coming Soon) -->
-    <div class="bg-gray-50 rounded-lg shadow-md border border-gray-200 opacity-75">
-      <div class="p-6">
-        <div class="flex items-center mb-4">
-          <div class="w-12 h-12 bg-red-100 rounded-lg flex items-center justify-center mr-3">
-            <svg class="w-6 h-6 text-red-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 18h.01M8 21h8a2 2 0 002-2V5a2 2 0 00-2-2H8a2 2 0 00-2 2v14a2 2 0 002 2z"></path>
-            </svg>
-          </div>
-          <h2 class="text-xl font-bold text-gray-700">Cross-Platform Development</h2>
-        </div>
-        <p class="text-gray-500 mb-4">Flutter, React Native, and mobile development</p>
         <p class="text-sm text-gray-400 italic">Coming soon...</p>
       </div>
     </div>
