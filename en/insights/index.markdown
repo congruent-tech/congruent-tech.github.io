@@ -35,17 +35,12 @@ permalink: /en/insights/
         </div>
         <p class="text-gray-600 mb-4">Configuration guides and best practices for shell environments</p>
         <div class="space-y-2">
-          {% for post in shell_posts limit:3 %}
+          {% for post in shell_posts %}
           <a href="{{ post.url }}" class="block text-blue-600 hover:text-blue-800 hover:underline text-sm">
             → {{ post.title }}
           </a>
           {% endfor %}
         </div>
-        {% if shell_posts.size > 3 %}
-        <p class="mt-3 text-sm text-gray-500">
-          +{{ shell_posts.size | minus: 3 }} more articles
-        </p>
-        {% endif %}
       </div>
     </div>
     {% endif %}
@@ -64,17 +59,12 @@ permalink: /en/insights/
         </div>
         <p class="text-gray-600 mb-4">Python environment management and development tools</p>
         <div class="space-y-2">
-          {% for post in python_posts limit:3 %}
+          {% for post in python_posts %}
           <a href="{{ post.url }}" class="block text-blue-600 hover:text-blue-800 hover:underline text-sm">
             → {{ post.title }}
           </a>
           {% endfor %}
         </div>
-        {% if python_posts.size > 3 %}
-        <p class="mt-3 text-sm text-gray-500">
-          +{{ python_posts.size | minus: 3 }} more articles
-        </p>
-        {% endif %}
       </div>
     </div>
     {% endif %}
@@ -93,17 +83,12 @@ permalink: /en/insights/
         </div>
         <p class="text-gray-600 mb-4">AI and machine learning database technologies</p>
         <div class="space-y-2">
-          {% for post in vector_db_posts limit:3 %}
+          {% for post in vector_db_posts %}
           <a href="{{ post.url }}" class="block text-blue-600 hover:text-blue-800 hover:underline text-sm">
             → {{ post.title }}
           </a>
           {% endfor %}
         </div>
-        {% if vector_db_posts.size > 3 %}
-        <p class="mt-3 text-sm text-gray-500">
-          +{{ vector_db_posts.size | minus: 3 }} more articles
-        </p>
-        {% endif %}
       </div>
     </div>
     {% endif %}
@@ -122,17 +107,12 @@ permalink: /en/insights/
         </div>
         <p class="text-gray-600 mb-4">IoT device security, cryptography, and embedded systems</p>
         <div class="space-y-2">
-          {% for post in iot_posts limit:3 %}
+          {% for post in iot_posts %}
           <a href="{{ post.url }}" class="block text-blue-600 hover:text-blue-800 hover:underline text-sm">
             → {{ post.title }}
           </a>
           {% endfor %}
         </div>
-        {% if iot_posts.size > 3 %}
-        <p class="mt-3 text-sm text-gray-500">
-          +{{ iot_posts.size | minus: 3 }} more articles
-        </p>
-        {% endif %}
       </div>
     </div>
     {% endif %}
@@ -151,17 +131,12 @@ permalink: /en/insights/
         </div>
         <p class="text-gray-600 mb-4">Advanced AI integration and development guides</p>
         <div class="space-y-2">
-          {% for post in ai_posts limit:3 %}
+          {% for post in ai_posts %}
           <a href="{{ post.url }}" class="block text-blue-600 hover:text-blue-800 hover:underline text-sm">
             → {{ post.title }}
           </a>
           {% endfor %}
         </div>
-        {% if ai_posts.size > 3 %}
-        <p class="mt-3 text-sm text-gray-500">
-          +{{ ai_posts.size | minus: 3 }} more articles
-        </p>
-        {% endif %}
       </div>
     </div>
     {% else %}
@@ -196,17 +171,12 @@ permalink: /en/insights/
         </div>
         <p class="text-gray-600 mb-4">Modern SEO strategies and web performance</p>
         <div class="space-y-2">
-          {% for post in seo_posts limit:3 %}
+          {% for post in seo_posts %}
           <a href="{{ post.url }}" class="block text-blue-600 hover:text-blue-800 hover:underline text-sm">
             → {{ post.title }}
           </a>
           {% endfor %}
         </div>
-        {% if seo_posts.size > 3 %}
-        <p class="mt-3 text-sm text-gray-500">
-          +{{ seo_posts.size | minus: 3 }} more articles
-        </p>
-        {% endif %}
       </div>
     </div>
     {% else %}
