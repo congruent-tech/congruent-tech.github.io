@@ -14,7 +14,8 @@ permalink: /en/insights/
   {% assign shell_posts = insights | where_exp: "p", "p.url contains '/shell/'" %}
   {% assign python_posts = insights | where_exp: "p", "p.url contains '/python/'" %}
   {% assign vector_db_posts = insights | where_exp: "p", "p.url contains '/vector-database/'" %}
-  {% assign ai_posts = insights | where_exp: "p", "p.url contains '/ai-ml/'" %}
+  {% assign iot_posts = insights | where_exp: "p", "p.url contains '/iot/'" %}
+  {% assign ai_posts = insights | where_exp: "p", "p.url contains '/ai/'" %}
   {% assign crossplatform_posts = insights | where_exp: "p", "p.url contains '/cross-platform/'" %}
   {% assign seo_posts = insights | where_exp: "p", "p.url contains '/seo-web/'" %}
   
@@ -102,6 +103,35 @@ permalink: /en/insights/
         {% if vector_db_posts.size > 3 %}
         <p class="mt-3 text-sm text-gray-500">
           +{{ vector_db_posts.size | minus: 3 }} more articles
+        </p>
+        {% endif %}
+      </div>
+    </div>
+    {% endif %}
+    
+    <!-- IoT & Security Topic Card -->
+    {% if iot_posts.size > 0 %}
+    <div class="bg-white rounded-lg shadow-md hover:shadow-lg transition-shadow duration-300 border border-gray-200">
+      <div class="p-6">
+        <div class="flex items-center mb-4">
+          <div class="w-12 h-12 bg-orange-100 rounded-lg flex items-center justify-center mr-3">
+            <svg class="w-6 h-6 text-orange-600" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z"></path>
+            </svg>
+          </div>
+          <h2 class="text-xl font-bold text-gray-900">IoT & Security</h2>
+        </div>
+        <p class="text-gray-600 mb-4">IoT device security, cryptography, and embedded systems</p>
+        <div class="space-y-2">
+          {% for post in iot_posts limit:3 %}
+          <a href="{{ post.url }}" class="block text-blue-600 hover:text-blue-800 hover:underline text-sm">
+            → {{ post.title }}
+          </a>
+          {% endfor %}
+        </div>
+        {% if iot_posts.size > 3 %}
+        <p class="mt-3 text-sm text-gray-500">
+          +{{ iot_posts.size | minus: 3 }} more articles
         </p>
         {% endif %}
       </div>
