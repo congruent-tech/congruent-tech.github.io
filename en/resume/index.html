@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Résumé - Arash Kashi</title>
+    <style>
+        :root {
+            /* Dark Background */
+            --bg-primary: #242424;
+            --bg-subtle: #2a2a2a;
+
+            /* Light Text */
+            --text-primary: #f7f7f7;
+            --text-secondary: #d0d0d0;
+            --text-muted: #888888;
+
+            /* Dark Border */
+            --border-light: #404040;
+
+            /* Vibrant Accents (Congruent colors - bright for dark theme) */
+            --accent-blue: #96cbfe;
+            --accent-green: #a8ff60;
+            --accent-yellow: #ffd700;
+            --accent-orange: #ffb054;
+            --accent-cyan: #c6c5fe;
+            --accent-purple: #ff73fd;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            line-height: 1.4;
+            color: var(--text-primary);
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 30px 40px;
+            background: var(--bg-primary);
+            font-size: 14px;
+        }
+
+        /* Section Headers - Congruent Style */
+        h2 {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin: 16px 0 10px 0;
+            padding: 6px 10px;
+            border-radius: 0 4px 4px 0;
+            page-break-inside: avoid;
+        }
+
+        h2:first-of-type {
+            margin-top: 0;
+        }
+
+        h2.experience {
+            color: var(--accent-green);
+            border-left: 3px solid var(--accent-green);
+            background: linear-gradient(90deg, rgba(168, 255, 96, 0.15) 0%, transparent 100%);
+        }
+
+        h2.keywords {
+            color: var(--accent-orange);
+            border-left: 3px solid var(--accent-orange);
+            background: linear-gradient(90deg, rgba(255, 176, 84, 0.15) 0%, transparent 100%);
+            margin-top: 0;
+        }
+
+        h2.education {
+            color: var(--accent-cyan);
+            border-left: 3px solid var(--accent-cyan);
+            background: linear-gradient(90deg, rgba(198, 197, 254, 0.15) 0%, transparent 100%);
+            margin-top: 0;
+        }
+
+        h2.languages {
+            color: var(--accent-blue);
+            border-left: 3px solid var(--accent-blue);
+            background: linear-gradient(90deg, rgba(150, 203, 254, 0.15) 0%, transparent 100%);
+            margin-top: 12px;
+        }
+
+        h2.certifications {
+            color: var(--accent-purple);
+            border-left: 3px solid var(--accent-purple);
+            background: linear-gradient(90deg, rgba(255, 115, 253, 0.15) 0%, transparent 100%);
+            margin-top: 12px;
+        }
+
+        /* Two Column Layout for Bottom Sections */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .column {
+            min-width: 0;
+        }
+
+        /* Job Entries - More Compact */
+        .job-entry {
+            margin-bottom: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-light);
+            page-break-inside: avoid;
+        }
+
+        .job-entry:last-of-type {
+            border-bottom: none;
+        }
+
+        .job-header {
+            margin-bottom: 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .company-location {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
+        }
+
+        .company {
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--accent-blue);
+            text-decoration: none;
+            transition: all 0.2s ease;
+        }
+
+        .company:hover {
+            color: var(--accent-cyan);
+        }
+
+        .location {
+            color: var(--text-muted);
+            font-size: 12px;
+        }
+
+        .date {
+            font-size: 12px;
+            color: var(--text-muted);
+            font-weight: 500;
+            white-space: nowrap;
+        }
+
+        .job-title {
+            font-style: italic;
+            font-size: 12px;
+            margin-bottom: 4px;
+            font-weight: 500;
+            color: var(--accent-yellow);
+        }
+
+        .job-description {
+            color: var(--text-secondary);
+            font-size: 12px;
+            line-height: 1.35;
+        }
+
+        .job-description a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .job-description a:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* Bullet points with colored markers */
+        .job-description ul {
+            margin: 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .job-description li {
+            position: relative;
+            padding-left: 12px;
+            margin-bottom: 2px;
+        }
+
+        .job-description li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-size: 10px;
+        }
+
+        /* Keywords Section */
+        .keywords-content {
+            line-height: 1.6;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .keywords-content a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .keywords-content a:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* Education Entries - Compact */
+        .education-entry {
+            margin-bottom: 8px;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border-light);
+            page-break-inside: avoid;
+        }
+
+        .education-entry:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .edu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 2px;
+            gap: 8px;
+        }
+
+        .degree {
+            font-weight: 600;
+            font-size: 13px;
+            color: var(--text-primary);
+        }
+
+        .school {
+            color: var(--text-muted);
+            font-size: 11px;
+            margin-top: 1px;
+        }
+
+        .thesis-links {
+            margin-top: 3px;
+            font-size: 11px;
+        }
+
+        .thesis {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .thesis:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* Print styles - Light theme for printing */
+        @media print {
+            :root {
+                --bg-primary: #ffffff;
+                --bg-subtle: #f8fafc;
+                --text-primary: #1f2937;
+                --text-secondary: #4b5563;
+                --text-muted: #6b7280;
+                --border-light: #e5e7eb;
+                --accent-blue: #2563eb;
+                --accent-green: #16a34a;
+                --accent-yellow: #ca8a04;
+                --accent-orange: #ea580c;
+                --accent-cyan: #0891b2;
+                --accent-purple: #a855f7;
+            }
+
+            body {
+                padding: 15px 25px;
+                max-width: 100%;
+                font-size: 11px;
+                line-height: 1.35;
+                background: white;
+                color: var(--text-primary);
+            }
+
+            h2 {
+                font-size: 11px;
+                margin: 12px 0 8px 0;
+                padding: 5px 8px;
+                page-break-after: avoid;
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
+            }
+
+            h2.experience {
+                background: rgba(22, 163, 74, 0.08) !important;
+                color: var(--accent-green);
+            }
+
+            h2.keywords {
+                background: rgba(234, 88, 12, 0.08) !important;
+                color: var(--accent-orange);
+            }
+
+            h2.education {
+                background: rgba(8, 145, 178, 0.08) !important;
+                color: var(--accent-cyan);
+            }
+
+            h2.languages {
+                background: rgba(37, 99, 235, 0.08) !important;
+                color: var(--accent-blue);
+            }
+
+            h2.certifications {
+                background: rgba(168, 85, 247, 0.08) !important;
+                color: var(--accent-purple);
+            }
+
+            .two-column {
+                gap: 16px;
+            }
+
+            .job-entry,
+            .education-entry {
+                padding: 6px 0;
+                margin-bottom: 6px;
+            }
+
+            .company, .degree {
+                font-size: 12px;
+            }
+
+            .job-description,
+            .keywords-content {
+                font-size: 11px;
+            }
+
+            @page {
+                margin: 0.4in;
+                size: letter;
+            }
+        }
+
+        /* Responsive - Stack columns on small screens */
+        @media (max-width: 600px) {
+            .two-column {
+                grid-template-columns: 1fr;
+                gap: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <h2 class="experience">Work Experience</h2>
+
+    <div class="job-entry">
+        <div class="job-header">
+            <div class="company-location">
+                <a href="https://www.pixida.com/" class="company">Pixida</a>
+                <span class="location">Munich</span>
+            </div>
+            <span class="date">Jan 2025 – Feb 2026</span>
+        </div>
+        <div class="job-title">Engineering Consultant – IoT / Embedded / AI</div>
+        <div class="job-description">
+            <ul>
+                <li>IoT/Embedded: Firmware for ESP32-C6 smart lock systems with AWS IoT Core, MQTT, FreeRTOS</li>
+                <li>Web development with Next.js and React for AI tool outputs and workflow interfaces</li>
+                <li>AI development: Agent frameworks and Chrome extensions for workflow optimization</li>
+                <li>Native iOS 18 office access app using Swift 6/SwiftUI with Azure (MSAL) and QR access control</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="job-entry">
+        <div class="job-header">
+            <div class="company-location">
+                <a href="https://www.pixida.com/" class="company">Pixida</a>
+                <span class="location">Munich</span>
+            </div>
+            <span class="date">May 2022 – Dec 2024</span>
+        </div>
+        <div class="job-title">Engineering Consultant – iOS / BMW Motorrad</div>
+        <div class="job-description">
+            <ul>
+                <li>Feature development for <a href="https://apps.apple.com/de/app/bmw-motorrad-connected/id1250881375">BMW Motorrad Connected App</a> using Swift, SwiftUI, UIKit, Combine, Core Data</li>
+                <li>Technical lead for complete migration from GraphQL to RESTful API</li>
+                <li>First introduction of Swift Async/Await in the BMW Motorrad codebase</li>
+                <li>Real-time trip recording with GPS tracking, Bluetooth connectivity, OTA updates</li>
+                <li>Only iOS developer selected for field tests at BMW Miramas test track (France)</li>
+                <li>Mentored junior developers through code reviews and technical guidance</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="job-entry">
+        <div class="job-header">
+            <div class="company-location">
+                <span class="company">Congruent Tech UG</span>
+            </div>
+            <span class="date">2018 – Present</span>
+        </div>
+        <div class="job-title">Mobile Consultant (Contractor)</div>
+        <div class="job-description">
+            <ul>
+                <li>Consulting iOS solutions for banking, health, entertainment industries</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="job-entry">
+        <div class="job-header">
+            <div class="company-location">
+                <a href="https://neugelb.com/en/home/" class="company">Neugelb Studios</a>
+                <span class="location">Berlin</span>
+            </div>
+            <span class="date">2017 – 2018</span>
+        </div>
+        <div class="job-title">Software Engineer</div>
+        <div class="job-description">
+            <ul>
+                <li>Lead iOS developer for the next major version of the CommerzBank iOS app</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="job-entry">
+        <div class="job-header">
+            <div class="company-location">
+                <a href="https://about.sharecare.com/" class="company">Feingold</a>
+                <span class="location">Berlin</span>
+            </div>
+            <span class="date">2016 – 2017</span>
+        </div>
+        <div class="job-title">Software Engineer</div>
+        <div class="job-description">
+            <ul>
+                <li>Senior developer for <a href="https://apps.apple.com/us/app/sharecare-health-well-being/id964313779">Sharecare iPhone app</a> (Swift)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="job-entry">
+        <div class="job-header">
+            <div class="company-location">
+                <a href="https://www.wooga.com" class="company">Wooga</a>
+                <span class="location">Berlin</span>
+            </div>
+            <span class="date">2013 – 2016</span>
+        </div>
+        <div class="job-title">Software Engineer</div>
+        <div class="job-description">
+            <ul>
+                <li>Features for <a href="https://apps.apple.com/us/app/diamond-dash/id463106406">Diamond Dash iOS</a>, one of the most successful casual games with 100k+ daily users (Obj-C)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="job-entry">
+        <div class="job-header">
+            <div class="company-location">
+                <a href="http://tastefilter.com" class="company">TasteFilter</a>
+                <span class="location">Montréal</span>
+            </div>
+            <span class="date">2013</span>
+        </div>
+        <div class="job-title">Software Engineer</div>
+        <div class="job-description">
+            <ul>
+                <li><a href="http://goo.gl/I7UIn6">Intelligent classification</a> of Last.fm music for the TasteFilter suggestion engine (Python)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="job-entry">
+        <div class="job-header">
+            <div class="company-location">
+                <span class="company">Mobicept Inc.</span>
+                <span class="location">Montréal</span>
+            </div>
+            <span class="date">2012 – 2013</span>
+        </div>
+        <div class="job-title">Software Engineer</div>
+        <div class="job-description">
+            <ul>
+                <li>Frontend, backend services and initial iPhone application (PHP, Objective-C)</li>
+            </ul>
+        </div>
+    </div>
+
+    <div class="job-entry">
+        <div class="job-header">
+            <div class="company-location">
+                <a href="http://www.trusimulation.com" class="company">Mechtronix (TRU Simulation)</a>
+                <span class="location">Montréal</span>
+            </div>
+            <span class="date">2008 – 2010</span>
+        </div>
+        <div class="job-title">Software Engineer</div>
+        <div class="job-description">
+            <ul>
+                <li>Lead software integration engineer for the <a href="http://www.trusimulation.com">XJ simulator</a></li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Two Column Section -->
+    <div class="two-column">
+        <div class="column">
+            <h2 class="keywords">Technical Skills</h2>
+            <div class="keywords-content">
+                LLM Integration, Claude API, Python (NumPy, Pandas), Core ML, Docker, Edge Computing, <a href="https://swift.org/">Swift</a>, SwiftUI, UIKit, Combine, <a href="http://swift.berlin/swift-berlin-24/">CoreData</a>, Async/Await, <a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html">Objective-C</a>, REST API, GraphQL, MVVM, AWS IoT Core, MQTT, ESP32, ESP-IDF, FreeRTOS, Embedded C/C++, Next.js, React, TypeScript, Node.js, Azure (MSAL), Git, CI/CD, Fastlane, XCTest, CocoaPods, SPM, Bluetooth LE, OTA Updates, <a href="https://www.coursera.org/account/accomplishments/certificate/4FUCVEUTECH5">GCP</a>
+            </div>
+
+            <h2 class="languages">Languages</h2>
+            <div class="keywords-content">
+                English (Professional) · German (B1) · Persian (Native)
+            </div>
+
+            <h2 class="certifications">Certifications</h2>
+            <div class="keywords-content">
+                SAFe Product Owner/Product Manager
+            </div>
+        </div>
+        <div class="column">
+            <h2 class="education">Education</h2>
+
+            <div class="education-entry">
+                <div class="edu-header">
+                    <div class="degree">M.Sc. Computer Science</div>
+                    <span class="date">2010 – 2013</span>
+                </div>
+                <div class="school">McGill University, Montréal</div>
+                <div class="thesis-links">
+                    <a href="https://drive.google.com/file/d/0ByaVx4hXsELhV210RUc4QmZJWDg/view?usp=sharing" class="thesis">Thesis: Disambiguating Identities from Campaign Data</a>
+                </div>
+            </div>
+
+            <div class="education-entry">
+                <div class="edu-header">
+                    <div class="degree">M.A.Sc. Electrical Engineering</div>
+                    <span class="date">2005 – 2007</span>
+                </div>
+                <div class="school">Concordia University, Montréal</div>
+                <div class="thesis-links">
+                    <a href="https://drive.google.com/file/d/0ByaVx4hXsELhM0ZqZGhPc1lJY2c/view" class="thesis">PIERS</a> · <a href="https://drive.google.com/file/d/0ByaVx4hXsELhUG1XaHJaMm9Vak0/view" class="thesis">IEEE-MTT</a> · <a href="https://drive.google.com/file/d/0ByaVx4hXsELhRnRwNkJ1QWNyNXM/view?usp=sharing" class="thesis">Thesis</a>
+                </div>
+            </div>
+
+            <div class="education-entry">
+                <div class="edu-header">
+                    <div class="degree">B.Sc. Electrical Engineering</div>
+                    <span class="date">1999 – 2004</span>
+                </div>
+                <div class="school">Iran University of Science & Technology, Tehran</div>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
