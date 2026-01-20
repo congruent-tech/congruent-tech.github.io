@@ -34,55 +34,111 @@
         }
 
         body {
-            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
             line-height: 1.4;
             color: var(--text-primary);
-            max-width: 850px;
+            max-width: 900px;
             margin: 0 auto;
-            padding: 35px 60px;
+            padding: 30px 40px;
             background: var(--bg-primary);
-            font-size: 15px;
-        }
-
-        h1 {
-            text-align: center;
-            font-size: 26px;
-            font-weight: 400;
-            margin-bottom: 25px;
-            letter-spacing: 4px;
-            color: var(--text-primary);
-            text-transform: uppercase;
-        }
-
-        h2 {
             font-size: 14px;
+        }
+
+        /* Section Headers - Congruent Style */
+        h2 {
+            font-size: 12px;
             font-weight: 700;
             text-transform: uppercase;
-            color: var(--accent-blue);
-            padding-bottom: 5px;
-            margin: 18px 0 12px 0;
-            letter-spacing: 2px;
-            border-bottom: 1.5px solid var(--accent-blue);
+            letter-spacing: 1.5px;
+            margin: 16px 0 10px 0;
+            padding: 6px 10px;
+            border-radius: 0 4px 4px 0;
             page-break-inside: avoid;
         }
 
-        .job-header {
-            margin-bottom: 4px;
-            padding-top: 10px;
-            border-top: 1px solid var(--border-light);
+        h2:first-of-type {
+            margin-top: 0;
         }
 
-        .job-entry:first-of-type .job-header {
-            border-top: none;
-            padding-top: 0;
+        h2.experience {
+            color: var(--accent-green);
+            border-left: 3px solid var(--accent-green);
+            background: linear-gradient(90deg, rgba(168, 255, 96, 0.15) 0%, transparent 100%);
+        }
+
+        h2.keywords {
+            color: var(--accent-orange);
+            border-left: 3px solid var(--accent-orange);
+            background: linear-gradient(90deg, rgba(255, 176, 84, 0.15) 0%, transparent 100%);
+            margin-top: 0;
+        }
+
+        h2.education {
+            color: var(--accent-cyan);
+            border-left: 3px solid var(--accent-cyan);
+            background: linear-gradient(90deg, rgba(198, 197, 254, 0.15) 0%, transparent 100%);
+            margin-top: 0;
+        }
+
+        h2.languages {
+            color: var(--accent-blue);
+            border-left: 3px solid var(--accent-blue);
+            background: linear-gradient(90deg, rgba(150, 203, 254, 0.15) 0%, transparent 100%);
+            margin-top: 12px;
+        }
+
+        h2.certifications {
+            color: var(--accent-purple);
+            border-left: 3px solid var(--accent-purple);
+            background: linear-gradient(90deg, rgba(255, 115, 253, 0.15) 0%, transparent 100%);
+            margin-top: 12px;
+        }
+
+        /* Two Column Layout for Bottom Sections */
+        .two-column {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 24px;
+            margin-top: 16px;
+        }
+
+        .column {
+            min-width: 0;
+        }
+
+        /* Job Entries - More Compact */
+        .job-entry {
+            margin-bottom: 8px;
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border-light);
+            page-break-inside: avoid;
+        }
+
+        .job-entry:last-of-type {
+            border-bottom: none;
+        }
+
+        .job-header {
+            margin-bottom: 2px;
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            flex-wrap: wrap;
+            gap: 4px;
+        }
+
+        .company-location {
+            display: flex;
+            align-items: baseline;
+            gap: 4px;
         }
 
         .company {
             font-weight: 600;
-            font-size: 16px;
+            font-size: 14px;
             color: var(--accent-blue);
             text-decoration: none;
-            transition: color 0.2s ease;
+            transition: all 0.2s ease;
         }
 
         .company:hover {
@@ -91,103 +147,124 @@
 
         .location {
             color: var(--text-muted);
-            font-size: 14px;
-            margin-left: 4px;
+            font-size: 12px;
         }
 
         .date {
-            float: right;
-            font-size: 14px;
+            font-size: 12px;
             color: var(--text-muted);
             font-weight: 500;
+            white-space: nowrap;
         }
 
         .job-title {
             font-style: italic;
-            font-size: 14px;
+            font-size: 12px;
             margin-bottom: 4px;
             font-weight: 500;
             color: var(--accent-yellow);
         }
 
         .job-description {
-            margin-bottom: 0;
-            padding-left: 0;
             color: var(--text-secondary);
-            font-size: 14px;
-            line-height: 1.5;
+            font-size: 12px;
+            line-height: 1.35;
         }
 
-        .job-entry {
-            margin-bottom: 10px;
+        .job-description a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .job-description a:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* Bullet points with colored markers */
+        .job-description ul {
+            margin: 0;
+            padding-left: 0;
+            list-style: none;
+        }
+
+        .job-description li {
+            position: relative;
+            padding-left: 12px;
+            margin-bottom: 2px;
+        }
+
+        .job-description li::before {
+            content: "▸";
+            position: absolute;
+            left: 0;
+            color: var(--accent-green);
+            font-size: 10px;
+        }
+
+        /* Keywords Section */
+        .keywords-content {
+            line-height: 1.6;
+            font-size: 12px;
+            color: var(--text-secondary);
+        }
+
+        .keywords-content a {
+            color: var(--accent-blue);
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .keywords-content a:hover {
+            color: var(--accent-cyan);
+        }
+
+        /* Education Entries - Compact */
+        .education-entry {
+            margin-bottom: 8px;
+            padding: 6px 0;
+            border-bottom: 1px solid var(--border-light);
             page-break-inside: avoid;
+        }
+
+        .education-entry:last-of-type {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+
+        .edu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: baseline;
+            margin-bottom: 2px;
+            gap: 8px;
         }
 
         .degree {
             font-weight: 600;
-            font-size: 16px;
+            font-size: 13px;
             color: var(--text-primary);
         }
 
         .school {
             color: var(--text-muted);
-            font-size: 14px;
-            margin-top: 2px;
+            font-size: 11px;
+            margin-top: 1px;
+        }
+
+        .thesis-links {
+            margin-top: 3px;
+            font-size: 11px;
         }
 
         .thesis {
-            font-size: 14px;
             color: var(--accent-blue);
             text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        .thesis-block {
-            display: block;
-            margin-top: 4px;
+            font-weight: 500;
         }
 
         .thesis:hover {
             color: var(--accent-cyan);
-        }
-
-        .keywords {
-            line-height: 1.7;
-            font-size: 14px;
-            color: var(--text-secondary);
-        }
-
-        .keywords a {
-            color: var(--accent-blue);
-            text-decoration: none;
-            transition: color 0.2s ease;
-        }
-
-        .keywords a:hover {
-            color: var(--accent-cyan);
-        }
-
-        .education-entry {
-            margin-bottom: 10px;
-            padding-top: 10px;
-            border-top: 1px solid var(--border-light);
-            page-break-inside: avoid;
-        }
-
-        .education-entry:first-of-type {
-            border-top: none !important;
-            padding-top: 0 !important;
-        }
-
-        h2 + .education-entry {
-            border-top: none;
-            padding-top: 0;
-        }
-
-        .clearfix::after {
-            content: "";
-            display: table;
-            clear: both;
         }
 
         /* Print styles - Light theme for printing */
@@ -195,242 +272,300 @@
             :root {
                 --bg-primary: #ffffff;
                 --bg-subtle: #f8fafc;
-                --text-primary: #2c3e50;
-                --text-secondary: #555555;
-                --text-muted: #7f8c8d;
-                --border-light: #ececec;
-                --accent-blue: #3498db;
+                --text-primary: #1f2937;
+                --text-secondary: #4b5563;
+                --text-muted: #6b7280;
+                --border-light: #e5e7eb;
+                --accent-blue: #2563eb;
                 --accent-green: #16a34a;
-                --accent-yellow: #34495e;
+                --accent-yellow: #ca8a04;
                 --accent-orange: #ea580c;
-                --accent-cyan: #2980b9;
+                --accent-cyan: #0891b2;
                 --accent-purple: #a855f7;
             }
 
             body {
-                padding: 25px 35px;
+                padding: 15px 25px;
                 max-width: 100%;
-                font-size: 13px;
+                font-size: 11px;
                 line-height: 1.35;
                 background: white;
                 color: var(--text-primary);
             }
 
-            h1 {
-                font-size: 22px;
-                margin-bottom: 20px;
-                font-weight: 400;
-                letter-spacing: 3px;
-                color: #1a1a1a;
-            }
-
             h2 {
-                font-size: 13px;
-                margin: 16px 0 10px 0;
+                font-size: 11px;
+                margin: 12px 0 8px 0;
+                padding: 5px 8px;
                 page-break-after: avoid;
-                color: #2c3e50;
-                border-bottom-color: var(--accent-blue);
+                -webkit-print-color-adjust: exact;
+                print-color-adjust: exact;
             }
 
-            .company, .thesis, .keywords a {
-                color: var(--accent-blue) !important;
+            h2.experience {
+                background: rgba(22, 163, 74, 0.08) !important;
+                color: var(--accent-green);
             }
 
-            .job-title {
-                color: #34495e;
+            h2.keywords {
+                background: rgba(234, 88, 12, 0.08) !important;
+                color: var(--accent-orange);
             }
 
-            .job-entry {
-                margin-bottom: 8px;
-                page-break-inside: avoid;
+            h2.education {
+                background: rgba(8, 145, 178, 0.08) !important;
+                color: var(--accent-cyan);
             }
 
-            .job-header {
-                padding-top: 8px;
+            h2.languages {
+                background: rgba(37, 99, 235, 0.08) !important;
+                color: var(--accent-blue);
             }
 
-            .job-entry:first-of-type .job-header {
-                padding-top: 0;
+            h2.certifications {
+                background: rgba(168, 85, 247, 0.08) !important;
+                color: var(--accent-purple);
             }
 
+            .two-column {
+                gap: 16px;
+            }
+
+            .job-entry,
             .education-entry {
-                margin-bottom: 8px;
-                padding-top: 8px;
-                page-break-inside: avoid;
+                padding: 6px 0;
+                margin-bottom: 6px;
             }
 
-            .education-entry:first-of-type {
-                padding-top: 0 !important;
-                border-top: none !important;
+            .company, .degree {
+                font-size: 12px;
             }
 
-            h2 + .education-entry {
-                border-top: none;
-                padding-top: 0;
-            }
-
-            .job-description {
-                margin-bottom: 0;
-            }
-
-            .keywords {
-                line-height: 1.6;
+            .job-description,
+            .keywords-content {
+                font-size: 11px;
             }
 
             @page {
-                margin: 0.5in;
+                margin: 0.4in;
                 size: letter;
+            }
+        }
+
+        /* Responsive - Stack columns on small screens */
+        @media (max-width: 600px) {
+            .two-column {
+                grid-template-columns: 1fr;
+                gap: 16px;
             }
         }
     </style>
 </head>
 <body>
-    <h1>LEBENSLAUF</h1>
+    <h2 class="experience">Berufserfahrung</h2>
 
-    <h2>Berufserfahrung</h2>
-
-    <div class="job-entry clearfix">
+    <div class="job-entry">
         <div class="job-header">
-            <span class="date">Jan. 2025 - Feb. 2026</span>
-            <a href="https://www.pixida.com/" class="company">Pixida</a>, <span class="location">München, Deutschland</span>
+            <div class="company-location">
+                <a href="https://www.pixida.com/" class="company">Pixida</a>
+                <span class="location">München</span>
+            </div>
+            <span class="date">Jan. 2025 – Feb. 2026</span>
         </div>
         <div class="job-title">Engineering Consultant – IoT / Embedded / KI</div>
         <div class="job-description">
-            • IoT/Embedded-Entwicklung: Firmware für ESP32-C6 Smart-Lock-Systeme mit AWS IoT Core, MQTT und FreeRTOS.<br>
-            • Webentwicklung mit Next.js und React zur Verwaltung von KI-Tool-Ausgaben und Workflow-Schnittstellen.<br>
-            • KI-Entwicklung: Entwurf von KI-Agent-Frameworks und Chrome-Erweiterungen zur Workflow-Optimierung.<br>
-            • Architektur einer nativen iOS-18-Bürozugangs-App mit Swift 6/SwiftUI, Azure-Authentifizierung (MSAL) und QR-Code-basierter Zugangskontrolle.
+            <ul>
+                <li>IoT/Embedded-Entwicklung: Firmware für ESP32-C6 Smart-Lock-Systeme mit AWS IoT Core, MQTT und FreeRTOS</li>
+                <li>Webentwicklung mit Next.js und React zur Verwaltung von KI-Tool-Ausgaben und Workflow-Schnittstellen</li>
+                <li>KI-Entwicklung: Entwurf von KI-Agent-Frameworks und Chrome-Erweiterungen zur Workflow-Optimierung</li>
+                <li>Architektur einer nativen iOS-18-Bürozugangs-App mit Swift 6/SwiftUI, Azure-Authentifizierung (MSAL) und QR-Code-basierter Zugangskontrolle</li>
+            </ul>
         </div>
     </div>
 
-    <div class="job-entry clearfix">
+    <div class="job-entry">
         <div class="job-header">
-            <span class="date">Mai 2022 - Dez. 2024</span>
-            <a href="https://www.pixida.com/" class="company">Pixida</a>, <span class="location">München, Deutschland</span>
+            <div class="company-location">
+                <a href="https://www.pixida.com/" class="company">Pixida</a>
+                <span class="location">München</span>
+            </div>
+            <span class="date">Mai 2022 – Dez. 2024</span>
         </div>
         <div class="job-title">Engineering Consultant – iOS / BMW Motorrad</div>
         <div class="job-description">
-            • Eigenständige Feature-Entwicklung für die <a href="https://apps.apple.com/de/app/bmw-motorrad-connected/id1250881375" class="company">BMW Motorrad Connected App</a> mit Swift, SwiftUI, UIKit, Combine und Core Data.<br>
-            • Technische Leitung der vollständigen Migration von GraphQL zu RESTful API für die gesamte Anwendung.<br>
-            • Erste Einführung von Swift Async/Await in der BMW Motorrad Codebasis.<br>
-            • Implementierung von Echtzeit-Fahrtaufzeichnung mit GPS-Tracking, Bluetooth-Fahrzeugkonnektivität und OTA-Update-Funktionalität.<br>
-            • Als einziger iOS-Entwickler für Feldtests auf der BMW-Teststrecke Miramas in Frankreich ausgewählt.<br>
-            • Mentoring von Junior-Entwicklern durch Code-Reviews und technische Anleitung.
+            <ul>
+                <li>Eigenständige Feature-Entwicklung für die <a href="https://apps.apple.com/de/app/bmw-motorrad-connected/id1250881375">BMW Motorrad Connected App</a> mit Swift, SwiftUI, UIKit, Combine und Core Data</li>
+                <li>Technische Leitung der vollständigen Migration von GraphQL zu RESTful API für die gesamte Anwendung</li>
+                <li>Erste Einführung von Swift Async/Await in der BMW Motorrad Codebasis</li>
+                <li>Implementierung von Echtzeit-Fahrtaufzeichnung mit GPS-Tracking, Bluetooth-Fahrzeugkonnektivität und OTA-Update-Funktionalität</li>
+                <li>Als einziger iOS-Entwickler für Feldtests auf der BMW-Teststrecke Miramas in Frankreich ausgewählt</li>
+                <li>Mentoring von Junior-Entwicklern durch Code-Reviews und technische Anleitung</li>
+            </ul>
         </div>
     </div>
 
-    <div class="job-entry clearfix">
+    <div class="job-entry">
         <div class="job-header">
-            <span class="date">2018 - Heute</span>
-            <span class="company">Congruent Tech UG</span>
+            <div class="company-location">
+                <span class="company">Congruent Tech UG</span>
+            </div>
+            <span class="date">2018 – Heute</span>
         </div>
         <div class="job-title">Mobile Consultant (Freiberufler)</div>
         <div class="job-description">
-            • Beratung für iOS-Lösungen in verschiedenen Branchen wie Banken, Gesundheit, Unterhaltung usw.
+            <ul>
+                <li>Beratung für iOS-Lösungen in verschiedenen Branchen wie Banken, Gesundheit, Unterhaltung</li>
+            </ul>
         </div>
     </div>
 
-    <div class="job-entry clearfix">
+    <div class="job-entry">
         <div class="job-header">
-            <span class="date">2017-2018</span>
-            <a href="https://neugelb.com/en/home/" class="company">Neugelb Studios GmbH</a>, <span class="location">Berlin, Deutschland</span>
+            <div class="company-location">
+                <a href="https://neugelb.com/en/home/" class="company">Neugelb Studios</a>
+                <span class="location">Berlin</span>
+            </div>
+            <span class="date">2017 – 2018</span>
         </div>
         <div class="job-title">Softwareentwickler</div>
         <div class="job-description">
-            • Leitender iOS-Entwickler für die nächste Hauptversion der CommerzBank iOS-App.
+            <ul>
+                <li>Leitender iOS-Entwickler für die nächste Hauptversion der CommerzBank iOS-App</li>
+            </ul>
         </div>
     </div>
 
-    <div class="job-entry clearfix">
+    <div class="job-entry">
         <div class="job-header">
-            <span class="date">2016-2017</span>
-            <a href="https://about.sharecare.com/" class="company">Feingold</a>, <span class="location">Berlin, Deutschland</span>
+            <div class="company-location">
+                <a href="https://about.sharecare.com/" class="company">Feingold</a>
+                <span class="location">Berlin</span>
+            </div>
+            <span class="date">2016 – 2017</span>
         </div>
         <div class="job-title">Softwareentwickler</div>
         <div class="job-description">
-            • Senior-Entwickler für alle Entwicklungsaspekte der <a href="https://apps.apple.com/us/app/sharecare-health-well-being/id964313779" class="company">Sharecare iPhone-Anwendung</a>. (Swift)
+            <ul>
+                <li>Senior-Entwickler für die <a href="https://apps.apple.com/us/app/sharecare-health-well-being/id964313779">Sharecare iPhone-Anwendung</a> (Swift)</li>
+            </ul>
         </div>
     </div>
 
-    <div class="job-entry clearfix">
+    <div class="job-entry">
         <div class="job-header">
-            <span class="date">2013-2016</span>
-            <a href="https://www.wooga.com" class="company">Wooga</a>, <span class="location">Berlin, Deutschland</span>
+            <div class="company-location">
+                <a href="https://www.wooga.com" class="company">Wooga</a>
+                <span class="location">Berlin</span>
+            </div>
+            <span class="date">2013 – 2016</span>
         </div>
         <div class="job-title">Softwareentwickler</div>
         <div class="job-description">
-            • Entwicklung neuer Features für <a href="https://apps.apple.com/us/app/diamond-dash/id463106406" class="company">Diamond Dash iOS</a>, eines der erfolgreichsten Casual-Spiele aller Zeiten mit Hunderttausenden aktiven täglichen Nutzern. (Objective-C)
+            <ul>
+                <li>Features für <a href="https://apps.apple.com/us/app/diamond-dash/id463106406">Diamond Dash iOS</a>, eines der erfolgreichsten Casual-Spiele mit 100k+ täglichen Nutzern (Obj-C)</li>
+            </ul>
         </div>
     </div>
 
-    <div class="job-entry clearfix">
+    <div class="job-entry">
         <div class="job-header">
+            <div class="company-location">
+                <a href="http://tastefilter.com" class="company">TasteFilter</a>
+                <span class="location">Montréal</span>
+            </div>
             <span class="date">2013</span>
-            <a href="http://tastefilter.com" class="company">TasteFilter</a>, <span class="location">Montréal</span>
         </div>
         <div class="job-title">Softwareentwickler</div>
         <div class="job-description">
-            • Entwicklung einer <a href="http://goo.gl/I7UIn6" class="company">intelligenten Klassifizierung</a> von Last.fm-Musik als Empfehlungsmotor für die TasteFilter Mobile-App. (Python) (<a href="https://play.google.com/store/apps/details?id=com.tastefilter.app" class="company">Android-App</a>)
+            <ul>
+                <li><a href="http://goo.gl/I7UIn6">Intelligente Klassifizierung</a> von Last.fm-Musik als Empfehlungsmotor für TasteFilter (Python)</li>
+            </ul>
         </div>
     </div>
 
-    <div class="job-entry clearfix">
+    <div class="job-entry">
         <div class="job-header">
-            <span class="date">2012-2013</span>
-            <span class="company">Mobicept Inc. (Kangaroo Rewards)</span>, <span class="location">Montréal</span>
+            <div class="company-location">
+                <span class="company">Mobicept Inc.</span>
+                <span class="location">Montréal</span>
+            </div>
+            <span class="date">2012 – 2013</span>
         </div>
         <div class="job-title">Softwareentwickler</div>
         <div class="job-description">
-            • Entwicklung von Frontend- und Backend-Diensten sowie der Anfangsphase der iPhone-Anwendung. (PHP, Objective-C).
+            <ul>
+                <li>Frontend-, Backend-Dienste und initiale iPhone-Anwendung (PHP, Objective-C)</li>
+            </ul>
         </div>
     </div>
 
-    <div class="job-entry clearfix">
+    <div class="job-entry">
         <div class="job-header">
-            <span class="date">2008-2010</span>
-            <a href="http://www.trusimulation.com" class="company">Mechtronix (TRU Simulation)</a>, <span class="location">Montréal</span>
+            <div class="company-location">
+                <a href="http://www.trusimulation.com" class="company">Mechtronix (TRU Simulation)</a>
+                <span class="location">Montréal</span>
+            </div>
+            <span class="date">2008 – 2010</span>
         </div>
         <div class="job-title">Softwareentwickler</div>
         <div class="job-description">
-            • Leitender Software-Integrationsingenieur für den kostengünstigen Simulator <a href="http://www.trusimulation.com" class="company">XJ</a>.
+            <ul>
+                <li>Leitender Software-Integrationsingenieur für den <a href="http://www.trusimulation.com">XJ-Simulator</a></li>
+            </ul>
         </div>
     </div>
 
-    <h2>Kenntnisse</h2>
-    <div class="keywords">
-        LLM Integration, Claude API, Python (NumPy, Pandas), Core ML, Docker, Edge Computing, <a href="https://swift.org/">Swift</a>, SwiftUI, UIKit, Combine, <a href="http://swift.berlin/swift-berlin-24/">CoreData</a>, Swift Async/Await, <a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html">Objective-C</a>, REST API, GraphQL, MVVM, AWS IoT Core, MQTT, ESP32, ESP-IDF, FreeRTOS, Embedded C/C++, Next.js, React, TypeScript, JavaScript, Node.js, Azure (MSAL), Git, CI/CD, Fastlane, XCTest, CocoaPods, SPM, Carthage, Bluetooth LE, OTA Updates, <a href="https://www.coursera.org/account/accomplishments/certificate/4FUCVEUTECH5">Google Cloud Platform</a>
-    </div>
+    <!-- Two Column Section -->
+    <div class="two-column">
+        <div class="column">
+            <h2 class="keywords">Kenntnisse</h2>
+            <div class="keywords-content">
+                LLM Integration, Claude API, Python (NumPy, Pandas), Core ML, Docker, Edge Computing, <a href="https://swift.org/">Swift</a>, SwiftUI, UIKit, Combine, <a href="http://swift.berlin/swift-berlin-24/">CoreData</a>, Async/Await, <a href="https://developer.apple.com/library/archive/documentation/Cocoa/Conceptual/ProgrammingWithObjectiveC/Introduction/Introduction.html">Objective-C</a>, REST API, GraphQL, MVVM, AWS IoT Core, MQTT, ESP32, ESP-IDF, FreeRTOS, Embedded C/C++, Next.js, React, TypeScript, Node.js, Azure (MSAL), Git, CI/CD, Fastlane, XCTest, CocoaPods, SPM, Bluetooth LE, OTA Updates, <a href="https://www.coursera.org/account/accomplishments/certificate/4FUCVEUTECH5">GCP</a>
+            </div>
 
-    <h2>Zertifizierungen</h2>
-    <div class="keywords">
-        SAFe Product Owner/Product Manager
-    </div>
+            <h2 class="languages">Sprachen</h2>
+            <div class="keywords-content">
+                Englisch (Verhandlungssicher) · Deutsch (B1) · Persisch (Muttersprache)
+            </div>
 
-    <h2>Sprachen</h2>
-    <div class="keywords">
-        Englisch (Verhandlungssicher) · Deutsch (B1) · Persisch (Muttersprache)
-    </div>
+            <h2 class="certifications">Zertifizierungen</h2>
+            <div class="keywords-content">
+                SAFe Product Owner/Product Manager
+            </div>
+        </div>
+        <div class="column">
+            <h2 class="education">Ausbildung</h2>
 
-    <h2>Ausbildung</h2>
+            <div class="education-entry">
+                <div class="edu-header">
+                    <div class="degree">M.Sc. Informatik</div>
+                    <span class="date">2010 – 2013</span>
+                </div>
+                <div class="school">McGill University, Montréal</div>
+                <div class="thesis-links">
+                    <a href="https://drive.google.com/file/d/0ByaVx4hXsELhV210RUc4QmZJWDg/view?usp=sharing" class="thesis">Masterarbeit: Disambiguierung von Identitäten aus Wahlkampfspendedaten</a>
+                </div>
+            </div>
 
-    <div class="education-entry clearfix">
-        <span class="date">2010-2013</span>
-        <div class="degree">M. Sc. in Informatik</div>
-        <div class="school">McGill University, Montréal, Kanada</div>
-        <a href="https://drive.google.com/file/d/0ByaVx4hXsELhV210RUc4QmZJWDg/view?usp=sharing" class="thesis thesis-block">Masterarbeit: Disambiguierung von Identitäten aus Wahlkampfspendedaten</a>
-    </div>
+            <div class="education-entry">
+                <div class="edu-header">
+                    <div class="degree">M.A.Sc. Elektrotechnik</div>
+                    <span class="date">2005 – 2007</span>
+                </div>
+                <div class="school">Concordia University, Montréal</div>
+                <div class="thesis-links">
+                    <a href="https://drive.google.com/file/d/0ByaVx4hXsELhM0ZqZGhPc1lJY2c/view" class="thesis">PIERS</a> · <a href="https://drive.google.com/file/d/0ByaVx4hXsELhUG1XaHJaMm9Vak0/view" class="thesis">IEEE-MTT</a> · <a href="https://drive.google.com/file/d/0ByaVx4hXsELhRnRwNkJ1QWNyNXM/view?usp=sharing" class="thesis">Masterarbeit</a>
+                </div>
+            </div>
 
-    <div class="education-entry clearfix">
-        <span class="date">2005-2007</span>
-        <div class="degree">M. A. Sc. in Elektrotechnik</div>
-        <div class="school">Concordia University, Montréal, Kanada</div>
-        <a href="https://drive.google.com/file/d/0ByaVx4hXsELhM0ZqZGhPc1lJY2c/view" class="thesis">PIERS-Publikation</a>, <a href="https://drive.google.com/file/d/0ByaVx4hXsELhUG1XaHJaMm9Vak0/view" class="thesis">IEEE-MTT</a>, <a href="https://drive.google.com/file/d/0ByaVx4hXsELhRnRwNkJ1QWNyNXM/view?usp=sharing" class="thesis">Masterarbeit</a>.
-    </div>
-
-    <div class="education-entry clearfix">
-        <span class="date">1999-2004</span>
-        <div class="degree">B. Sc. in Elektrotechnik</div>
-        <div class="school">Iran University of Science & Technology, Teheran, Iran</div>
+            <div class="education-entry">
+                <div class="edu-header">
+                    <div class="degree">B.Sc. Elektrotechnik</div>
+                    <span class="date">1999 – 2004</span>
+                </div>
+                <div class="school">Iran University of Science & Technology, Teheran</div>
+            </div>
+        </div>
     </div>
 
 </body>
