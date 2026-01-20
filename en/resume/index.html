@@ -352,6 +352,37 @@
             }
         }
 
+        /* Language Switcher */
+        .lang-switcher {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 16px;
+        }
+
+        .lang-switcher a {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 12px;
+            background: var(--bg-subtle);
+            border: 1px solid var(--border-light);
+            border-radius: 4px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .lang-switcher a:hover {
+            background: var(--border-light);
+            color: var(--text-primary);
+        }
+
+        .lang-switcher .flag {
+            font-size: 16px;
+            line-height: 1;
+        }
+
         /* Responsive - Stack columns on small screens */
         @media (max-width: 600px) {
             .two-column {
@@ -359,9 +390,22 @@
                 gap: 16px;
             }
         }
+
+        @media print {
+            .lang-switcher {
+                display: none;
+            }
+        }
     </style>
 </head>
 <body>
+    <div class="lang-switcher">
+        <a href="/de/resume/" title="View in German">
+            <span class="flag">🇩🇪</span>
+            <span>Deutsch</span>
+        </a>
+    </div>
+
     <h2 class="experience">Work Experience</h2>
 
     <div class="job-entry">
