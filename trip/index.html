@@ -1,0 +1,860 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Winter Holiday 2026 | Trip Planner</title>
+    <style>
+        :root {
+            --primary: #1e3a5f;
+            --secondary: #3498db;
+            --accent: #e74c3c;
+            --snow: #f8f9fa;
+            --ice: #e3f2fd;
+            --text: #2c3e50;
+            --muted: #7f8c8d;
+            --success: #27ae60;
+            --warning: #f39c12;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: linear-gradient(135deg, var(--primary) 0%, #2c5282 100%);
+            min-height: 100vh;
+            color: var(--text);
+            line-height: 1.6;
+        }
+
+        .hero {
+            background: linear-gradient(rgba(30, 58, 95, 0.85), rgba(30, 58, 95, 0.9)),
+                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="80">🏔️</text></svg>');
+            color: white;
+            padding: 3rem 1rem;
+            text-align: center;
+        }
+
+        .hero h1 {
+            font-size: clamp(1.8rem, 5vw, 3rem);
+            margin-bottom: 0.5rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+        }
+
+        .hero .dates {
+            font-size: 1.2rem;
+            opacity: 0.9;
+            margin-bottom: 1rem;
+        }
+
+        .hero .subtitle {
+            font-size: 1rem;
+            opacity: 0.8;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1rem;
+        }
+
+        .insight-box {
+            background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
+            border-left: 4px solid #ffc107;
+            padding: 1.5rem;
+            margin: 2rem 0;
+            border-radius: 0 8px 8px 0;
+        }
+
+        .insight-box h3 {
+            color: #856404;
+            margin-bottom: 0.5rem;
+        }
+
+        .plans-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin: 2rem 0;
+        }
+
+        .plan-card {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .plan-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        }
+
+        .plan-header {
+            padding: 1.5rem;
+            color: white;
+            text-align: center;
+        }
+
+        .plan-header.austria { background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%); }
+        .plan-header.switzerland { background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%); }
+        .plan-header.cross-country { background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%); }
+        .plan-header.budget { background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%); }
+
+        .plan-header .medal {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .plan-header h2 {
+            font-size: 1.3rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .plan-header .location {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        .plan-body {
+            padding: 1.5rem;
+        }
+
+        .price-tag {
+            text-align: center;
+            padding: 1rem;
+            background: var(--ice);
+            border-radius: 12px;
+            margin-bottom: 1rem;
+        }
+
+        .price-tag .total {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .price-tag .per-person {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .plan-details {
+            list-style: none;
+        }
+
+        .plan-details li {
+            padding: 0.5rem 0;
+            border-bottom: 1px solid #eee;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .plan-details li:last-child {
+            border-bottom: none;
+        }
+
+        .plan-details .label {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .plan-details .value {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .snow-status {
+            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
+            border-radius: 8px;
+            padding: 0.75rem;
+            margin: 0.75rem 0;
+            font-size: 0.85rem;
+        }
+
+        .snow-status .status-open {
+            color: var(--success);
+            font-weight: 700;
+        }
+
+        .snow-status .status-warning {
+            color: var(--warning);
+            font-weight: 700;
+        }
+
+        .snow-status .snow-depth {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        .snow-links {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 0.5rem;
+        }
+
+        .snow-links a {
+            background: var(--primary);
+            color: white;
+            padding: 0.3rem 0.6rem;
+            border-radius: 4px;
+            text-decoration: none;
+            font-size: 0.75rem;
+            transition: background 0.2s;
+        }
+
+        .snow-links a:hover {
+            background: var(--secondary);
+        }
+
+        .itinerary {
+            margin-top: 1rem;
+            padding-top: 1rem;
+            border-top: 2px dashed #eee;
+        }
+
+        .itinerary h4 {
+            font-size: 0.85rem;
+            color: var(--muted);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .day-item {
+            display: flex;
+            gap: 0.75rem;
+            padding: 0.4rem 0;
+            font-size: 0.9rem;
+        }
+
+        .day-item .day {
+            background: var(--ice);
+            padding: 0.2rem 0.5rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.8rem;
+            color: var(--primary);
+            min-width: 45px;
+            text-align: center;
+        }
+
+        .comparison-table {
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            margin: 2rem 0;
+        }
+
+        .comparison-table h3 {
+            background: var(--primary);
+            color: white;
+            padding: 1rem 1.5rem;
+            font-size: 1.1rem;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #eee;
+        }
+
+        th {
+            background: var(--snow);
+            font-weight: 600;
+            color: var(--primary);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        tr:hover {
+            background: var(--ice);
+        }
+
+        .highlight-row {
+            background: #e8f5e9 !important;
+        }
+
+        .tips-section {
+            background: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+        }
+
+        .tips-section h3 {
+            color: var(--primary);
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+
+        .tips-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+        }
+
+        .tip-card {
+            background: var(--snow);
+            padding: 1.25rem;
+            border-radius: 12px;
+            border-left: 4px solid var(--secondary);
+        }
+
+        .tip-card h4 {
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+            font-size: 1rem;
+        }
+
+        .tip-card p {
+            color: var(--muted);
+            font-size: 0.9rem;
+        }
+
+        .recommendation {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            text-align: center;
+        }
+
+        .recommendation h3 {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+        }
+
+        .recommendation .options {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .recommendation .option {
+            background: rgba(255,255,255,0.2);
+            padding: 1rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
+        }
+
+        .recommendation .option strong {
+            display: block;
+            font-size: 1.1rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .recommendation .option span {
+            opacity: 0.9;
+            font-size: 0.9rem;
+        }
+
+        footer {
+            text-align: center;
+            padding: 2rem;
+            color: rgba(255,255,255,0.7);
+            font-size: 0.9rem;
+        }
+
+        footer a {
+            color: rgba(255,255,255,0.9);
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-best { background: #d4edda; color: #155724; }
+        .badge-budget { background: #cce5ff; color: #004085; }
+        .badge-premium { background: #fff3cd; color: #856404; }
+        .badge-open { background: #d4edda; color: #155724; }
+        .badge-caution { background: #fff3cd; color: #856404; }
+
+        .snow-table td a {
+            color: var(--secondary);
+            text-decoration: none;
+        }
+
+        .snow-table td a:hover {
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .hero { padding: 2rem 1rem; }
+            .plan-body { padding: 1rem; }
+            th, td { padding: 0.75rem 0.5rem; font-size: 0.85rem; }
+            .tips-section { padding: 1.5rem; }
+            .snow-links { flex-direction: column; }
+        }
+
+        @media (max-width: 480px) {
+            .plans-grid { grid-template-columns: 1fr; }
+            .recommendation .options { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <h1>Winter Holiday Planner 2026</h1>
+        <p class="dates">February 16 - 22, 2026</p>
+        <p class="subtitle">Berlin - Stuttgart - Alps - Berlin | 2 People | Sprinter Diesel</p>
+    </header>
+
+    <main class="container">
+        <div class="insight-box">
+            <h3>Key Insight for Beginners</h3>
+            <p><strong>You don't need 6 days of skiing!</strong> As complete beginners, 3-4 ski days is optimal. Days 1-2 are exhausting (learning, falling), Day 3 you start getting it but muscles are sore, Day 4+ brings diminishing returns and injury risk from fatigue. Mix with rest days!</p>
+        </div>
+
+        <!-- Snow Conditions Table -->
+        <div class="comparison-table">
+            <h3>Current Snow Conditions (Updated Feb 9, 2026)</h3>
+            <div class="table-wrapper">
+                <table class="snow-table">
+                    <thead>
+                        <tr>
+                            <th>Destination</th>
+                            <th>Status</th>
+                            <th>Snow Depth</th>
+                            <th>Open</th>
+                            <th>Reliability</th>
+                            <th>Links</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr class="highlight-row">
+                            <td><strong>Stubai Glacier</strong></td>
+                            <td><span class="badge badge-open">OPEN</span></td>
+                            <td>40cm base / 140cm summit</td>
+                            <td>20/26 lifts</td>
+                            <td>Excellent</td>
+                            <td>
+                                <a href="https://www.stubaier-gletscher.com/en/stubai-live/snow-report/" target="_blank">Snow</a> |
+                                <a href="https://www.stubaier-gletscher.com/en/stubai-live/webcams/" target="_blank">Webcam</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Diavolezza</strong></td>
+                            <td><span class="badge badge-open">OPEN</span></td>
+                            <td>31cm base / 70cm summit</td>
+                            <td>5/5 lifts</td>
+                            <td>Very Good</td>
+                            <td>
+                                <a href="https://www.snow-forecast.com/resorts/Diavolezza-Lagalb/snow-report" target="_blank">Snow</a> |
+                                <a href="https://www.bergfex.com/diavolezza/webcams/" target="_blank">Webcam</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ramsau (XC)</strong></td>
+                            <td><span class="badge badge-open">OPEN</span></td>
+                            <td>40cm base / 70cm upper</td>
+                            <td>16/23 trails (~85km)</td>
+                            <td>Good</td>
+                            <td>
+                                <a href="https://www.schladming-dachstein.at/en/activities/cross-country-skiing/open-trails" target="_blank">Trails</a> |
+                                <a href="https://www.bergfex.com/ramsau-dachstein/webcams/" target="_blank">Webcam</a>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><strong>Feldberg</strong></td>
+                            <td><span class="badge badge-caution">OPEN*</span></td>
+                            <td>30cm base / 70cm summit</td>
+                            <td>12/17 lifts</td>
+                            <td>Moderate</td>
+                            <td>
+                                <a href="https://www.bergfex.com/liftverbund-feldberg/schneebericht/" target="_blank">Snow</a> |
+                                <a href="https://www.snow-forecast.com/resorts/Feldberg/snow-report" target="_blank">Forecast</a>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+            <p style="padding: 1rem; font-size: 0.85rem; color: var(--muted);">
+                *Feldberg: Lower altitude = freeze-thaw cycles possible. Check conditions before going.
+                <strong>Best snow reliability: Stubai Glacier (5/5 stars)</strong>
+            </p>
+        </div>
+
+        <h2 style="color: white; text-align: center; margin: 2rem 0 1rem;">Optimized Plans</h2>
+
+        <div class="plans-grid">
+            <!-- Plan A: Stubai -->
+            <article class="plan-card">
+                <div class="plan-header austria">
+                    <div class="medal">1</div>
+                    <h2>Stubai Glacier</h2>
+                    <p class="location">Austria - 4 Nights</p>
+                </div>
+                <div class="plan-body">
+                    <div class="price-tag">
+                        <div class="total">1,400 EUR</div>
+                        <div class="per-person">700 EUR per person</div>
+                    </div>
+                    <div class="snow-status">
+                        <span class="status-open">OPEN</span> -
+                        <span class="snow-depth">140cm summit snow</span> - Excellent reliability
+                        <div class="snow-links">
+                            <a href="https://www.stubaier-gletscher.com/en/stubai-live/snow-report/" target="_blank">Snow Report</a>
+                            <a href="https://www.stubaier-gletscher.com/en/stubai-live/webcams/" target="_blank">Webcams</a>
+                            <a href="https://www.dresdnerhuette.at" target="_blank">Book Hut</a>
+                        </div>
+                    </div>
+                    <ul class="plan-details">
+                        <li><span class="label">Ski Days</span><span class="value">3 days</span></li>
+                        <li><span class="label">Accommodation</span><span class="value">Dresdner Hutte</span></li>
+                        <li><span class="label">Altitude</span><span class="value">2,308m</span></li>
+                        <li><span class="label">Includes</span><span class="value">Half-board</span></li>
+                    </ul>
+                    <div class="itinerary">
+                        <h4>Itinerary</h4>
+                        <div class="day-item"><span class="day">Mon</span> Drive Berlin - Stuttgart - Stubai</div>
+                        <div class="day-item"><span class="day">Tue-Thu</span> Skiing (3 days)</div>
+                        <div class="day-item"><span class="day">Fri</span> Rest: Innsbruck visit / sauna</div>
+                        <div class="day-item"><span class="day">Sat</span> Drive home</div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Plan B: Switzerland -->
+            <article class="plan-card">
+                <div class="plan-header switzerland">
+                    <div class="medal">2</div>
+                    <h2>Berghaus Diavolezza</h2>
+                    <p class="location">Switzerland - 4 Nights</p>
+                </div>
+                <div class="plan-body">
+                    <div class="price-tag">
+                        <div class="total">1,420 EUR</div>
+                        <div class="per-person">710 EUR per person</div>
+                    </div>
+                    <div class="snow-status">
+                        <span class="status-open">OPEN</span> -
+                        <span class="snow-depth">70cm summit</span> - Snow forecast +20cm this week
+                        <div class="snow-links">
+                            <a href="https://www.snow-forecast.com/resorts/Diavolezza-Lagalb/snow-report" target="_blank">Snow Report</a>
+                            <a href="https://www.bergfex.com/diavolezza/webcams/" target="_blank">Webcams</a>
+                            <a href="https://www.corvatsch-diavolezza.ch/en/berghaus-diavolezza/" target="_blank">Book</a>
+                        </div>
+                    </div>
+                    <ul class="plan-details">
+                        <li><span class="label">Ski Days</span><span class="value">3 days</span></li>
+                        <li><span class="label">Accommodation</span><span class="value">Dorm (half-board)</span></li>
+                        <li><span class="label">Altitude</span><span class="value">2,978m</span></li>
+                        <li><span class="label">Views</span><span class="value">Bernina Glacier</span></li>
+                    </ul>
+                    <div class="itinerary">
+                        <h4>Itinerary</h4>
+                        <div class="day-item"><span class="day">Mon</span> Drive to Pontresina</div>
+                        <div class="day-item"><span class="day">Tue-Wed</span> Skiing (2 days)</div>
+                        <div class="day-item"><span class="day">Thu</span> St. Moritz / glacier walk</div>
+                        <div class="day-item"><span class="day">Fri</span> Optional ski or explore</div>
+                        <div class="day-item"><span class="day">Sat</span> Drive home</div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Plan C: Cross-Country -->
+            <article class="plan-card">
+                <div class="plan-header cross-country">
+                    <div class="medal">3</div>
+                    <h2>Ramsau Cross-Country</h2>
+                    <p class="location">Austria - 4 Nights</p>
+                </div>
+                <div class="plan-body">
+                    <div class="price-tag">
+                        <div class="total">1,040 EUR</div>
+                        <div class="per-person">520 EUR per person</div>
+                    </div>
+                    <div class="snow-status">
+                        <span class="status-open">OPEN</span> -
+                        <span class="snow-depth">85km trails open</span> - Watch for morning ice
+                        <div class="snow-links">
+                            <a href="https://www.schladming-dachstein.at/en/activities/cross-country-skiing/open-trails" target="_blank">Trail Status</a>
+                            <a href="https://www.bergfex.com/ramsau-dachstein/webcams/" target="_blank">Webcams</a>
+                            <a href="https://ramsaudachstein.panomax.com/" target="_blank">360 View</a>
+                        </div>
+                    </div>
+                    <ul class="plan-details">
+                        <li><span class="label">XC Ski Days</span><span class="value">3 days</span></li>
+                        <li><span class="label">Trail Network</span><span class="value">220 km</span></li>
+                        <li><span class="label">Accommodation</span><span class="value">Farm stay</span></li>
+                        <li><span class="label">Difficulty</span><span class="value">Beginner-friendly</span></li>
+                    </ul>
+                    <div class="itinerary">
+                        <h4>Itinerary</h4>
+                        <div class="day-item"><span class="day">Mon</span> Drive to Ramsau</div>
+                        <div class="day-item"><span class="day">Tue</span> XC lesson + easy trails</div>
+                        <div class="day-item"><span class="day">Wed</span> Explore more trails</div>
+                        <div class="day-item"><span class="day">Thu</span> Rest: Dachstein glacier visit</div>
+                        <div class="day-item"><span class="day">Fri</span> Final XC day</div>
+                        <div class="day-item"><span class="day">Sat</span> Drive home</div>
+                    </div>
+                </div>
+            </article>
+
+            <!-- Plan D: Budget -->
+            <article class="plan-card">
+                <div class="plan-header budget">
+                    <div class="medal">$</div>
+                    <h2>Stuttgart Day Trips</h2>
+                    <p class="location">Black Forest - Home-based</p>
+                </div>
+                <div class="plan-body">
+                    <div class="price-tag">
+                        <div class="total">610 EUR</div>
+                        <div class="per-person">305 EUR per person</div>
+                    </div>
+                    <div class="snow-status">
+                        <span class="status-warning">CHECK FIRST</span> -
+                        <span class="snow-depth">70cm summit</span> - Freeze-thaw risk
+                        <div class="snow-links">
+                            <a href="https://www.bergfex.com/liftverbund-feldberg/schneebericht/" target="_blank">Feldberg Snow</a>
+                            <a href="https://www.snow-forecast.com/resorts/Feldberg/snow-report" target="_blank">Forecast</a>
+                        </div>
+                    </div>
+                    <ul class="plan-details">
+                        <li><span class="label">Ski Days</span><span class="value">2 days</span></li>
+                        <li><span class="label">Destinations</span><span class="value">Feldberg, Albstadt</span></li>
+                        <li><span class="label">Activities</span><span class="value">Mixed</span></li>
+                        <li><span class="label">Flexibility</span><span class="value">Maximum</span></li>
+                    </ul>
+                    <div class="itinerary">
+                        <h4>Itinerary</h4>
+                        <div class="day-item"><span class="day">Mon</span> Cross-country at Kniebis</div>
+                        <div class="day-item"><span class="day">Tue</span> Skiing at Albstadt</div>
+                        <div class="day-item"><span class="day">Wed</span> Rest day</div>
+                        <div class="day-item"><span class="day">Thu</span> Feldberg sledding</div>
+                        <div class="day-item"><span class="day">Fri</span> Feldberg skiing + lesson</div>
+                        <div class="day-item"><span class="day">Sat</span> Snowshoeing</div>
+                        <div class="day-item"><span class="day">Sun</span> Drive to Berlin</div>
+                    </div>
+                </div>
+            </article>
+        </div>
+
+        <!-- Comparison Table -->
+        <div class="comparison-table">
+            <h3>Quick Comparison</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Plan</th>
+                            <th>Location</th>
+                            <th>Ski Days</th>
+                            <th>Total Cost</th>
+                            <th>Per Person</th>
+                            <th>Snow Risk</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>D: Stuttgart</strong></td>
+                            <td>Black Forest</td>
+                            <td>2</td>
+                            <td>610 EUR</td>
+                            <td>305 EUR</td>
+                            <td><span class="badge badge-caution">Higher</span></td>
+                        </tr>
+                        <tr class="highlight-row">
+                            <td><strong>C: Ramsau XC</strong></td>
+                            <td>Austria</td>
+                            <td>3 (XC)</td>
+                            <td>1,040 EUR</td>
+                            <td>520 EUR</td>
+                            <td><span class="badge badge-open">Low</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>A: Stubai</strong></td>
+                            <td>Austria</td>
+                            <td>3</td>
+                            <td>1,400 EUR</td>
+                            <td>700 EUR</td>
+                            <td><span class="badge badge-open">Very Low</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>B: Diavolezza</strong></td>
+                            <td>Switzerland</td>
+                            <td>3</td>
+                            <td>1,420 EUR</td>
+                            <td>710 EUR</td>
+                            <td><span class="badge badge-open">Low</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Recommendation -->
+        <div class="recommendation">
+            <h3>Recommendation</h3>
+            <p>Based on budget, beginner level, snow reliability, and experience value:</p>
+            <div class="options">
+                <div class="option">
+                    <strong>Best Experience + Snow</strong>
+                    <span>Plan A: Stubai @ 700 EUR/person</span>
+                </div>
+                <div class="option">
+                    <strong>Best Value</strong>
+                    <span>Plan C: Ramsau XC @ 520 EUR/person</span>
+                </div>
+                <div class="option">
+                    <strong>Maximum Savings</strong>
+                    <span>Plan D: Stuttgart @ 305 EUR/person</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tips Section -->
+        <div class="tips-section">
+            <h3>Beginner Tips</h3>
+            <div class="tips-grid">
+                <div class="tip-card">
+                    <h4>Take a Lesson</h4>
+                    <p>Day 1: Book a 2-3h group lesson. Essential for safety and faster learning. 26-40 EUR/person.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Rest Days Matter</h4>
+                    <p>Plan at least 1 non-skiing activity. Prevents injury from muscle fatigue and keeps it fun.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Rent at Resort</h4>
+                    <p>Beginner skis are shorter/forgiving. Staff can adjust bindings. Don't bring your own first time.</p>
+                </div>
+                <div class="tip-card">
+                    <h4>Prep Your Body</h4>
+                    <p>Start stretching legs/core 1 week before. Expect sore muscles days 2-3. Stay hydrated!</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Useful Links -->
+        <div class="comparison-table">
+            <h3>Useful Links</h3>
+            <div class="table-wrapper">
+                <table class="snow-table">
+                    <thead>
+                        <tr>
+                            <th>Destination</th>
+                            <th>Official Site</th>
+                            <th>Snow Report</th>
+                            <th>Webcams</th>
+                            <th>Book</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Stubai Glacier</strong></td>
+                            <td><a href="https://www.stubaier-gletscher.com/en/" target="_blank">stubaier-gletscher.com</a></td>
+                            <td><a href="https://www.stubaier-gletscher.com/en/stubai-live/snow-report/" target="_blank">Snow</a></td>
+                            <td><a href="https://www.stubaier-gletscher.com/en/stubai-live/webcams/" target="_blank">Cams</a></td>
+                            <td><a href="https://www.dresdnerhuette.at" target="_blank">Dresdner Hutte</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Diavolezza</strong></td>
+                            <td><a href="https://www.corvatsch-diavolezza.ch/en/" target="_blank">corvatsch-diavolezza.ch</a></td>
+                            <td><a href="https://www.snow-forecast.com/resorts/Diavolezza-Lagalb/snow-report" target="_blank">Snow</a></td>
+                            <td><a href="https://www.bergfex.com/diavolezza/webcams/" target="_blank">Cams</a></td>
+                            <td><a href="https://www.corvatsch-diavolezza.ch/en/berghaus-diavolezza/" target="_blank">Berghaus</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ramsau</strong></td>
+                            <td><a href="https://www.schladming-dachstein.at/en/" target="_blank">schladming-dachstein.at</a></td>
+                            <td><a href="https://www.schladming-dachstein.at/en/activities/cross-country-skiing/open-trails" target="_blank">Trails</a></td>
+                            <td><a href="https://www.bergfex.com/ramsau-dachstein/webcams/" target="_blank">Cams</a></td>
+                            <td><a href="https://www.booking.com/city/at/ramsau.html" target="_blank">Booking</a></td>
+                        </tr>
+                        <tr>
+                            <td><strong>Feldberg</strong></td>
+                            <td><a href="https://www.hochschwarzwald.de/en/" target="_blank">hochschwarzwald.de</a></td>
+                            <td><a href="https://www.bergfex.com/liftverbund-feldberg/schneebericht/" target="_blank">Snow</a></td>
+                            <td><a href="https://www.snow-forecast.com/resorts/Feldberg/snow-report" target="_blank">Forecast</a></td>
+                            <td><a href="https://www.booking.com/region/de/black-forest.html" target="_blank">Booking</a></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- Cost Breakdown -->
+        <div class="comparison-table">
+            <h3>Detailed Cost Breakdown (Plan A: Stubai)</h3>
+            <div class="table-wrapper">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Category</th>
+                            <th>Details</th>
+                            <th>Cost</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Accommodation</strong></td>
+                            <td>Dresdner Hutte, 4 nights, 2-bed room, half-board</td>
+                            <td>600 EUR</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Ski Passes</strong></td>
+                            <td>3-day pass x 2 adults (Stubai Glacier)</td>
+                            <td>424 EUR</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Fuel</strong></td>
+                            <td>~1,600 km, Sprinter @ 11L/100km, 1.65 EUR/L avg</td>
+                            <td>290 EUR</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tolls</strong></td>
+                            <td>Austrian vignette + Brenner motorway</td>
+                            <td>38 EUR</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Extras</strong></td>
+                            <td>Innsbruck day trip, snacks</td>
+                            <td>50 EUR</td>
+                        </tr>
+                        <tr style="background: var(--ice); font-weight: bold;">
+                            <td>TOTAL</td>
+                            <td></td>
+                            <td>~1,400 EUR</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        <p>Created February 2026 | <a href="https://congruent-tech.github.io">Congruent Tech</a></p>
+        <p style="margin-top: 0.5rem; font-size: 0.8rem;">Route: Berlin - Stuttgart (pick up) - Alps - Berlin</p>
+    </footer>
+</body>
+</html>
