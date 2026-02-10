@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Winter Holiday 2026 | Trip Planner</title>
+    <title>Dolomites Huts - Feb 17, 2026 | Trip Planner</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <style>
         :root {
             --primary: #1e3a5f;
@@ -25,1138 +27,694 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
-            background: linear-gradient(135deg, var(--primary) 0%, #2c5282 100%);
+            background: linear-gradient(135deg, #2c3e50 0%, #4a6741 100%);
             min-height: 100vh;
             color: var(--text);
             line-height: 1.6;
         }
 
         .hero {
-            background: linear-gradient(rgba(30, 58, 95, 0.85), rgba(30, 58, 95, 0.9)),
-                        url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><text y="50" font-size="80">🏔️</text></svg>');
+            background: linear-gradient(rgba(44, 62, 80, 0.9), rgba(74, 103, 65, 0.9));
             color: white;
-            padding: 3rem 1rem;
+            padding: 2rem 1rem;
             text-align: center;
         }
 
         .hero h1 {
-            font-size: clamp(1.8rem, 5vw, 3rem);
+            font-size: clamp(1.6rem, 4vw, 2.5rem);
             margin-bottom: 0.5rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
         }
 
         .hero .dates {
-            font-size: 1.2rem;
+            font-size: 1.1rem;
             opacity: 0.9;
-            margin-bottom: 1rem;
-        }
-
-        .hero .subtitle {
-            font-size: 1rem;
-            opacity: 0.8;
         }
 
         .container {
-            max-width: 1200px;
+            max-width: 1400px;
             margin: 0 auto;
             padding: 1rem;
         }
 
-        .insight-box {
-            background: linear-gradient(135deg, #fff3cd 0%, #ffeeba 100%);
-            border-left: 4px solid #ffc107;
-            padding: 1.5rem;
-            margin: 2rem 0;
-            border-radius: 0 8px 8px 0;
-        }
-
-        .insight-box h3 {
-            color: #856404;
-            margin-bottom: 0.5rem;
-        }
-
-        .plans-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            margin: 2rem 0;
-        }
-
-        .plan-card {
-            background: white;
+        /* Map Styles */
+        #map {
+            height: 450px;
             border-radius: 16px;
-            overflow: hidden;
-            box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            margin: 1.5rem 0;
         }
 
-        .plan-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+        .leaflet-popup-content {
+            margin: 8px 12px;
+            min-width: 200px;
         }
 
-        .plan-header {
-            padding: 1.5rem;
-            color: white;
-            text-align: center;
-        }
-
-        .plan-header.austria { background: linear-gradient(135deg, #c62828 0%, #b71c1c 100%); }
-        .plan-header.switzerland { background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%); }
-        .plan-header.cross-country { background: linear-gradient(135deg, #1565c0 0%, #0d47a1 100%); }
-        .plan-header.budget { background: linear-gradient(135deg, #2e7d32 0%, #1b5e20 100%); }
-
-        .plan-header .medal {
-            font-size: 2.5rem;
+        .popup-title {
+            font-weight: bold;
+            font-size: 1.1rem;
+            color: var(--primary);
             margin-bottom: 0.5rem;
         }
 
-        .plan-header h2 {
-            font-size: 1.3rem;
-            margin-bottom: 0.25rem;
-        }
-
-        .plan-header .location {
-            opacity: 0.9;
-            font-size: 0.9rem;
-        }
-
-        .plan-body {
-            padding: 1.5rem;
-        }
-
-        .price-tag {
-            text-align: center;
-            padding: 1rem;
-            background: var(--ice);
-            border-radius: 12px;
-            margin-bottom: 1rem;
-        }
-
-        .price-tag .total {
-            font-size: 2rem;
-            font-weight: 700;
-            color: var(--primary);
-        }
-
-        .price-tag .per-person {
-            color: var(--muted);
-            font-size: 0.9rem;
-        }
-
-        .plan-details {
-            list-style: none;
-        }
-
-        .plan-details li {
-            padding: 0.5rem 0;
-            border-bottom: 1px solid #eee;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .plan-details li:last-child {
-            border-bottom: none;
-        }
-
-        .plan-details .label {
-            color: var(--muted);
-            font-size: 0.9rem;
-        }
-
-        .plan-details .value {
-            font-weight: 600;
-            color: var(--text);
-        }
-
-        .snow-status {
-            background: linear-gradient(135deg, #e8f5e9 0%, #c8e6c9 100%);
-            border-radius: 8px;
-            padding: 0.75rem;
-            margin: 0.75rem 0;
+        .popup-detail {
             font-size: 0.85rem;
+            margin: 0.25rem 0;
         }
 
-        .snow-status .status-open {
+        .popup-price {
+            font-size: 1rem;
+            font-weight: bold;
             color: var(--success);
-            font-weight: 700;
-        }
-
-        .snow-status .status-warning {
-            color: var(--warning);
-            font-weight: 700;
-        }
-
-        .snow-status .snow-depth {
-            color: var(--primary);
-            font-weight: 600;
-        }
-
-        .snow-links {
-            display: flex;
-            gap: 0.5rem;
-            flex-wrap: wrap;
             margin-top: 0.5rem;
         }
 
-        .snow-links a {
+        .popup-link {
+            display: inline-block;
+            margin-top: 0.5rem;
             background: var(--primary);
             color: white;
             padding: 0.3rem 0.6rem;
             border-radius: 4px;
             text-decoration: none;
-            font-size: 0.75rem;
-            transition: background 0.2s;
-        }
-
-        .snow-links a:hover {
-            background: var(--secondary);
-        }
-
-        .itinerary {
-            margin-top: 1rem;
-            padding-top: 1rem;
-            border-top: 2px dashed #eee;
-        }
-
-        .itinerary h4 {
-            font-size: 0.85rem;
-            color: var(--muted);
-            margin-bottom: 0.75rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .day-item {
-            display: flex;
-            gap: 0.75rem;
-            padding: 0.4rem 0;
-            font-size: 0.9rem;
-        }
-
-        .day-item .day {
-            background: var(--ice);
-            padding: 0.2rem 0.5rem;
-            border-radius: 4px;
-            font-weight: 600;
             font-size: 0.8rem;
-            color: var(--primary);
-            min-width: 45px;
-            text-align: center;
         }
 
-        .comparison-table {
+        /* Summary List */
+        .summary-box {
             background: white;
             border-radius: 16px;
-            overflow: hidden;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
             box-shadow: 0 10px 40px rgba(0,0,0,0.15);
-            margin: 2rem 0;
         }
 
-        .comparison-table h3 {
-            background: var(--primary);
-            color: white;
-            padding: 1rem 1.5rem;
-            font-size: 1.1rem;
-        }
-
-        .table-wrapper {
-            overflow-x: auto;
-        }
-
-        table {
-            width: 100%;
-            border-collapse: collapse;
-        }
-
-        th, td {
-            padding: 1rem;
-            text-align: left;
-            border-bottom: 1px solid #eee;
-        }
-
-        th {
-            background: var(--snow);
-            font-weight: 600;
+        .summary-box h3 {
             color: var(--primary);
-            font-size: 0.85rem;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
+            margin-bottom: 1rem;
+            font-size: 1.2rem;
         }
 
-        tr:hover {
+        .hut-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1rem;
+        }
+
+        .hut-item {
+            background: var(--snow);
+            border-radius: 12px;
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-left: 4px solid var(--primary);
+        }
+
+        .hut-item:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            border-left-color: var(--success);
+        }
+
+        .hut-item.active {
+            border-left-color: var(--accent);
             background: var(--ice);
         }
 
-        .highlight-row {
-            background: #e8f5e9 !important;
+        .hut-item h4 {
+            color: var(--primary);
+            font-size: 1rem;
+            margin-bottom: 0.3rem;
         }
 
-        .tips-section {
+        .hut-item .location {
+            font-size: 0.85rem;
+            color: var(--muted);
+        }
+
+        .hut-item .price {
+            font-size: 1.1rem;
+            font-weight: bold;
+            color: var(--success);
+            margin-top: 0.5rem;
+        }
+
+        .hut-item .details {
+            font-size: 0.8rem;
+            color: var(--text);
+            margin-top: 0.5rem;
+        }
+
+        .hut-item .badge {
+            display: inline-block;
+            padding: 0.15rem 0.5rem;
+            border-radius: 10px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            margin-top: 0.5rem;
+        }
+
+        .badge-open { background: #d4edda; color: #155724; }
+        .badge-cheapest { background: #cce5ff; color: #004085; }
+        .badge-popular { background: #fff3cd; color: #856404; }
+
+        /* Detail Panel */
+        .detail-panel {
             background: white;
             border-radius: 16px;
-            padding: 2rem;
-            margin: 2rem 0;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
             box-shadow: 0 10px 40px rgba(0,0,0,0.15);
+            display: none;
         }
 
-        .tips-section h3 {
+        .detail-panel.active {
+            display: block;
+        }
+
+        .detail-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 1rem;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .detail-header h2 {
             color: var(--primary);
-            margin-bottom: 1.5rem;
-            font-size: 1.3rem;
+            font-size: 1.5rem;
         }
 
-        .tips-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-            gap: 1.5rem;
-        }
-
-        .tip-card {
-            background: var(--snow);
-            padding: 1.25rem;
-            border-radius: 12px;
-            border-left: 4px solid var(--secondary);
-        }
-
-        .tip-card h4 {
-            color: var(--primary);
-            margin-bottom: 0.5rem;
-            font-size: 1rem;
-        }
-
-        .tip-card p {
-            color: var(--muted);
-            font-size: 0.9rem;
-        }
-
-        .recommendation {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            border-radius: 16px;
-            padding: 2rem;
-            margin: 2rem 0;
+        .detail-header .price-box {
+            background: var(--ice);
+            padding: 0.75rem 1.25rem;
+            border-radius: 8px;
             text-align: center;
         }
 
-        .recommendation h3 {
+        .detail-header .price-box .price {
             font-size: 1.5rem;
-            margin-bottom: 1rem;
+            font-weight: bold;
+            color: var(--success);
         }
 
-        .recommendation .options {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
+        .detail-header .price-box .label {
+            font-size: 0.8rem;
+            color: var(--muted);
+        }
+
+        .detail-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 1rem;
-            margin-top: 1.5rem;
+            margin: 1rem 0;
         }
 
-        .recommendation .option {
-            background: rgba(255,255,255,0.2);
-            padding: 1rem 1.5rem;
-            border-radius: 12px;
-            backdrop-filter: blur(10px);
+        .detail-item {
+            background: var(--snow);
+            padding: 0.75rem;
+            border-radius: 8px;
         }
 
-        .recommendation .option strong {
-            display: block;
-            font-size: 1.1rem;
-            margin-bottom: 0.25rem;
+        .detail-item .label {
+            font-size: 0.75rem;
+            color: var(--muted);
+            text-transform: uppercase;
         }
 
-        .recommendation .option span {
-            opacity: 0.9;
+        .detail-item .value {
+            font-weight: 600;
+            color: var(--text);
+        }
+
+        .contact-buttons {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+            margin-top: 1rem;
+        }
+
+        .contact-buttons a {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            text-decoration: none;
             font-size: 0.9rem;
+            transition: opacity 0.2s;
+        }
+
+        .contact-buttons a:hover {
+            opacity: 0.85;
+        }
+
+        .btn-primary { background: var(--primary); color: white; }
+        .btn-success { background: var(--success); color: white; }
+        .btn-secondary { background: var(--muted); color: white; }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--muted);
+            position: absolute;
+            right: 1rem;
+            top: 1rem;
         }
 
         footer {
             text-align: center;
             padding: 2rem;
             color: rgba(255,255,255,0.7);
-            font-size: 0.9rem;
-        }
-
-        footer a {
-            color: rgba(255,255,255,0.9);
-        }
-
-        .badge {
-            display: inline-block;
-            padding: 0.25rem 0.75rem;
-            border-radius: 20px;
-            font-size: 0.75rem;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .badge-best { background: #d4edda; color: #155724; }
-        .badge-budget { background: #cce5ff; color: #004085; }
-        .badge-premium { background: #fff3cd; color: #856404; }
-        .badge-open { background: #d4edda; color: #155724; }
-        .badge-caution { background: #fff3cd; color: #856404; }
-
-        .snow-table td a {
-            color: var(--secondary);
-            text-decoration: none;
-        }
-
-        .snow-table td a:hover {
-            text-decoration: underline;
+            font-size: 0.85rem;
         }
 
         @media (max-width: 768px) {
-            .hero { padding: 2rem 1rem; }
-            .plan-body { padding: 1rem; }
-            th, td { padding: 0.75rem 0.5rem; font-size: 0.85rem; }
-            .tips-section { padding: 1.5rem; }
-            .snow-links { flex-direction: column; }
-        }
-
-        @media (max-width: 480px) {
-            .plans-grid { grid-template-columns: 1fr; }
-            .recommendation .options { flex-direction: column; }
+            #map { height: 350px; }
+            .detail-header { flex-direction: column; }
         }
     </style>
 </head>
 <body>
     <header class="hero">
-        <h1>Winter Holiday Planner 2026</h1>
-        <p class="dates">February 16 - 22, 2026</p>
-        <p class="subtitle">Berlin - Stuttgart - Alps - Berlin | 2 People | Sprinter Diesel</p>
+        <h1>🏔️ Dolomites Mountain Huts</h1>
+        <p class="dates">Open for Overnight Stay | February 17, 2026</p>
     </header>
 
     <main class="container">
-        <div class="insight-box">
-            <h3>Key Insight for Beginners</h3>
-            <p><strong>You don't need 6 days of skiing!</strong> As complete beginners, 3-4 ski days is optimal. Days 1-2 are exhausting (learning, falling), Day 3 you start getting it but muscles are sore, Day 4+ brings diminishing returns and injury risk from fatigue. Mix with rest days!</p>
-        </div>
+        <!-- Interactive Map -->
+        <div id="map"></div>
 
-        <!-- Featured: Gletscherkessel Präg -->
-        <div class="recommendation" style="background: linear-gradient(135deg, #1a472a 0%, #2d5a3f 100%); margin-top: 2rem;">
-            <h3>Featured: Gletscherkessel Präg</h3>
-            <p style="font-size: 1.1rem;">A hidden gem in the Hochschwarzwald - glacial basin with deep forest trails</p>
-            <div class="options" style="margin-top: 1rem;">
-                <div class="option">
-                    <strong>Location</strong>
-                    <span>Präg, near Todtnau (~1h 45min from Stuttgart)</span>
+        <!-- Hut Summary Grid -->
+        <div class="summary-box">
+            <h3>7 Rifugi Open in February 2026 <span style="font-weight: normal; font-size: 0.9rem; color: var(--muted);">(click for details)</span></h3>
+            <div class="hut-grid">
+                <div class="hut-item" data-hut="lagazuoi">
+                    <h4>1. Rifugio Lagazuoi</h4>
+                    <p class="location">Cortina d'Ampezzo • 2,752m</p>
+                    <p class="price">from €80/night</p>
+                    <p class="details">Cable car access • Highest in Cortina</p>
+                    <span class="badge badge-cheapest">CHEAPEST B&B</span>
+                    <span class="badge badge-popular">POPULAR</span>
                 </div>
-                <div class="option">
-                    <strong>Unique Feature</strong>
-                    <span>6 glaciers collided here during Ice Age - rare for low mountains</span>
+                <div class="hut-item" data-hut="fanes">
+                    <h4>2. Rifugio Fanes</h4>
+                    <p class="location">San Vigilio di Marebbe • 2,060m</p>
+                    <p class="price">from €80/night</p>
+                    <p class="details">Snowcat available • Luxury rooms</p>
+                    <span class="badge badge-cheapest">CHEAPEST HALF-BOARD</span>
                 </div>
-                <div class="option">
-                    <strong>Elevation</strong>
-                    <span>~900-1,000m</span>
+                <div class="hut-item" data-hut="lavarella">
+                    <h4>3. Rifugio Lavarella</h4>
+                    <p class="location">San Vigilio di Marebbe • 2,042m</p>
+                    <p class="price">from €91/night</p>
+                    <p class="details">2h hike • Fanes Natural Park</p>
+                    <span class="badge badge-open">CONFIRMED</span>
+                </div>
+                <div class="hut-item" data-hut="sennes">
+                    <h4>4. Rifugio Sennes</h4>
+                    <p class="location">San Vigilio di Marebbe • 2,116m</p>
+                    <p class="price">Contact for price</p>
+                    <p class="details">High plateau • Historic hut</p>
+                    <span class="badge badge-open">CONFIRMED</span>
+                </div>
+                <div class="hut-item" data-hut="scotoni">
+                    <h4>5. Rifugio Scotoni</h4>
+                    <p class="location">Alta Badia • 1,985m</p>
+                    <p class="price">Contact for price</p>
+                    <p class="details">Ski-in access • 20 beds</p>
+                    <span class="badge badge-popular">SKI SAFARI</span>
+                </div>
+                <div class="hut-item" data-hut="nemes">
+                    <h4>6. Malga Nemes</h4>
+                    <p class="location">Sesto • 1,877m</p>
+                    <p class="price">Contact for price</p>
+                    <p class="details">Open daily until April 6</p>
+                    <span class="badge badge-open">DAILY OPEN</span>
+                </div>
+                <div class="hut-item" data-hut="rastua">
+                    <h4>7. Malga Ra Stua</h4>
+                    <p class="location">Cortina d'Ampezzo • 1,668m</p>
+                    <p class="price">Contact for price</p>
+                    <p class="details">Snowmobile transfer • Natural park</p>
+                    <span class="badge badge-open">OPEN</span>
                 </div>
             </div>
         </div>
 
-        <!-- Notschrei Loipenzentrum - Live Status -->
-        <div class="comparison-table" style="margin-top: 1.5rem; border: 3px solid #27ae60;">
-            <h3 style="background: linear-gradient(135deg, #27ae60 0%, #1e8449 100%);">
-                Notschrei Loipenzentrum - Live Status (Feb 10, 2026)
-            </h3>
-            <div style="padding: 1.5rem;">
-                <div style="display: flex; flex-wrap: wrap; gap: 1rem; margin-bottom: 1rem;">
-                    <div style="flex: 1; min-width: 200px; background: var(--ice); padding: 1rem; border-radius: 8px; text-align: center;">
-                        <div style="font-size: 2rem; font-weight: bold; color: var(--primary);">35 cm</div>
-                        <div style="color: var(--muted);">Snow Depth (unpacked)</div>
-                    </div>
-                    <div style="flex: 1; min-width: 200px; background: var(--ice); padding: 1rem; border-radius: 8px; text-align: center;">
-                        <div style="font-size: 2rem; font-weight: bold; color: var(--success);">-1°C</div>
-                        <div style="color: var(--muted);">Temperature</div>
-                    </div>
-                    <div style="flex: 1; min-width: 200px; background: var(--ice); padding: 1rem; border-radius: 8px; text-align: center;">
-                        <div style="font-size: 2rem; font-weight: bold; color: var(--warning);">Windy</div>
-                        <div style="color: var(--muted);">Ridge Conditions</div>
-                    </div>
+        <!-- Detail Panels -->
+        <div class="detail-panel" id="detail-lagazuoi">
+            <button class="close-btn" onclick="closeDetail()">&times;</button>
+            <div class="detail-header">
+                <div>
+                    <h2>Rifugio Lagazuoi</h2>
+                    <p style="color: var(--muted);">Cortina d'Ampezzo, Veneto • 2,752m elevation</p>
                 </div>
-                <table style="width: 100%; margin-top: 1rem;">
-                    <thead>
-                        <tr>
-                            <th>Trail</th>
-                            <th>Status</th>
-                            <th>Distance</th>
-                            <th>Last Groomed</th>
-                            <th>Notes</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="highlight-row">
-                            <td><strong><a href="https://www.hochschwarzwald.de/touren/loipenzugang-stuebenwasenspur-anspruchsvoll-1ac85ca3f2" target="_blank" style="color: var(--primary);">Stübenwasenspur</a></strong></td>
-                            <td><span class="badge badge-open">OPEN</span></td>
-                            <td>5.8-20.2 km (shortcut options)</td>
-                            <td>Feb 9, 2026</td>
-                            <td>Notschrei → Stübenwasen → Todtnauer Hütte. Panoramic ridge views.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Schauinslandspur</strong></td>
-                            <td><span class="badge badge-caution">CLOSED</span></td>
-                            <td>17.2 km (variants: 6.2-15 km)</td>
-                            <td>-</td>
-                            <td>Ground contact, icy sections. Not recommended.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Haldenspur</strong></td>
-                            <td><span class="badge badge-caution">PARTIAL</span></td>
-                            <td>1 km of 3.5 km</td>
-                            <td>-</td>
-                            <td>Only short section groomed.</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Nordic-Arena</strong></td>
-                            <td><span class="badge badge-open">OPEN</span></td>
-                            <td>Training loops</td>
-                            <td>Daily</td>
-                            <td>Lit Mon-Fri 17:30-20:30 (members only)</td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div style="margin-top: 1rem; display: flex; gap: 0.5rem; flex-wrap: wrap;">
-                    <a href="https://www.notschrei-loipe.de/" target="_blank" style="background: var(--primary); color: white; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none;">Official Website</a>
-                    <a href="https://www.notschrei-loipe.de/loipenzentrum-verein.html" target="_blank" style="background: var(--secondary); color: white; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none;">About the Center</a>
-                    <a href="https://www.notschrei-loipe.de/loipenzentrum-webcam.html" target="_blank" style="background: var(--success); color: white; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none;">Live Webcam</a>
-                    <a href="https://www.hochschwarzwald.de/touren/loipenzugang-stuebenwasenspur-anspruchsvoll-1ac85ca3f2" target="_blank" style="background: #e74c3c; color: white; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none;">Stübenwasenspur (Advanced)</a>
-                    <a href="https://www.hochschwarzwald.de/touren/loipenzugang-stuebenwasenspur-einfach-7a21db2331" target="_blank" style="background: #27ae60; color: white; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none;">Stübenwasenspur (Easy Access)</a>
-                    <a href="https://www.loipenportal.de/schwarzwald" target="_blank" style="background: #6c757d; color: white; padding: 0.5rem 1rem; border-radius: 4px; text-decoration: none;">All Black Forest Trails</a>
+                <div class="price-box">
+                    <div class="price">€80 - €115</div>
+                    <div class="label">per person/night</div>
                 </div>
-                <p style="margin-top: 1rem; font-size: 0.85rem; color: var(--muted);">
-                    <strong>Founded 1975</strong> | Total network: 19.6 km | Classic & Skating | Connected to Todtnauberg (53 km) and Feldberg networks
-                </p>
+            </div>
+            <div class="detail-grid">
+                <div class="detail-item"><span class="label">Status</span><div class="value">✅ Open Dec 23 - Apr 6</div></div>
+                <div class="detail-item"><span class="label">Dormitory (B&B)</span><div class="value">€80/person</div></div>
+                <div class="detail-item"><span class="label">+ Dinner</span><div class="value">+€35/person</div></div>
+                <div class="detail-item"><span class="label">Double Room</span><div class="value">€250/room</div></div>
+                <div class="detail-item"><span class="label">Access</span><div class="value">Cable car (5 min)</div></div>
+                <div class="detail-item"><span class="label">Capacity</span><div class="value">74 beds</div></div>
+                <div class="detail-item"><span class="label">Highlights</span><div class="value">WWI museum, Sauna (€25), Panoramic terrace</div></div>
+                <div class="detail-item"><span class="label">Olympics Note</span><div class="value">Cable car accessible from Val Badia side</div></div>
+            </div>
+            <div class="contact-buttons">
+                <a href="https://rifugiolagazuoi.com" target="_blank" class="btn-primary">Website</a>
+                <a href="mailto:booking@rifugiolagazuoi.com" class="btn-success">Book: booking@rifugiolagazuoi.com</a>
+                <a href="tel:+390436867303" class="btn-secondary">+39 0436 867303</a>
             </div>
         </div>
 
-        <!-- Präg Detailed Card -->
-        <article class="plan-card" style="margin: 2rem 0;">
-            <div class="plan-header" style="background: linear-gradient(135deg, #1a472a 0%, #2d5a3f 100%);">
-                <div class="medal">🌲</div>
-                <h2>Gletscherkessel Präg</h2>
-                <p class="location">Black Forest Nature Reserve</p>
-            </div>
-            <div class="plan-body">
-                <div class="snow-status">
-                    <span class="status-open">NEARBY TRAILS OPEN</span> -
-                    <span class="snow-depth">Notschrei: 35cm snow</span> - Connected to 50+ km trail network
-                    <div class="snow-links">
-                        <a href="https://www.notschrei-loipe.de/" target="_blank">Notschrei Loipe</a>
-                        <a href="https://www.loipenportal.de/schwarzwald" target="_blank">Trail Status</a>
-                        <a href="https://www.todtnauberg.de/content/langlauf" target="_blank">Todtnauberg Trails</a>
-                        <a href="https://www.hochschwarzwald.de/en/attractions/praeger-gletscherkessel-e2e3068966" target="_blank">Präg Info</a>
-                    </div>
+        <div class="detail-panel" id="detail-fanes">
+            <button class="close-btn" onclick="closeDetail()">&times;</button>
+            <div class="detail-header">
+                <div>
+                    <h2>Rifugio Fanes</h2>
+                    <p style="color: var(--muted);">San Vigilio di Marebbe, South Tyrol • 2,060m</p>
                 </div>
-                <ul class="plan-details">
-                    <li><span class="label">Nature</span><span class="value">3 glacial lakes, Ice Age boulders</span></li>
-                    <li><span class="label">From Stuttgart</span><span class="value">~110 km / 1h 45min</span></li>
-                    <li><span class="label">Trail Network</span><span class="value">53 km (Todtnauberg)</span></li>
-                    <li><span class="label">Best For</span><span class="value">Deep forest XC skiing</span></li>
-                    <li><span class="label">Difficulty</span><span class="value">Beginner to Advanced</span></li>
-                </ul>
-                <div class="itinerary">
-                    <h4>Nearby Cross-Country Trails</h4>
-                    <div class="day-item"><span class="day" style="background: #d4edda; color: #155724;">OPEN</span> Stübenwasenspur: 19.6 km (advanced) - groomed Feb 9</div>
-                    <div class="day-item"><span class="day" style="background: #d4edda; color: #155724;">OPEN</span> Köpfle-Loipe (Feldberg): 3.3 km - very good condition</div>
-                    <div class="day-item"><span class="day" style="background: #fff3cd; color: #856404;">CHECK</span> Kapellenloipe: 12.1 km (beginner-friendly)</div>
-                    <div class="day-item"><span class="day" style="background: #fff3cd; color: #856404;">CHECK</span> Hornloipe: 2.5 km (easy, above village)</div>
-                </div>
-                <div class="itinerary">
-                    <h4>Glacial Lake Hike</h4>
-                    <div class="day-item"><span class="day">START</span> Präg town hall bus stop</div>
-                    <div class="day-item"><span class="day">ROUTE</span> Circular lake trail to 3 glacial lakes</div>
-                    <div class="day-item"><span class="day">SEE</span> Ice Age boulder fields, rare alpine flora</div>
+                <div class="price-box">
+                    <div class="price">€80 - €126</div>
+                    <div class="label">half-board/night</div>
                 </div>
             </div>
-        </article>
-
-        <!-- Stuttgart Area Forest Hikes Section -->
-        <h2 style="color: white; text-align: center; margin: 2rem 0 1rem;">Forest Hikes & XC Skiing Near Stuttgart</h2>
-
-        <div class="comparison-table">
-            <h3>Current Snow Conditions - Feb 10, 2026</h3>
-            <div class="table-wrapper">
-                <table class="snow-table">
-                    <thead>
-                        <tr>
-                            <th>Area</th>
-                            <th>Status</th>
-                            <th>Snow</th>
-                            <th>XC Trails</th>
-                            <th>From Stuttgart</th>
-                            <th>Links</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="highlight-row">
-                            <td><strong>Notschrei / Präg</strong></td>
-                            <td><span class="badge badge-open">OPEN</span></td>
-                            <td>35 cm</td>
-                            <td>19.6 km open</td>
-                            <td>1h 45min</td>
-                            <td><a href="https://www.notschrei-loipe.de/" target="_blank">Trails</a></td>
-                        </tr>
-                        <tr class="highlight-row">
-                            <td><strong>Feldberg</strong></td>
-                            <td><span class="badge badge-open">OPEN</span></td>
-                            <td>20-60 cm</td>
-                            <td>3.3 km (very good)</td>
-                            <td>1h 45min</td>
-                            <td><a href="https://www.loipenportal.de/schwarzwald" target="_blank">Status</a></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Kniebis</strong></td>
-                            <td><span class="badge badge-caution">CHECK</span></td>
-                            <td>20-50 cm</td>
-                            <td>~100 km network</td>
-                            <td>1h 15min</td>
-                            <td><a href="https://freudenstadt-loipen.de/" target="_blank">Loipen</a></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Seibelseckle</strong></td>
-                            <td><span class="badge badge-open">OPEN</span></td>
-                            <td>40 cm</td>
-                            <td>Connected trails</td>
-                            <td>1h 15min</td>
-                            <td><a href="https://www.seibelseckle.de/" target="_blank">Snow</a></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Hornisgrinde</strong></td>
-                            <td><span class="badge badge-caution">HIKING</span></td>
-                            <td>Variable</td>
-                            <td>Winter hiking</td>
-                            <td>1h 15min</td>
-                            <td><a href="https://www.bergfex.com/seibelseckle/webcams/" target="_blank">Webcam</a></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Albstadt (Alb)</strong></td>
-                            <td><span class="badge badge-caution">LIMITED</span></td>
-                            <td>0-10 cm</td>
-                            <td>Most closed</td>
-                            <td>1h 10min</td>
-                            <td><a href="https://www.albstadt-tourismus.de/" target="_blank">Info</a></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="detail-grid">
+                <div class="detail-item"><span class="label">Status</span><div class="value">✅ Open Jan 6 - Apr 12</div></div>
+                <div class="detail-item"><span class="label">Dormitory (11-bed)</span><div class="value">€80/person</div></div>
+                <div class="detail-item"><span class="label">Double (shared bath)</span><div class="value">€90/person</div></div>
+                <div class="detail-item"><span class="label">Luxury "Stöa" rooms</span><div class="value">€105-€126/person</div></div>
+                <div class="detail-item"><span class="label">Access</span><div class="value">Ski touring, snowshoe, or snowcat</div></div>
+                <div class="detail-item"><span class="label">Capacity</span><div class="value">70 beds</div></div>
+                <div class="detail-item"><span class="label">Children</span><div class="value">30% off under 8, 10% off 8-9</div></div>
+                <div class="detail-item"><span class="label">Highlights</span><div class="value">Kingdom of Fanes mythology, luxury comfort</div></div>
             </div>
-            <p style="padding: 1rem; font-size: 0.85rem; color: var(--muted);">
-                <strong>Recommendation for Feb 16:</strong> Head to Präg/Notschrei area for the best combination of deep forest skiing and reliable snow.
-                Feldberg offers backup if conditions vary.
-            </p>
-        </div>
-
-        <!-- Forest Hiking Options -->
-        <div class="plans-grid">
-            <article class="plan-card">
-                <div class="plan-header" style="background: linear-gradient(135deg, #2d5a3f 0%, #1a472a 100%);">
-                    <div class="medal">🌲</div>
-                    <h2>Kniebis-Freudenstadt</h2>
-                    <p class="location">Northern Black Forest</p>
-                </div>
-                <div class="plan-body">
-                    <ul class="plan-details">
-                        <li><span class="label">From Stuttgart</span><span class="value">1h 15min</span></li>
-                        <li><span class="label">XC Trails</span><span class="value">~100 km</span></li>
-                        <li><span class="label">Elevation</span><span class="value">~960m</span></li>
-                        <li><span class="label">Highlight</span><span class="value">Black Forest National Park</span></li>
-                    </ul>
-                    <div class="itinerary">
-                        <h4>Key Trails</h4>
-                        <div class="day-item"><span class="day">3.7km</span> Schwarzkopfloipe - deep forest</div>
-                        <div class="day-item"><span class="day">14km</span> Long loops available</div>
-                        <div class="day-item"><span class="day">NIGHT</span> Illuminated trail in ski stadium</div>
-                    </div>
-                </div>
-            </article>
-
-            <article class="plan-card">
-                <div class="plan-header" style="background: linear-gradient(135deg, #2d5a3f 0%, #1a472a 100%);">
-                    <div class="medal">🏔️</div>
-                    <h2>Mummelsee-Hornisgrinde</h2>
-                    <p class="location">Schwarzwaldhochstraße</p>
-                </div>
-                <div class="plan-body">
-                    <ul class="plan-details">
-                        <li><span class="label">From Stuttgart</span><span class="value">1h 15min</span></li>
-                        <li><span class="label">Trail Length</span><span class="value">6.6 km</span></li>
-                        <li><span class="label">Elevation</span><span class="value">1,163m peak</span></li>
-                        <li><span class="label">Type</span><span class="value">Winter hiking</span></li>
-                    </ul>
-                    <div class="itinerary">
-                        <h4>Highlights</h4>
-                        <div class="day-item"><span class="day">VIEW</span> Mummelsee glacial lake</div>
-                        <div class="day-item"><span class="day">MOOR</span> Hornisgrinde high moor boardwalk</div>
-                        <div class="day-item"><span class="day">TIP</span> Bring microspikes - can be icy</div>
-                    </div>
-                </div>
-            </article>
-
-            <article class="plan-card">
-                <div class="plan-header" style="background: linear-gradient(135deg, #2d5a3f 0%, #1a472a 100%);">
-                    <div class="medal">🎿</div>
-                    <h2>Hinterzarten</h2>
-                    <p class="location">Hochschwarzwald</p>
-                </div>
-                <div class="plan-body">
-                    <ul class="plan-details">
-                        <li><span class="label">From Stuttgart</span><span class="value">1h 30min</span></li>
-                        <li><span class="label">XC Trails</span><span class="value">90 km / 11 tracks</span></li>
-                        <li><span class="label">Elevation</span><span class="value">~890m</span></li>
-                        <li><span class="label">Best For</span><span class="value">All skill levels</span></li>
-                    </ul>
-                    <div class="itinerary">
-                        <h4>Trails</h4>
-                        <div class="day-item"><span class="day">1.2km</span> Shortest (beginners)</div>
-                        <div class="day-item"><span class="day">32km</span> Hinterzarten-Schluchsee</div>
-                        <div class="day-item"><span class="day">BOTH</span> Classic & skating styles</div>
-                    </div>
-                </div>
-            </article>
-
-            <article class="plan-card">
-                <div class="plan-header" style="background: linear-gradient(135deg, #2d5a3f 0%, #1a472a 100%);">
-                    <div class="medal">🥾</div>
-                    <h2>Baiersbronn</h2>
-                    <p class="location">Northern Black Forest</p>
-                </div>
-                <div class="plan-body">
-                    <ul class="plan-details">
-                        <li><span class="label">From Stuttgart</span><span class="value">1h 10min</span></li>
-                        <li><span class="label">Winter Trails</span><span class="value">220 km</span></li>
-                        <li><span class="label">XC Trails</span><span class="value">7 along Hochstraße</span></li>
-                        <li><span class="label">Special</span><span class="value">National Park access</span></li>
-                    </ul>
-                    <div class="itinerary">
-                        <h4>Multi-Day Options</h4>
-                        <div class="day-item"><span class="day">91km</span> Seensteig (5 stages)</div>
-                        <div class="day-item"><span class="day">66km</span> Murgleiter Trail</div>
-                        <div class="day-item"><span class="day">SEE</span> Cirque lakes, waterfalls, moorland</div>
-                    </div>
-                </div>
-            </article>
-        </div>
-
-        <!-- Snow Conditions Table -->
-        <div class="comparison-table">
-            <h3>Current Snow Conditions (Updated Feb 9, 2026)</h3>
-            <div class="table-wrapper">
-                <table class="snow-table">
-                    <thead>
-                        <tr>
-                            <th>Destination</th>
-                            <th>Status</th>
-                            <th>Snow Depth</th>
-                            <th>Open</th>
-                            <th>Reliability</th>
-                            <th>Links</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr class="highlight-row">
-                            <td><strong>Stubai Glacier</strong></td>
-                            <td><span class="badge badge-open">OPEN</span></td>
-                            <td>40cm base / 140cm summit</td>
-                            <td>20/26 lifts</td>
-                            <td>Excellent</td>
-                            <td>
-                                <a href="https://www.stubaier-gletscher.com/en/stubai-live/snow-report/" target="_blank">Snow</a> |
-                                <a href="https://www.stubaier-gletscher.com/en/stubai-live/webcams/" target="_blank">Webcam</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Diavolezza</strong></td>
-                            <td><span class="badge badge-open">OPEN</span></td>
-                            <td>31cm base / 70cm summit</td>
-                            <td>5/5 lifts</td>
-                            <td>Very Good</td>
-                            <td>
-                                <a href="https://www.snow-forecast.com/resorts/Diavolezza-Lagalb/snow-report" target="_blank">Snow</a> |
-                                <a href="https://www.bergfex.com/diavolezza/webcams/" target="_blank">Webcam</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Ramsau (XC)</strong></td>
-                            <td><span class="badge badge-open">OPEN</span></td>
-                            <td>40cm base / 70cm upper</td>
-                            <td>16/23 trails (~85km)</td>
-                            <td>Good</td>
-                            <td>
-                                <a href="https://www.schladming-dachstein.at/en/activities/cross-country-skiing/open-trails" target="_blank">Trails</a> |
-                                <a href="https://www.bergfex.com/ramsau-dachstein/webcams/" target="_blank">Webcam</a>
-                            </td>
-                        </tr>
-                        <tr>
-                            <td><strong>Feldberg</strong></td>
-                            <td><span class="badge badge-caution">OPEN*</span></td>
-                            <td>30cm base / 70cm summit</td>
-                            <td>12/17 lifts</td>
-                            <td>Moderate</td>
-                            <td>
-                                <a href="https://www.bergfex.com/liftverbund-feldberg/schneebericht/" target="_blank">Snow</a> |
-                                <a href="https://www.snow-forecast.com/resorts/Feldberg/snow-report" target="_blank">Forecast</a>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-            <p style="padding: 1rem; font-size: 0.85rem; color: var(--muted);">
-                *Feldberg: Lower altitude = freeze-thaw cycles possible. Check conditions before going.
-                <strong>Best snow reliability: Stubai Glacier (5/5 stars)</strong>
-            </p>
-        </div>
-
-        <h2 style="color: white; text-align: center; margin: 2rem 0 1rem;">Optimized Plans</h2>
-
-        <div class="plans-grid">
-            <!-- Plan A: Stubai -->
-            <article class="plan-card">
-                <div class="plan-header austria">
-                    <div class="medal">1</div>
-                    <h2>Stubai Glacier</h2>
-                    <p class="location">Austria - 4 Nights</p>
-                </div>
-                <div class="plan-body">
-                    <div class="price-tag">
-                        <div class="total">1,400 EUR</div>
-                        <div class="per-person">700 EUR per person</div>
-                    </div>
-                    <div class="snow-status">
-                        <span class="status-open">OPEN</span> -
-                        <span class="snow-depth">140cm summit snow</span> - Excellent reliability
-                        <div class="snow-links">
-                            <a href="https://www.stubaier-gletscher.com/en/stubai-live/snow-report/" target="_blank">Snow Report</a>
-                            <a href="https://www.stubaier-gletscher.com/en/stubai-live/webcams/" target="_blank">Webcams</a>
-                            <a href="https://www.dresdnerhuette.at" target="_blank">Book Hut</a>
-                        </div>
-                    </div>
-                    <ul class="plan-details">
-                        <li><span class="label">Ski Days</span><span class="value">3 days</span></li>
-                        <li><span class="label">Accommodation</span><span class="value">Dresdner Hutte</span></li>
-                        <li><span class="label">Altitude</span><span class="value">2,308m</span></li>
-                        <li><span class="label">Includes</span><span class="value">Half-board</span></li>
-                    </ul>
-                    <div class="itinerary">
-                        <h4>Itinerary</h4>
-                        <div class="day-item"><span class="day">Mon</span> Drive Berlin - Stuttgart - Stubai</div>
-                        <div class="day-item"><span class="day">Tue-Thu</span> Skiing (3 days)</div>
-                        <div class="day-item"><span class="day">Fri</span> Rest: Innsbruck visit / sauna</div>
-                        <div class="day-item"><span class="day">Sat</span> Drive home</div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Plan B: Switzerland -->
-            <article class="plan-card">
-                <div class="plan-header switzerland">
-                    <div class="medal">2</div>
-                    <h2>Berghaus Diavolezza</h2>
-                    <p class="location">Switzerland - 4 Nights</p>
-                </div>
-                <div class="plan-body">
-                    <div class="price-tag">
-                        <div class="total">1,420 EUR</div>
-                        <div class="per-person">710 EUR per person</div>
-                    </div>
-                    <div class="snow-status">
-                        <span class="status-open">OPEN</span> -
-                        <span class="snow-depth">70cm summit</span> - Snow forecast +20cm this week
-                        <div class="snow-links">
-                            <a href="https://www.snow-forecast.com/resorts/Diavolezza-Lagalb/snow-report" target="_blank">Snow Report</a>
-                            <a href="https://www.bergfex.com/diavolezza/webcams/" target="_blank">Webcams</a>
-                            <a href="https://www.corvatsch-diavolezza.ch/en/berghaus-diavolezza/" target="_blank">Book</a>
-                        </div>
-                    </div>
-                    <ul class="plan-details">
-                        <li><span class="label">Ski Days</span><span class="value">3 days</span></li>
-                        <li><span class="label">Accommodation</span><span class="value">Dorm (half-board)</span></li>
-                        <li><span class="label">Altitude</span><span class="value">2,978m</span></li>
-                        <li><span class="label">Views</span><span class="value">Bernina Glacier</span></li>
-                    </ul>
-                    <div class="itinerary">
-                        <h4>Itinerary</h4>
-                        <div class="day-item"><span class="day">Mon</span> Drive to Pontresina</div>
-                        <div class="day-item"><span class="day">Tue-Wed</span> Skiing (2 days)</div>
-                        <div class="day-item"><span class="day">Thu</span> St. Moritz / glacier walk</div>
-                        <div class="day-item"><span class="day">Fri</span> Optional ski or explore</div>
-                        <div class="day-item"><span class="day">Sat</span> Drive home</div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Plan C: Cross-Country -->
-            <article class="plan-card">
-                <div class="plan-header cross-country">
-                    <div class="medal">3</div>
-                    <h2>Ramsau Cross-Country</h2>
-                    <p class="location">Austria - 4 Nights</p>
-                </div>
-                <div class="plan-body">
-                    <div class="price-tag">
-                        <div class="total">1,040 EUR</div>
-                        <div class="per-person">520 EUR per person</div>
-                    </div>
-                    <div class="snow-status">
-                        <span class="status-open">OPEN</span> -
-                        <span class="snow-depth">85km trails open</span> - Watch for morning ice
-                        <div class="snow-links">
-                            <a href="https://www.schladming-dachstein.at/en/activities/cross-country-skiing/open-trails" target="_blank">Trail Status</a>
-                            <a href="https://www.bergfex.com/ramsau-dachstein/webcams/" target="_blank">Webcams</a>
-                            <a href="https://ramsaudachstein.panomax.com/" target="_blank">360 View</a>
-                        </div>
-                    </div>
-                    <ul class="plan-details">
-                        <li><span class="label">XC Ski Days</span><span class="value">3 days</span></li>
-                        <li><span class="label">Trail Network</span><span class="value">220 km</span></li>
-                        <li><span class="label">Accommodation</span><span class="value">Farm stay</span></li>
-                        <li><span class="label">Difficulty</span><span class="value">Beginner-friendly</span></li>
-                    </ul>
-                    <div class="itinerary">
-                        <h4>Itinerary</h4>
-                        <div class="day-item"><span class="day">Mon</span> Drive to Ramsau</div>
-                        <div class="day-item"><span class="day">Tue</span> XC lesson + easy trails</div>
-                        <div class="day-item"><span class="day">Wed</span> Explore more trails</div>
-                        <div class="day-item"><span class="day">Thu</span> Rest: Dachstein glacier visit</div>
-                        <div class="day-item"><span class="day">Fri</span> Final XC day</div>
-                        <div class="day-item"><span class="day">Sat</span> Drive home</div>
-                    </div>
-                </div>
-            </article>
-
-            <!-- Plan D: Budget -->
-            <article class="plan-card">
-                <div class="plan-header budget">
-                    <div class="medal">$</div>
-                    <h2>Stuttgart Day Trips</h2>
-                    <p class="location">Black Forest - Home-based</p>
-                </div>
-                <div class="plan-body">
-                    <div class="price-tag">
-                        <div class="total">610 EUR</div>
-                        <div class="per-person">305 EUR per person</div>
-                    </div>
-                    <div class="snow-status">
-                        <span class="status-warning">CHECK FIRST</span> -
-                        <span class="snow-depth">70cm summit</span> - Freeze-thaw risk
-                        <div class="snow-links">
-                            <a href="https://www.bergfex.com/liftverbund-feldberg/schneebericht/" target="_blank">Feldberg Snow</a>
-                            <a href="https://www.snow-forecast.com/resorts/Feldberg/snow-report" target="_blank">Forecast</a>
-                        </div>
-                    </div>
-                    <ul class="plan-details">
-                        <li><span class="label">Ski Days</span><span class="value">2 days</span></li>
-                        <li><span class="label">Destinations</span><span class="value">Feldberg, Albstadt</span></li>
-                        <li><span class="label">Activities</span><span class="value">Mixed</span></li>
-                        <li><span class="label">Flexibility</span><span class="value">Maximum</span></li>
-                    </ul>
-                    <div class="itinerary">
-                        <h4>Itinerary</h4>
-                        <div class="day-item"><span class="day">Mon</span> Cross-country at Kniebis</div>
-                        <div class="day-item"><span class="day">Tue</span> Skiing at Albstadt</div>
-                        <div class="day-item"><span class="day">Wed</span> Rest day</div>
-                        <div class="day-item"><span class="day">Thu</span> Feldberg sledding</div>
-                        <div class="day-item"><span class="day">Fri</span> Feldberg skiing + lesson</div>
-                        <div class="day-item"><span class="day">Sat</span> Snowshoeing</div>
-                        <div class="day-item"><span class="day">Sun</span> Drive to Berlin</div>
-                    </div>
-                </div>
-            </article>
-        </div>
-
-        <!-- Comparison Table -->
-        <div class="comparison-table">
-            <h3>Quick Comparison</h3>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Plan</th>
-                            <th>Location</th>
-                            <th>Ski Days</th>
-                            <th>Total Cost</th>
-                            <th>Per Person</th>
-                            <th>Snow Risk</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>D: Stuttgart</strong></td>
-                            <td>Black Forest</td>
-                            <td>2</td>
-                            <td>610 EUR</td>
-                            <td>305 EUR</td>
-                            <td><span class="badge badge-caution">Higher</span></td>
-                        </tr>
-                        <tr class="highlight-row">
-                            <td><strong>C: Ramsau XC</strong></td>
-                            <td>Austria</td>
-                            <td>3 (XC)</td>
-                            <td>1,040 EUR</td>
-                            <td>520 EUR</td>
-                            <td><span class="badge badge-open">Low</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>A: Stubai</strong></td>
-                            <td>Austria</td>
-                            <td>3</td>
-                            <td>1,400 EUR</td>
-                            <td>700 EUR</td>
-                            <td><span class="badge badge-open">Very Low</span></td>
-                        </tr>
-                        <tr>
-                            <td><strong>B: Diavolezza</strong></td>
-                            <td>Switzerland</td>
-                            <td>3</td>
-                            <td>1,420 EUR</td>
-                            <td>710 EUR</td>
-                            <td><span class="badge badge-open">Low</span></td>
-                        </tr>
-                    </tbody>
-                </table>
+            <div class="contact-buttons">
+                <a href="https://www.rifugiofanes.com" target="_blank" class="btn-primary">Website</a>
+                <a href="https://www.rifugiofanes.com/en/booking" target="_blank" class="btn-success">Book Online</a>
+                <a href="tel:+390474453001" class="btn-secondary">+39 0474 453001</a>
             </div>
         </div>
 
-        <!-- Recommendation -->
-        <div class="recommendation">
-            <h3>Recommendation</h3>
-            <p>Based on budget, beginner level, snow reliability, and experience value:</p>
-            <div class="options">
-                <div class="option">
-                    <strong>Best Experience + Snow</strong>
-                    <span>Plan A: Stubai @ 700 EUR/person</span>
+        <div class="detail-panel" id="detail-lavarella">
+            <button class="close-btn" onclick="closeDetail()">&times;</button>
+            <div class="detail-header">
+                <div>
+                    <h2>Rifugio Lavarella</h2>
+                    <p style="color: var(--muted);">San Vigilio di Marebbe, South Tyrol • 2,042m</p>
                 </div>
-                <div class="option">
-                    <strong>Best Value</strong>
-                    <span>Plan C: Ramsau XC @ 520 EUR/person</span>
+                <div class="price-box">
+                    <div class="price">€91 - €105</div>
+                    <div class="label">half-board/night</div>
                 </div>
-                <div class="option">
-                    <strong>Maximum Savings</strong>
-                    <span>Plan D: Stuttgart @ 305 EUR/person</span>
-                </div>
+            </div>
+            <div class="detail-grid">
+                <div class="detail-item"><span class="label">Status</span><div class="value">✅ Confirmed Jan 30 - Apr 12</div></div>
+                <div class="detail-item"><span class="label">Dormitory</span><div class="value">€91/person</div></div>
+                <div class="detail-item"><span class="label">Private Room</span><div class="value">€103/person</div></div>
+                <div class="detail-item"><span class="label">Access</span><div class="value">2h from Pederü (trail CAI 7)</div></div>
+                <div class="detail-item"><span class="label">Capacity</span><div class="value">51 beds</div></div>
+                <div class="detail-item"><span class="label">Location</span><div class="value">Fanes-Sennes-Braies Natural Park</div></div>
+            </div>
+            <div class="contact-buttons">
+                <a href="https://lavarella.it" target="_blank" class="btn-primary">Website</a>
+                <a href="https://lavarella.it/it/prenota-online" target="_blank" class="btn-success">Book Online</a>
+                <a href="mailto:rifugio@lavarella.it" class="btn-secondary">rifugio@lavarella.it</a>
             </div>
         </div>
 
-        <!-- Tips Section -->
-        <div class="tips-section">
-            <h3>Beginner Tips</h3>
-            <div class="tips-grid">
-                <div class="tip-card">
-                    <h4>Take a Lesson</h4>
-                    <p>Day 1: Book a 2-3h group lesson. Essential for safety and faster learning. 26-40 EUR/person.</p>
+        <div class="detail-panel" id="detail-sennes">
+            <button class="close-btn" onclick="closeDetail()">&times;</button>
+            <div class="detail-header">
+                <div>
+                    <h2>Rifugio Sennes</h2>
+                    <p style="color: var(--muted);">San Vigilio di Marebbe, South Tyrol • 2,116m</p>
                 </div>
-                <div class="tip-card">
-                    <h4>Rest Days Matter</h4>
-                    <p>Plan at least 1 non-skiing activity. Prevents injury from muscle fatigue and keeps it fun.</p>
+                <div class="price-box">
+                    <div class="price">Contact</div>
+                    <div class="label">for pricing</div>
                 </div>
-                <div class="tip-card">
-                    <h4>Rent at Resort</h4>
-                    <p>Beginner skis are shorter/forgiving. Staff can adjust bindings. Don't bring your own first time.</p>
-                </div>
-                <div class="tip-card">
-                    <h4>Prep Your Body</h4>
-                    <p>Start stretching legs/core 1 week before. Expect sore muscles days 2-3. Stay hydrated!</p>
-                </div>
+            </div>
+            <div class="detail-grid">
+                <div class="detail-item"><span class="label">Status</span><div class="value">✅ Confirmed Feb 1 - Apr 6</div></div>
+                <div class="detail-item"><span class="label">Meals</span><div class="value">Half-board available</div></div>
+                <div class="detail-item"><span class="label">Kitchen Hours</span><div class="value">12:00-14:30, 18:00-19:30</div></div>
+                <div class="detail-item"><span class="label">Open Hours</span><div class="value">7:30 - 22:00</div></div>
+                <div class="detail-item"><span class="label">Access</span><div class="value">Ski touring / snowshoes</div></div>
+                <div class="detail-item"><span class="label">Combine with</span><div class="value">Rifugio Lavarella (nearby)</div></div>
+            </div>
+            <div class="contact-buttons">
+                <a href="https://www.sennes.com/en/" target="_blank" class="btn-primary">Website</a>
+                <a href="https://www.sennes.com/en/contacts.php" target="_blank" class="btn-success">Contact to Book</a>
             </div>
         </div>
 
-        <!-- Useful Links -->
-        <div class="comparison-table">
-            <h3>Useful Links</h3>
-            <div class="table-wrapper">
-                <table class="snow-table">
-                    <thead>
-                        <tr>
-                            <th>Destination</th>
-                            <th>Official Site</th>
-                            <th>Snow Report</th>
-                            <th>Webcams</th>
-                            <th>Book</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Stubai Glacier</strong></td>
-                            <td><a href="https://www.stubaier-gletscher.com/en/" target="_blank">stubaier-gletscher.com</a></td>
-                            <td><a href="https://www.stubaier-gletscher.com/en/stubai-live/snow-report/" target="_blank">Snow</a></td>
-                            <td><a href="https://www.stubaier-gletscher.com/en/stubai-live/webcams/" target="_blank">Cams</a></td>
-                            <td><a href="https://www.dresdnerhuette.at" target="_blank">Dresdner Hutte</a></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Diavolezza</strong></td>
-                            <td><a href="https://www.corvatsch-diavolezza.ch/en/" target="_blank">corvatsch-diavolezza.ch</a></td>
-                            <td><a href="https://www.snow-forecast.com/resorts/Diavolezza-Lagalb/snow-report" target="_blank">Snow</a></td>
-                            <td><a href="https://www.bergfex.com/diavolezza/webcams/" target="_blank">Cams</a></td>
-                            <td><a href="https://www.corvatsch-diavolezza.ch/en/berghaus-diavolezza/" target="_blank">Berghaus</a></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Ramsau</strong></td>
-                            <td><a href="https://www.schladming-dachstein.at/en/" target="_blank">schladming-dachstein.at</a></td>
-                            <td><a href="https://www.schladming-dachstein.at/en/activities/cross-country-skiing/open-trails" target="_blank">Trails</a></td>
-                            <td><a href="https://www.bergfex.com/ramsau-dachstein/webcams/" target="_blank">Cams</a></td>
-                            <td><a href="https://www.booking.com/city/at/ramsau.html" target="_blank">Booking</a></td>
-                        </tr>
-                        <tr>
-                            <td><strong>Feldberg</strong></td>
-                            <td><a href="https://www.hochschwarzwald.de/en/" target="_blank">hochschwarzwald.de</a></td>
-                            <td><a href="https://www.bergfex.com/liftverbund-feldberg/schneebericht/" target="_blank">Snow</a></td>
-                            <td><a href="https://www.snow-forecast.com/resorts/Feldberg/snow-report" target="_blank">Forecast</a></td>
-                            <td><a href="https://www.booking.com/region/de/black-forest.html" target="_blank">Booking</a></td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="detail-panel" id="detail-scotoni">
+            <button class="close-btn" onclick="closeDetail()">&times;</button>
+            <div class="detail-header">
+                <div>
+                    <h2>Rifugio Scotoni</h2>
+                    <p style="color: var(--muted);">Alta Badia • 1,985m</p>
+                </div>
+                <div class="price-box">
+                    <div class="price">Contact</div>
+                    <div class="label">for pricing</div>
+                </div>
+            </div>
+            <div class="detail-grid">
+                <div class="detail-item"><span class="label">Capacity</span><div class="value">20 beds</div></div>
+                <div class="detail-item"><span class="label">Rooms</span><div class="value">Twin, quad, 5-bed, 6-bed</div></div>
+                <div class="detail-item"><span class="label">Access</span><div class="value">Ski-in from Alta Badia slopes</div></div>
+                <div class="detail-item"><span class="label">Style</span><div class="value">Traditional Tyrolean</div></div>
+                <div class="detail-item"><span class="label">Meals</span><div class="value">Buffet breakfast, dinner on request</div></div>
+                <div class="detail-item"><span class="label">Best For</span><div class="value">Ski safari, Dolomites traverse</div></div>
+            </div>
+            <div class="contact-buttons">
+                <a href="https://www.scotoni.it/en/" target="_blank" class="btn-primary">Website</a>
+                <a href="https://www.scotoni.it/en/rooms-and-prices-in-alta-badia" target="_blank" class="btn-success">Rooms & Prices</a>
             </div>
         </div>
 
-        <!-- Cost Breakdown -->
-        <div class="comparison-table">
-            <h3>Detailed Cost Breakdown (Plan A: Stubai)</h3>
-            <div class="table-wrapper">
-                <table>
-                    <thead>
-                        <tr>
-                            <th>Category</th>
-                            <th>Details</th>
-                            <th>Cost</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><strong>Accommodation</strong></td>
-                            <td>Dresdner Hutte, 4 nights, 2-bed room, half-board</td>
-                            <td>600 EUR</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Ski Passes</strong></td>
-                            <td>3-day pass x 2 adults (Stubai Glacier)</td>
-                            <td>424 EUR</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Fuel</strong></td>
-                            <td>~1,600 km, Sprinter @ 11L/100km, 1.65 EUR/L avg</td>
-                            <td>290 EUR</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Tolls</strong></td>
-                            <td>Austrian vignette + Brenner motorway</td>
-                            <td>38 EUR</td>
-                        </tr>
-                        <tr>
-                            <td><strong>Extras</strong></td>
-                            <td>Innsbruck day trip, snacks</td>
-                            <td>50 EUR</td>
-                        </tr>
-                        <tr style="background: var(--ice); font-weight: bold;">
-                            <td>TOTAL</td>
-                            <td></td>
-                            <td>~1,400 EUR</td>
-                        </tr>
-                    </tbody>
-                </table>
+        <div class="detail-panel" id="detail-nemes">
+            <button class="close-btn" onclick="closeDetail()">&times;</button>
+            <div class="detail-header">
+                <div>
+                    <h2>Malga Nemes</h2>
+                    <p style="color: var(--muted);">Sesto (Sexten), South Tyrol • 1,877m</p>
+                </div>
+                <div class="price-box">
+                    <div class="price">Contact</div>
+                    <div class="label">for pricing</div>
+                </div>
+            </div>
+            <div class="detail-grid">
+                <div class="detail-item"><span class="label">Status</span><div class="value">✅ Open daily until April 6</div></div>
+                <div class="detail-item"><span class="label">Access</span><div class="value">Winter hiking, ski touring, snowshoes</div></div>
+                <div class="detail-item"><span class="label">Location</span><div class="value">Eastern Sesto Valley</div></div>
+                <div class="detail-item"><span class="label">Features</span><div class="value">XC skiing, terrace with mountain views</div></div>
+                <div class="detail-item"><span class="label">Family</span><div class="value">Children's playground</div></div>
+            </div>
+            <div class="contact-buttons">
+                <a href="http://www.alpe-nemes.com/" target="_blank" class="btn-primary">Website</a>
+                <a href="tel:+393470119360" class="btn-secondary">+39 347 0119360</a>
+            </div>
+        </div>
+
+        <div class="detail-panel" id="detail-rastua">
+            <button class="close-btn" onclick="closeDetail()">&times;</button>
+            <div class="detail-header">
+                <div>
+                    <h2>Malga Ra Stua</h2>
+                    <p style="color: var(--muted);">Cortina d'Ampezzo, Veneto • 1,668m</p>
+                </div>
+                <div class="price-box">
+                    <div class="price">Contact</div>
+                    <div class="label">for pricing</div>
+                </div>
+            </div>
+            <div class="detail-grid">
+                <div class="detail-item"><span class="label">Status</span><div class="value">✅ Open Dec 26 - Mar 29</div></div>
+                <div class="detail-item"><span class="label">Access</span><div class="value">3km walk from St. Uberto parking</div></div>
+                <div class="detail-item"><span class="label">Transfer</span><div class="value">Snowmobile available at check-in/out</div></div>
+                <div class="detail-item"><span class="label">Location</span><div class="value">Dolomiti d'Ampezzo Natural Park</div></div>
+                <div class="detail-item"><span class="label">Breakfast</span><div class="value">Buffet / continental</div></div>
+            </div>
+            <div class="contact-buttons">
+                <a href="https://www.rifugiomalgarastua.it/en/" target="_blank" class="btn-primary">Website</a>
+                <a href="tel:+390436 5753" class="btn-secondary">+39 0436 5753</a>
             </div>
         </div>
     </main>
 
     <footer>
-        <p>Created February 2026 | <a href="https://congruent-tech.github.io">Congruent Tech</a></p>
-        <p style="margin-top: 0.5rem; font-size: 0.8rem;">Route: Berlin - Stuttgart (pick up) - Alps - Berlin</p>
+        <p>Dolomites Huts Research | February 2026 | Prices in EUR</p>
     </footer>
+
+    <script>
+        // Hut data with coordinates
+        const huts = [
+            {
+                id: 'lagazuoi',
+                name: 'Rifugio Lagazuoi',
+                coords: [46.5267, 12.0078],
+                elevation: '2,752m',
+                price: '€80/night',
+                location: 'Cortina d\'Ampezzo',
+                access: 'Cable car',
+                website: 'https://rifugiolagazuoi.com'
+            },
+            {
+                id: 'fanes',
+                name: 'Rifugio Fanes',
+                coords: [46.6121, 12.0143],
+                elevation: '2,060m',
+                price: '€80/night',
+                location: 'San Vigilio di Marebbe',
+                access: 'Ski/snowcat',
+                website: 'https://www.rifugiofanes.com'
+            },
+            {
+                id: 'lavarella',
+                name: 'Rifugio Lavarella',
+                coords: [46.6189, 12.0056],
+                elevation: '2,042m',
+                price: '€91/night',
+                location: 'San Vigilio di Marebbe',
+                access: '2h hike',
+                website: 'https://lavarella.it'
+            },
+            {
+                id: 'sennes',
+                name: 'Rifugio Sennes',
+                coords: [46.6333, 12.0167],
+                elevation: '2,116m',
+                price: 'Contact',
+                location: 'San Vigilio di Marebbe',
+                access: 'Ski touring',
+                website: 'https://www.sennes.com/en/'
+            },
+            {
+                id: 'scotoni',
+                name: 'Rifugio Scotoni',
+                coords: [46.5444, 11.9361],
+                elevation: '1,985m',
+                price: 'Contact',
+                location: 'Alta Badia',
+                access: 'Ski-in',
+                website: 'https://www.scotoni.it/en/'
+            },
+            {
+                id: 'nemes',
+                name: 'Malga Nemes',
+                coords: [46.6889, 12.4028],
+                elevation: '1,877m',
+                price: 'Contact',
+                location: 'Sesto',
+                access: 'Winter hike',
+                website: 'http://www.alpe-nemes.com/'
+            },
+            {
+                id: 'rastua',
+                name: 'Malga Ra Stua',
+                coords: [46.5833, 12.1333],
+                elevation: '1,668m',
+                price: 'Contact',
+                location: 'Cortina d\'Ampezzo',
+                access: 'Snowmobile',
+                website: 'https://www.rifugiomalgarastua.it/en/'
+            }
+        ];
+
+        // Initialize map
+        const map = L.map('map').setView([46.58, 12.1], 10);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Custom icon
+        const hutIcon = L.divIcon({
+            className: 'custom-marker',
+            html: '<div style="background: #e74c3c; width: 24px; height: 24px; border-radius: 50%; border: 3px solid white; box-shadow: 0 2px 5px rgba(0,0,0,0.3);"></div>',
+            iconSize: [24, 24],
+            iconAnchor: [12, 12]
+        });
+
+        // Add markers
+        const markers = {};
+        huts.forEach(hut => {
+            const marker = L.marker(hut.coords, { icon: hutIcon }).addTo(map);
+
+            const popupContent = `
+                <div class="popup-title">${hut.name}</div>
+                <div class="popup-detail"><strong>📍</strong> ${hut.location}</div>
+                <div class="popup-detail"><strong>⛰️</strong> ${hut.elevation}</div>
+                <div class="popup-detail"><strong>🚶</strong> ${hut.access}</div>
+                <div class="popup-price">${hut.price}</div>
+                <a href="${hut.website}" target="_blank" class="popup-link">Visit Website</a>
+            `;
+
+            marker.bindPopup(popupContent);
+
+            marker.on('mouseover', function() {
+                this.openPopup();
+            });
+
+            marker.on('click', function() {
+                showDetail(hut.id);
+            });
+
+            markers[hut.id] = marker;
+        });
+
+        // Fit bounds to show all markers
+        const group = new L.featureGroup(Object.values(markers));
+        map.fitBounds(group.getBounds().pad(0.1));
+
+        // Detail panel functions
+        function showDetail(hutId) {
+            document.querySelectorAll('.detail-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.hut-item').forEach(h => h.classList.remove('active'));
+
+            const panel = document.getElementById('detail-' + hutId);
+            const item = document.querySelector(`[data-hut="${hutId}"]`);
+
+            if (panel) {
+                panel.classList.add('active');
+                panel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+            if (item) {
+                item.classList.add('active');
+            }
+
+            // Open popup on map
+            if (markers[hutId]) {
+                markers[hutId].openPopup();
+            }
+        }
+
+        function closeDetail() {
+            document.querySelectorAll('.detail-panel').forEach(p => p.classList.remove('active'));
+            document.querySelectorAll('.hut-item').forEach(h => h.classList.remove('active'));
+        }
+
+        // Add click handlers to hut items
+        document.querySelectorAll('.hut-item').forEach(item => {
+            item.addEventListener('click', () => {
+                const hutId = item.dataset.hut;
+                showDetail(hutId);
+
+                // Pan map to marker
+                const hut = huts.find(h => h.id === hutId);
+                if (hut) {
+                    map.panTo(hut.coords);
+                }
+            });
+        });
+    </script>
 </body>
 </html>
