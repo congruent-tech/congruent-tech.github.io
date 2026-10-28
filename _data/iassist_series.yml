@@ -1,0 +1,34 @@
+# Parts of the "Building iAssist" article series, in reading order.
+- part: 1
+  title: "Why we built our own coding agent in Swift"
+  url: /en/insights/ai/building-iassist/01-why-build-a-coding-agent/
+- part: 2
+  title: "The cognitive loop: the heart of an agent"
+  url: /en/insights/ai/building-iassist/02-the-cognitive-loop/
+- part: 3
+  title: "Protocols and the provider seam"
+  url: /en/insights/ai/building-iassist/03-protocols-and-providers/
+- part: 4
+  title: "Giving the agent hands: file tools"
+  url: /en/insights/ai/building-iassist/04-file-tools/
+- part: 5
+  title: "A shell the agent can't abuse"
+  url: /en/insights/ai/building-iassist/05-shell-safety/
+- part: 6
+  title: "Sub-agents and the live agent tree"
+  url: /en/insights/ai/building-iassist/06-sub-agents-and-the-agent-tree/
+- part: 7
+  title: "Context engineering: prompts, budgets and compaction"
+  url: /en/insights/ai/building-iassist/07-context-engineering/
+- part: 8
+  title: "Workflows: when code decides, not the model"
+  url: /en/insights/ai/building-iassist/08-workflows-evaluator-optimizer/
+- part: 9
+  title: "Memory as a tool, not prompt stuffing"
+  url: /en/insights/ai/building-iassist/09-memory-as-a-tool/
+- part: 10
+  title: "From terminal to Mac app: Parto, MCP and rich answers"
+  url: /en/insights/ai/building-iassist/10-from-terminal-to-mac-app/
+- part: 11
+  title: "Sync, strategy and lessons learned"
+  url: /en/insights/ai/building-iassist/11-sync-strategy-and-lessons/

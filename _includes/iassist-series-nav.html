@@ -1,0 +1,20 @@
+{% assign series = site.data.iassist_series %}
+{% assign total = series | size %}
+{% assign idx = page.part | minus: 1 %}
+{% assign prev_idx = idx | minus: 1 %}
+{% assign next_idx = idx | plus: 1 %}
+<nav class="iassist-series" aria-label="Building iAssist series" style="max-width: 56rem; margin: 3rem auto 2rem; border: 1px solid #E5E7EB; border-radius: .75rem; background: #fff; padding: 1.25rem 1.5rem;">
+  <p style="font-size: .75rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: #1D4ED8; margin: 0 0 .5rem;">Building iAssist · Part {{ page.part }} of {{ total }}</p>
+  <details>
+    <summary style="cursor: pointer; font-weight: 600;">All parts of the series</summary>
+    <ol style="margin: .75rem 0 0 1.25rem;">
+      {% for item in series %}
+      <li style="margin: .2rem 0;">{% if item.part == page.part %}<strong>{{ item.title }}</strong>{% else %}<a href="{{ item.url }}">{{ item.title }}</a>{% endif %}</li>
+      {% endfor %}
+    </ol>
+  </details>
+  <div style="display: flex; justify-content: space-between; gap: 1rem; margin-top: 1rem; flex-wrap: wrap;">
+    {% if prev_idx >= 0 %}{% assign prev = series[prev_idx] %}<a href="{{ prev.url }}">← Part {{ prev.part }}: {{ prev.title }}</a>{% else %}<span></span>{% endif %}
+    {% if next_idx < total %}{% assign next = series[next_idx] %}<a href="{{ next.url }}" style="text-align: right;">Part {{ next.part }}: {{ next.title }} →</a>{% endif %}
+  </div>
+</nav>
