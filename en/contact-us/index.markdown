@@ -17,4 +17,12 @@ title: Contact us - Freelancer - MacOS - iOS - SEO Services - Berlin | Congruent
             congruent.tech.ug@gmail.com
         </a>
     </div>
+
+    <a href="/en/terms/" class="mt-10 flex items-center gap-4 max-w-xl rounded-xl border border-blue-100 bg-blue-50 px-5 py-4 hover:border-blue-300 transition">
+        <svg class="h-8 w-8 flex-none text-blue-700" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/><path d="M8 13h8M8 17h5"/></svg>
+        <span>
+            <span class="block font-semibold text-gray-800">Our Terms &amp; Conditions</span>
+            <span class="block text-sm text-gray-600">Plain-language rules for working together, with examples →</span>
+        </span>
+    </a>
 </div>

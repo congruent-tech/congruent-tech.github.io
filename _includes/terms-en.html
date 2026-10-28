@@ -1,0 +1,522 @@
+<style>
+  .terms {
+    --t-blue: #1D4ED8;
+    --t-blue-soft: #EFF4FF;
+    --t-yellow: #FFB900;
+    --t-yellow-soft: #FFF8E6;
+    --t-brown: #8B5E3C;
+    --t-ink: #1F2937;
+    --t-muted: #6B7280;
+    --t-line: #E5E7EB;
+    color: var(--t-ink);
+    font-weight: 400;
+    line-height: 1.65;
+  }
+  .terms h1, .terms h2, .terms h3 { color: var(--t-ink); }
+  .terms h1 { font-family: Roboto, sans-serif; font-weight: 700; font-size: 2.4rem; line-height: 1.15; letter-spacing: -0.01em; }
+  .terms .t-kicker { font-size: .8rem; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; color: var(--t-blue); }
+  .terms .t-lead { font-size: 1.15rem; color: var(--t-muted); }
+
+  /* Short version cards */
+  .terms .t-short { display: grid; gap: 1rem; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); }
+  .terms .t-short div { background: #fff; border: 1px solid var(--t-line); border-top: 4px solid var(--t-blue); border-radius: .75rem; padding: 1rem 1.1rem; }
+  .terms .t-short strong { display: block; font-family: Roboto, sans-serif; font-weight: 700; margin-bottom: .25rem; }
+  .terms .t-short span { color: var(--t-muted); font-size: .95rem; }
+
+  /* Parts */
+  .terms .t-part { margin-top: 3.5rem; }
+  .terms .t-part-head { display: flex; align-items: baseline; gap: .9rem; border-bottom: 2px solid var(--t-ink); padding-bottom: .6rem; margin-bottom: 1.2rem; }
+  .terms .t-part-letter { font-family: Roboto, sans-serif; font-weight: 700; font-size: 2.2rem; color: var(--t-blue); line-height: 1; }
+  .terms .t-part-head h2 { font-family: Roboto, sans-serif; font-weight: 700; font-size: 1.6rem; }
+  .terms .t-part-head p { color: var(--t-muted); font-size: .95rem; }
+
+  /* Accordion */
+  .terms .acc { border: 1px solid var(--t-line); border-radius: .75rem; background: #fff; margin-bottom: .75rem; transition: box-shadow .2s, border-color .2s; }
+  .terms .acc.open { border-color: #C7D2FE; box-shadow: 0 6px 20px rgba(29, 78, 216, .08); }
+  .terms .acc-btn { width: 100%; display: flex; align-items: center; gap: 1rem; text-align: left; padding: 1rem 1.2rem; cursor: pointer; background: none; border: 0; border-radius: .75rem; }
+  .terms .acc-btn:focus-visible { outline: 3px solid var(--t-yellow); outline-offset: 2px; }
+  .terms .acc-num { flex: none; font-family: Roboto, sans-serif; font-weight: 700; font-size: .85rem; color: var(--t-blue); background: var(--t-blue-soft); border-radius: .5rem; padding: .3rem .55rem; }
+  .terms .acc-text { flex: 1; }
+  .terms .acc-title { display: block; font-family: Roboto, sans-serif; font-weight: 700; font-size: 1.15rem; }
+  .terms .acc-sum { display: block; color: var(--t-muted); font-size: .95rem; margin-top: .1rem; }
+  .terms .chev { flex: none; width: 2rem; height: 2rem; border-radius: 999px; display: grid; place-items: center; background: #F3F4F6; transition: background .2s, transform .35s ease; }
+  .terms .chev::before { content: ""; width: .55rem; height: .55rem; border-right: 2px solid var(--t-ink); border-bottom: 2px solid var(--t-ink); transform: translateY(-2px) rotate(45deg); }
+  .terms .acc.open > .acc-btn .chev { transform: rotate(180deg); background: var(--t-blue-soft); }
+  .terms .acc-panel { display: grid; grid-template-rows: 0fr; transition: grid-template-rows .35s ease; }
+  .terms .acc.open > .acc-panel { grid-template-rows: 1fr; }
+  .terms .acc-inner { overflow: hidden; visibility: hidden; transition: visibility .35s; }
+  .terms .acc.open > .acc-panel > .acc-inner { visibility: visible; }
+  .terms .acc-body { padding: 0 1.2rem 1.2rem 1.2rem; }
+  .terms .acc-body > * + * { margin-top: .8rem; }
+  .terms .acc-body ul { list-style: disc; padding-left: 1.3rem; }
+  .terms .acc-body li + li { margin-top: .35rem; }
+
+  /* Second level */
+  .terms .acc .acc { border-radius: .6rem; background: #FAFAFA; margin-bottom: .5rem; box-shadow: none; }
+  .terms .acc .acc.open { background: #fff; }
+  .terms .acc .acc .acc-btn { padding: .75rem 1rem; }
+  .terms .acc .acc .acc-title { font-size: 1rem; }
+  .terms .acc .acc .acc-body { padding: 0 1rem 1rem 1rem; }
+  .terms .acc .acc .chev { width: 1.6rem; height: 1.6rem; }
+
+  /* Callouts */
+  .terms .t-example { background: var(--t-yellow-soft); border-left: 4px solid var(--t-yellow); border-radius: .5rem; padding: .8rem 1rem; }
+  .terms .t-example::before { content: "Example"; display: block; font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: #92400E; margin-bottom: .2rem; }
+  .terms .t-why { border-left: 4px solid var(--t-brown); background: #F8F3EE; border-radius: .5rem; padding: .8rem 1rem; }
+  .terms .t-why::before { content: "Why we do it this way"; display: block; font-size: .72rem; font-weight: 800; letter-spacing: .1em; text-transform: uppercase; color: var(--t-brown); margin-bottom: .2rem; }
+
+  /* Defect table */
+  .terms .t-classes { display: grid; gap: .6rem; }
+  .terms .t-class { display: grid; grid-template-columns: auto 1fr; gap: .8rem; align-items: start; border: 1px solid var(--t-line); border-radius: .6rem; padding: .7rem .9rem; background: #fff; }
+  .terms .t-badge { font-size: .75rem; font-weight: 800; border-radius: 999px; padding: .2rem .6rem; white-space: nowrap; }
+  .terms .t-badge.c1 { background: #FEE2E2; color: #991B1B; }
+  .terms .t-badge.c2 { background: #FEF3C7; color: #92400E; }
+  .terms .t-badge.c3 { background: #DCFCE7; color: #166534; }
+
+  .terms .t-tools button { font-size: .9rem; font-weight: 600; color: var(--t-blue); border: 1px solid #C7D2FE; border-radius: 999px; padding: .35rem .9rem; background: #fff; }
+  .terms .t-tools button:hover { background: var(--t-blue-soft); }
+
+  @media (prefers-reduced-motion: reduce) {
+    .terms .acc-panel, .terms .chev, .terms .acc-inner { transition: none; }
+  }
+  @media (max-width: 640px) {
+    .terms h1 { font-size: 1.9rem; }
+    .terms .acc-btn { padding: .9rem; gap: .7rem; }
+    .terms .acc-body { padding: 0 .9rem 1rem .9rem; }
+  }
+</style>
+
+<div class="terms container mx-auto px-4 sm:px-8 md:px-16 lg:px-40 pb-20">
+
+  <header class="mt-12">
+    <p class="t-kicker">Terms &amp; Conditions · AGB</p>
+    <h1 class="mt-2">General Terms and Conditions of Congruent Tech</h1>
+    <p class="t-lead mt-4">
+      These are the rules for working together with Congruent Tech UG (haftungsbeschränkt), Berlin.
+      We wrote them in plain language so you can understand them without a lawyer.
+      Each section shows a one-line summary. Click a section to open the details and examples.
+    </p>
+    <p class="text-sm mt-3" style="color: var(--t-muted);">Valid from 28 October 2026 · For business customers only · <a href="/en/impressum" class="underline">Company details</a></p>
+  </header>
+
+  <section class="mt-10">
+    <h2 class="text-xl" style="font-family: Roboto, sans-serif; font-weight: 700;">The short version</h2>
+    <div class="t-short mt-4">
+      <div><strong>The offer comes first</strong><span>Your offer from us says what we build, by when and for how much. These terms fill in the rest.</span></div>
+      <div><strong>You own what you pay for</strong><span>Custom work becomes yours once it is fully paid. You can publish it, sell it and change it.</span></div>
+      <div><strong>Email is enough</strong><span>Wherever these terms say "in writing", an email is enough. That includes cancelling.</span></div>
+      <div><strong>Projects and ongoing services are different</strong><span>Projects end when they are accepted. Ongoing services run month by month.</span></div>
+      <div><strong>Fair liability</strong><span>We are fully liable for serious faults. For small mistakes, liability is limited to typical, foreseeable damage.</span></div>
+      <div><strong>No surprises</strong><span>We never change price or scope behind your back. Every change needs your written OK.</span></div>
+    </div>
+    <div class="t-tools flex gap-2 mt-6">
+      <button type="button" data-terms-all="open">Open all sections</button>
+      <button type="button" data-terms-all="close">Close all</button>
+    </div>
+  </section>
+
+  <!-- ===================== PART A ===================== -->
+  <section class="t-part" id="part-a">
+    <div class="t-part-head">
+      <span class="t-part-letter">A</span>
+      <div><h2>The basics</h2><p>These rules apply to everything we do for you.</p></div>
+    </div>
+
+    <div class="acc" id="a1">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">A1</span><span class="acc-text"><span class="acc-title">Who we are and who these terms are for</span><span class="acc-sum">Business customers only. Your individual offer always comes first.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <p>Congruent Tech UG (haftungsbeschränkt), Berlin ("Congruent Tech", "we") builds iOS and macOS apps, offers SEO services, sets up ERP solutions and develops AI tools. These terms apply to all contracts between us and our customers ("you").</p>
+        <ul>
+          <li><strong>Business customers only.</strong> We work only with companies, freelancers and public bodies acting for business purposes (§ 14 BGB), not with private consumers.</li>
+          <li><strong>The offer comes first.</strong> If your offer or contract says something different from these terms, the offer wins.</li>
+          <li><strong>Your own terms.</strong> Your purchasing terms only apply if we agree to them in writing. Simply starting the work does not count as agreeing.</li>
+          <li><strong>How long an offer is valid.</strong> Our offers are valid for 14 days unless the offer says something else.</li>
+        </ul>
+        <div class="t-example">Our offer says delivery "by 15 March". These terms say deadlines only bind if marked "binding". The offer is more specific, so if it marks 15 March as binding, that date counts.</div>
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="a2">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">A2</span><span class="acc-text"><span class="acc-title">What "in writing" means</span><span class="acc-sum">An email is enough, everywhere in these terms, including cancellation.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <p>Whenever these terms say "in writing", text form (§ 126b BGB) is enough: an email, a signed PDF, or a message in a project tool we both use. No paper letter or handwritten signature is needed. This rule applies to <strong>every</strong> section, including cancelling an ongoing service.</p>
+        <p>A phone call or a chat in a meeting is not enough on its own. If we agree something verbally, one of us confirms it by email.</p>
+        <div class="t-why">One clear rule for the whole document means there is never a dispute about whether an email "counted".</div>
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="a3">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">A3</span><span class="acc-text"><span class="acc-title">How we work</span><span class="acc-sum">Current professional standards, binding dates only when marked binding, and no legal advice.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <ul>
+          <li><strong>Quality.</strong> We work to current professional standards in software development. Specific standards (for example accessibility levels or security certifications) apply only if they are named in the offer.</li>
+          <li><strong>Deadlines.</strong> Dates are planning targets unless the offer or our confirmation calls them "binding".</li>
+          <li><strong>Team.</strong> We may use qualified subcontractors. We remain fully responsible for their work. If a person named in the offer is replaced, we tell you and use someone equally qualified.</li>
+          <li><strong>No legal advice.</strong> We are a technology company, not a law firm. We point out legal topics we notice (such as data protection or App Store rules), but we do not guarantee that a result is legally compliant. Please check legal questions with your own advisor.</li>
+        </ul>
+        <div class="t-example">We build a newsletter sign-up form. We'll remind you that it needs a double opt-in, but checking the wording of your privacy text is up to you or your lawyer.</div>
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="a4">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">A4</span><span class="acc-text"><span class="acc-title">What we need from you</span><span class="acc-sum">One decision-maker, timely feedback and the access we need.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <ul>
+          <li><strong>A contact person</strong> who can make decisions for your side, plus a deputy when they are away.</li>
+          <li><strong>Information and access</strong> on time and free of charge: texts, images, logins, test devices, developer accounts and any industry rules we should know about.</li>
+          <li><strong>Timely feedback.</strong> Please review drafts and answer questions within the timeframes we agree.</li>
+        </ul>
+        <p>If something is missing or late on your side, our deadlines move by the same amount of time. If waiting costs us extra effort, we may bill it at the agreed rates. We will tell you as soon as we notice a delay.</p>
+        <div class="t-example">The app's texts were due on 1 May but arrive on 15 May. The release date moves by two weeks. If our developer was booked for those two weeks and had to be re-planned, we may bill the extra coordination time.</div>
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="a5">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">A5</span><span class="acc-text"><span class="acc-title">Changing the scope</span><span class="acc-sum">Changes only apply once both of us confirm them in writing. Unclear points are agreed together.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+
+        <div class="acc">
+          <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-text"><span class="acc-title">How a change request works</span><span class="acc-sum">Ask, get an estimate, confirm.</span></span><span class="chev" aria-hidden="true"></span></button>
+          <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+            <ul>
+              <li>Either of us can suggest a change in writing.</li>
+              <li>We tell you what it does to price, timeline and risk. Small estimates are free. If the analysis itself is a bigger job, we tell you the cost first and only start once you say yes.</li>
+              <li>The change applies once both of us confirm it in writing. Until then, we keep working under the existing agreement.</li>
+              <li>We only refuse a change for a good reason, for example if it would put the project at risk or we lack the expertise or capacity. We will explain why.</li>
+            </ul>
+            <div class="t-example">Halfway through the project you want Apple Watch support. We reply with "+6 person days, release moves 2 weeks". Once you confirm by email, it's part of the project.</div>
+          </div></div></div>
+        </div>
+
+        <div class="acc">
+          <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-text"><span class="acc-title">When the offer is unclear</span><span class="acc-sum">We ask you. We don't decide on our own.</span></span><span class="chev" aria-hidden="true"></span></button>
+          <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+            <p>If the description of the work leaves room for interpretation, we raise it with you and agree the meaning together in writing. We do not reinterpret the scope on our own.</p>
+            <p>Anything clearly outside the agreed scope is extra work and is billed separately, but only after you have agreed to it.</p>
+            <div class="t-why">Deciding unclear scope on our own would be unfair to you. Asking takes five minutes and saves arguments later.</div>
+          </div></div></div>
+        </div>
+
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="a6">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">A6</span><span class="acc-text"><span class="acc-title">Prices and payment</span><span class="acc-sum">Euro prices plus VAT, payment within 14 days, travel time at half rate.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <ul>
+          <li>All prices are in euros and exclude VAT, which is added at the legal rate.</li>
+          <li>A <strong>person day</strong> is up to 8 working hours. Work is billed in advance, monthly or on completion, as the offer says.</li>
+          <li><strong>Travel time</strong> is billed at 50% of the agreed hourly rate. Travel costs (train, hotel) are billed at actual cost unless agreed otherwise.</li>
+          <li>Invoices are due within <strong>14 days</strong> of the invoice date, without deductions or early-payment discounts.</li>
+          <li>If payment is late, statutory interest for businesses applies (§ 288 BGB).</li>
+          <li>You may only offset our invoices against claims we have accepted or a court has confirmed.</li>
+          <li>Extra effort caused by unclear or contradictory documents from your side is billed after we have pointed it out to you.</li>
+        </ul>
+        <div class="t-example">Our hourly rate is €100 and the trip to your office in Hamburg takes 2 hours each way. Travel time costs 4 h × €50 = €200, plus the train ticket.</div>
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="a7">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">A7</span><span class="acc-text"><span class="acc-title">Who owns what</span><span class="acc-sum">Custom work becomes yours once paid. Our reusable building blocks stay ours, but you may use them in your product forever.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+
+        <div class="acc">
+          <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-text"><span class="acc-title">Work made specifically for you</span><span class="acc-sum">Exclusive rights: publish, sell, change, pass on.</span></span><span class="chev" aria-hidden="true"></span></button>
+          <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+            <p>For code, designs and content we create specifically for your project, you receive an <strong>exclusive</strong> right of use, unlimited in time and territory. It covers every type of use: running the work internally, publishing it (for example in the App Store or Mac App Store), selling it, changing it, having others develop it further, and passing these rights on to others.</p>
+            <p>For custom software we hand over the source code, unless the offer says otherwise.</p>
+            <div class="t-example">We build your iOS app. Once it's paid for, you publish it under your own Apple developer account, sell it, and later hire another agency to add features. You don't need our permission.</div>
+          </div></div></div>
+        </div>
+
+        <div class="acc">
+          <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-text"><span class="acc-title">Our building blocks</span><span class="acc-sum">A permanent, free licence to use them inside your product.</span></span><span class="chev" aria-hidden="true"></span></button>
+          <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+            <p>We bring existing libraries, templates, scripts and tools that we developed before or outside your project. We keep the rights to these and may keep using them for other customers.</p>
+            <p>Wherever they are part of your result, you receive a <strong>non-exclusive, permanent, free</strong> licence to use, change and pass them on as part of that result. The only thing you may not do is sell them separately as a standalone product.</p>
+            <div class="t-example">Your app uses our in-house networking module. You can keep using and updating it inside your app forever. You just can't package the module and sell it as a library of its own.</div>
+          </div></div></div>
+        </div>
+
+        <div class="acc">
+          <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-text"><span class="acc-title">Open source and third-party products</span><span class="acc-sum">Their own licences apply. We warn you about restrictive ones.</span></span><span class="chev" aria-hidden="true"></span></button>
+          <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+            <p>Open source components, third-party software and services (for example cloud platforms or AI model providers) remain under their own licence terms. Before we use a component whose licence could restrict you, for example a "copyleft" licence such as the GPL, we tell you and ask first.</p>
+          </div></div></div>
+        </div>
+
+        <div class="acc">
+          <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-text"><span class="acc-title">When the rights pass to you</span><span class="acc-sum">On full payment. Testing is allowed before that.</span></span><span class="chev" aria-hidden="true"></span></button>
+          <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+            <p>The rights pass to you once you have paid the relevant amount in full. Before that, you may test and evaluate the results. If a payment is more than 30 days overdue and still unpaid 14 days after a written reminder, we may withdraw this test permission until you pay.</p>
+          </div></div></div>
+        </div>
+
+        <div class="acc">
+          <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-text"><span class="acc-title">Know-how</span><span class="acc-sum">We keep general experience. Your results and secrets stay yours.</span></span><span class="chev" aria-hidden="true"></span></button>
+          <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+            <p>We may use the general experience and techniques we gain in a project for other work. This never includes your confidential information, your custom code or your business ideas. We do not file patents on results of your project.</p>
+          </div></div></div>
+        </div>
+
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="a8">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">A8</span><span class="acc-text"><span class="acc-title">Defects and fixes</span><span class="acc-sum">12 months of fixes after acceptance. Tell us in writing, and we get two tries to fix each defect.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <ul>
+          <li><strong>What counts as a defect.</strong> A work is free of defects if it has the agreed features when we hand it over. Only promises expressly called a "guarantee" in the offer are guarantees.</li>
+          <li><strong>How to report.</strong> Describe the defect in writing, ideally with steps to reproduce it and screenshots. Please help us analyse it, for example by giving us access to logs.</li>
+          <li><strong>Our fix.</strong> We fix the defect or deliver a new version, whichever makes more sense. We get two attempts per defect. For minor defects, a documented workaround can count as a fix.</li>
+          <li><strong>How long.</strong> Claims expire 12 months after acceptance. This limit does not apply to defects we concealed on purpose, intent, gross negligence or injury to life, body or health.</li>
+          <li><strong>Not covered:</strong> problems caused by changes made by you or third parties after acceptance, by your specifications, by third-party systems, or by use outside the agreed environment.</li>
+          <li><strong>False alarms.</strong> If a reported "defect" turns out to be caused by something else and you could reasonably have noticed that, we may bill the time we spent analysing it.</li>
+        </ul>
+        <div class="t-example">Three months after launch, the app crashes when the user rotates the iPad. That's a defect, and we fix it for free. If the crash only happens because another agency changed the code, it's not covered, but we're happy to fix it at our normal rates.</div>
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="a9">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">A9</span><span class="acc-text"><span class="acc-title">Liability</span><span class="acc-sum">Full liability for serious faults. For small mistakes, only typical, foreseeable damage.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+
+        <div class="acc">
+          <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-text"><span class="acc-title">When we are fully liable</span><span class="acc-sum">Intent, gross negligence, personal injury, guarantees and product liability.</span></span><span class="chev" aria-hidden="true"></span></button>
+          <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+            <p>We are liable without limit for damage caused intentionally or through gross negligence, for injury to life, body or health, for guarantees we have given and under the German Product Liability Act (Produkthaftungsgesetz).</p>
+          </div></div></div>
+        </div>
+
+        <div class="acc">
+          <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-text"><span class="acc-title">Small mistakes (simple negligence)</span><span class="acc-sum">Only for essential duties, limited to typical, foreseeable damage.</span></span><span class="chev" aria-hidden="true"></span></button>
+          <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+            <p>For simple negligence we are only liable if we breach an essential contractual duty. These are duties the contract depends on and that you should be able to rely on. In that case our liability is limited to the damage that is typical for this kind of contract and foreseeable when the contract was made. Otherwise, we are not liable for simple negligence.</p>
+            <div class="t-example">We forget to renew an SSL certificate we manage, and your web shop shows a warning for a day. Lost sales from that day are typical and foreseeable. A lost investor deal you never told us about is not.</div>
+          </div></div></div>
+        </div>
+
+        <div class="acc">
+          <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-text"><span class="acc-title">Data loss</span><span class="acc-sum">Please keep backups. We cover what restoring from a normal backup would have cost.</span></span><span class="chev" aria-hidden="true"></span></button>
+          <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+            <p>You are responsible for backing up your data regularly, unless backups are part of a service we provide for you. If data is lost, our liability is limited to the effort needed to restore it from such backups.</p>
+          </div></div></div>
+        </div>
+
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="a10">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">A10</span><span class="acc-text"><span class="acc-title">Confidentiality and data protection</span><span class="acc-sum">Both of us keep secrets secret, also after the contract ends. Personal data follows the GDPR.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <ul>
+          <li>We both keep confidential information secret and protect it carefully. Information is confidential if it is marked as such or is obviously confidential, such as source code, business plans or customer lists.</li>
+          <li>This does not apply to information that is already public, that the receiving side already had or developed independently, or that it legally received from someone else.</li>
+          <li>Our employees and subcontractors may see confidential information only as far as they need it for the project, and they are bound to the same secrecy.</li>
+          <li>This duty continues for 3 years after the contract ends, and for trade secrets for as long as they remain secret.</li>
+          <li>When we process personal data on your behalf, we sign a data processing agreement (Art. 28 GDPR) with you.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="a11">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">A11</span><span class="acc-text"><span class="acc-title">Naming you as a reference</span><span class="acc-sum">We only use your logo or case studies with your OK.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <p>We may list your company name among our customers, unless you tell us not to. We only use your logo, screenshots or a case study with your written OK.</p>
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="a12">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">A12</span><span class="acc-text"><span class="acc-title">If we update these terms</span><span class="acc-sum">Only for ongoing services, announced 6 weeks ahead, and never for price or core service.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <ul>
+          <li>Projects always run under the terms that applied when they were agreed.</li>
+          <li>For ongoing services we may update these terms for a valid reason, such as a change in law or a new technical situation. We will never use this to change prices, the core service or the balance of the contract.</li>
+          <li>We send you the changes in writing at least <strong>6 weeks</strong> in advance and clearly say that they take effect unless you object.</li>
+          <li>If you object, the old terms stay in force. Each of us may then end the ongoing service with the normal notice period.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="a13">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">A13</span><span class="acc-text"><span class="acc-title">Final provisions</span><span class="acc-sum">German law, courts in Berlin, and the rest stays valid if one clause is invalid.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <ul>
+          <li>German law applies. The UN Convention on Contracts for the International Sale of Goods (CISG) does not apply.</li>
+          <li>The courts in Berlin have exclusive jurisdiction for all disputes, as far as the law allows (for example with merchants and legal entities).</li>
+          <li>If one clause is invalid, the rest remains valid. The invalid clause is replaced by the statutory rule.</li>
+        </ul>
+      </div></div></div>
+    </div>
+  </section>
+
+  <!-- ===================== PART B ===================== -->
+  <section class="t-part" id="part-b">
+    <div class="t-part-head">
+      <span class="t-part-letter">B</span>
+      <div><h2>Projects</h2><p>For work with a defined result, such as an app, a website, an ERP setup, an AI tool or an SEO audit.</p></div>
+    </div>
+
+    <div class="acc" id="b1">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">B1</span><span class="acc-text"><span class="acc-title">Results vs. working time</span><span class="acc-sum">A result must be accepted. Working time, such as consulting hours, is simply billed.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <p>The offer says whether we deliver a <strong>result</strong> (a "work", for example a finished app) or provide <strong>working time</strong> (a "service", for example 10 days of consulting or development support). Only results go through acceptance (B2). If the offer is unclear, we agree with you which one it is before we start.</p>
+        <div class="t-example">"Develop an iOS app with these 12 screens" is a result. "Support your team with 5 developer days per month" is working time.</div>
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="b2">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">B2</span><span class="acc-text"><span class="acc-title">Acceptance</span><span class="acc-sum">You test the result for 10 working days. Only serious defects block acceptance.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+
+        <div class="acc">
+          <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-text"><span class="acc-title">How acceptance works</span><span class="acc-sum">Hand-over, testing, then your confirmation.</span></span><span class="chev" aria-hidden="true"></span></button>
+          <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+            <ul>
+              <li>We hand over the result and tell you it is ready for acceptance.</li>
+              <li>You test it within <strong>10 working days</strong>, unless the offer says otherwise.</li>
+              <li>If there is no Class 1 or Class 2 defect, you confirm acceptance in writing. Smaller defects are noted in a short report and fixed afterwards.</li>
+              <li>Larger projects can be accepted in milestones. An accepted milestone stays accepted.</li>
+            </ul>
+          </div></div></div>
+        </div>
+
+        <div class="acc">
+          <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-text"><span class="acc-title">The three defect classes</span><span class="acc-sum">Which defects stop acceptance and which don't.</span></span><span class="chev" aria-hidden="true"></span></button>
+          <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+            <div class="t-classes">
+              <div class="t-class"><span class="t-badge c1">Class 1</span><div><strong>Blocking.</strong> The result, or a central part of it, cannot be used. <em>Example: the app crashes at launch, or the login doesn't work.</em></div></div>
+              <div class="t-class"><span class="t-badge c2">Class 2</span><div><strong>Serious.</strong> An important function is clearly restricted and there is no reasonable workaround. <em>Example: payments work, but receipts are never sent.</em></div></div>
+              <div class="t-class"><span class="t-badge c3">Class 3</span><div><strong>Minor.</strong> Everything else. It doesn't block acceptance and gets fixed afterwards. <em>Example: a button is 2 pixels out of place, or there is a typo in the settings screen.</em></div></div>
+            </div>
+            <p>We classify defects together. If we disagree, the description in the offer decides.</p>
+          </div></div></div>
+        </div>
+
+        <div class="acc">
+          <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-text"><span class="acc-title">When acceptance happens automatically</span><span class="acc-sum">After going live, or after 10 working days without a serious defect report.</span></span><span class="chev" aria-hidden="true"></span></button>
+          <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+            <p>The result counts as accepted if</p>
+            <ul>
+              <li>you start using it productively (for example, the app goes live in the App Store or the website goes online), or</li>
+              <li>the testing period ends and you have not reported at least one Class 1 or Class 2 defect in writing. We remind you of this effect when we hand over the result.</li>
+            </ul>
+            <div class="t-why">Without this rule a finished project could stay open forever. You still keep your full defect rights (A8) after acceptance.</div>
+          </div></div></div>
+        </div>
+
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="b3">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">B3</span><span class="acc-text"><span class="acc-title">Apps for the App Store</span><span class="acc-sum">Published under your account. We fix technical rejections. Content and policy decisions are yours.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <ul>
+          <li>Apps are published under <strong>your</strong> Apple developer account, so you stay the owner of the app listing, reviews and revenue. We help you set it up.</li>
+          <li>Apple reviews every app. If Apple rejects it for a technical reason we are responsible for, we fix it free of charge.</li>
+          <li>If the rejection is caused by the business model, your content or Apple changing its rules, we help you at our normal rates. A rejection like this is not a defect.</li>
+          <li>New iOS and macOS versions may require updates. Supporting future system versions is part of a maintenance service (Part C), not the original project.</li>
+        </ul>
+        <div class="t-example">Apple rejects the app because a permission prompt is missing a description. That's on us, so we fix it for free. Apple rejects it because it sells digital content outside in-app purchase. That's a business decision, so we help, but it's billed.</div>
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="b4">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">B4</span><span class="acc-text"><span class="acc-title">SEO</span><span class="acc-sum">We promise good work, not a specific Google ranking.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <p>Search engines decide rankings with algorithms nobody outside the search engine controls. We carry out the agreed SEO measures carefully and report what we did and what changed. A specific ranking, traffic or sales figure is only owed if the offer expressly calls it a guarantee.</p>
+        <div class="t-example">We optimise 40 product pages as agreed. Rankings improve for 30 of them, but a competitor overtakes you on one keyword. The work is still delivered as agreed.</div>
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="b5">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">B5</span><span class="acc-text"><span class="acc-title">AI tools</span><span class="acc-sum">AI can be wrong, so you review important outputs. We don't train models on your data.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <ul>
+          <li>AI systems produce results based on probabilities. They can make mistakes, even when everything is built correctly. Please check outputs before relying on them for important decisions. An occasional wrong answer from the model is not a defect in our work.</li>
+          <li>AI tools often use outside providers (for example a cloud language model). Their terms and prices apply, and we tell you which provider we plan to use.</li>
+          <li>We do not use your data to train AI models, and we choose provider settings that don't allow it, unless you agree to something else in writing.</li>
+        </ul>
+        <div class="t-example">We build an assistant that drafts replies to customer emails. It suggests a refund your policy doesn't allow. That's why a person on your team approves replies before they are sent.</div>
+      </div></div></div>
+    </div>
+  </section>
+
+  <!-- ===================== PART C ===================== -->
+  <section class="t-part" id="part-c">
+    <div class="t-part-head">
+      <span class="t-part-letter">C</span>
+      <div><h2>Ongoing services</h2><p>For services that run continuously, such as app maintenance, SEO support, hosting or IT support.</p></div>
+    </div>
+
+    <div class="acc" id="c1">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">C1</span><span class="acc-text"><span class="acc-title">Contract term and cancellation</span><span class="acc-sum">3 months minimum, then month to month with 1 month's notice.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <p>Unless the offer says otherwise:</p>
+        <ul>
+          <li>The service starts on the agreed start date and runs for at least <strong>3 months</strong>.</li>
+          <li>After that it continues month by month. Either side may cancel with <strong>1 month's notice</strong> to the end of a calendar month.</li>
+          <li>Cancellation by email is enough (see A2).</li>
+        </ul>
+        <div class="t-example">Maintenance starts on 1 February. The earliest end date is 30 April. If you send a cancellation email on 10 June, the service ends on 31 July.</div>
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="c2">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">C2</span><span class="acc-text"><span class="acc-title">Billing and price changes</span><span class="acc-sum">Billed monthly. Price changes at most once a year, and you can cancel.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <ul>
+          <li>Monthly fees are invoiced at the start of each month. Extra hours are billed at the end of the month.</li>
+          <li>We may adjust prices at most once every 12 months, with at least 6 weeks' written notice. If you don't accept the new price, you may cancel the service with effect from the day the new price would apply.</li>
+        </ul>
+      </div></div></div>
+    </div>
+
+    <div class="acc" id="c3">
+      <button class="acc-btn" type="button" aria-expanded="false"><span class="acc-num">C3</span><span class="acc-text"><span class="acc-title">Ending immediately for good cause</span><span class="acc-sum">Possible after a serious breach that isn't fixed in time.</span></span><span class="chev" aria-hidden="true"></span></button>
+      <div class="acc-panel"><div class="acc-inner"><div class="acc-body">
+        <p>Either side may end the contract immediately for good cause. Usually this requires a written warning first and a reasonable time to fix the problem. Good cause includes, for example, a payment more than 2 months overdue, or repeatedly failing to cooperate (A4) despite a warning.</p>
+      </div></div></div>
+    </div>
+  </section>
+
+  <p class="mt-14 text-sm" style="color: var(--t-muted);">
+    Questions about these terms? Write to us. Our contact details are in the <a href="/en/impressum" class="underline">Impressum</a>.
+  </p>
+</div>
+
+<script>
+  (function () {
+    var root = document.querySelector('.terms');
+    if (!root) return;
+
+    function setOpen(acc, open) {
+      acc.classList.toggle('open', open);
+      var btn = acc.querySelector(':scope > .acc-btn');
+      if (btn) btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+    }
+
+    root.querySelectorAll('.acc > .acc-btn').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var acc = btn.parentElement;
+        setOpen(acc, !acc.classList.contains('open'));
+      });
+    });
+
+    root.querySelectorAll('[data-terms-all]').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        var open = btn.getAttribute('data-terms-all') === 'open';
+        root.querySelectorAll('.acc').forEach(function (acc) { setOpen(acc, open); });
+      });
+    });
+
+    // Open a section linked by #id, e.g. /en/terms/#a7
+    if (location.hash) {
+      var target = root.querySelector(location.hash.replace(/[^#\w-]/g, ''));
+      if (target && target.classList.contains('acc')) {
+        setOpen(target, true);
+        target.scrollIntoView({ block: 'start' });
+      }
+    }
+  })();
+</script>
