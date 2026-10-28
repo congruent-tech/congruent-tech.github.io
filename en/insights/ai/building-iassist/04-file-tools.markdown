@@ -1,15 +1,16 @@
 ---
 layout: insight
-title: "Building iAssist, Part 4: Giving the Agent Hands with File Tools"
+title: "AI Agent Tool Use: Sandboxed File Read, Edit, Grep and Glob"
 permalink: /en/insights/ai/building-iassist/04-file-tools/
 date: 2026-10-28
 part: 4
 category: AI Development
-tags: [AI, Swift, Coding Agents, Tool Use, Sandboxing]
-description: "How iAssist's read, write, edit, grep and glob tools work: a workspace sandbox, diffs before every change, and error messages written for the model."
+tags: [AI Agent Tools, Tool Use, Function Calling, Agent Sandbox, Human-in-the-Loop, Coding Agents, Swift]
+description: "How to design tools for an AI coding agent: a workspace sandbox, diffs before every edit, capability flags and error messages written for the LLM to self-correct."
+series: "Building iAssist"
 ---
 
-# Building iAssist, Part 4: Giving the Agent Hands with File Tools
+# AI Agent Tool Use: Sandboxed File Read, Edit, Grep and Glob
 
 *Reading, searching and editing code inside a sandbox, with error messages written for the model*
 

@@ -1,15 +1,16 @@
 ---
 layout: insight
-title: "Building iAssist, Part 2: The Cognitive Loop at the Heart of an Agent"
+title: "The Agentic Loop Explained: Tool Calling in a Coding Agent"
 permalink: /en/insights/ai/building-iassist/02-the-cognitive-loop/
 date: 2026-10-28
 part: 2
 category: AI Development
-tags: [AI, Swift, Coding Agents, Agent Loop, Concurrency]
-description: "How iAssist's CognitiveLoop works: send history, run tools, repeat, and the guards that stop it from looping forever or failing silently."
+tags: [Agentic Loop, Tool Calling, Function Calling, AI Agent Architecture, Agent Reliability, Swift Concurrency, LLM Agents]
+description: "How an agentic loop works: send history, call tools, repeat. Swift code plus the guards that stop infinite tool-call loops, output truncation and silent failures."
+series: "Building iAssist"
 ---
 
-# Building iAssist, Part 2: The Cognitive Loop at the Heart of an Agent
+# The Agentic Loop Explained: Tool Calling in a Coding Agent
 
 *The 20-line idea every coding agent shares, and the guards that make it trustworthy*
 

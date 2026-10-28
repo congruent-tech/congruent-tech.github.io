@@ -1,15 +1,16 @@
 ---
 layout: insight
-title: "Building iAssist, Part 1: Why We Built Our Own Coding Agent in Swift"
+title: "How to Build an AI Coding Agent in Swift: The iAssist Story"
 permalink: /en/insights/ai/building-iassist/01-why-build-a-coding-agent/
 date: 2026-10-28
 part: 1
 category: AI Development
-tags: [AI, Swift, Coding Agents, LLM Tools, macOS, Architecture]
-description: "The story behind iAssist: how studying coding agents turned into a native Swift agent with a runnable REPL, a SwiftUI inspector and a Mac app called Parto."
+tags: [AI Coding Agent, How to Build an AI Agent, Agent Architecture, Agent Harness, LLM Agents, Swift, macOS, Claude Code]
+description: "How we built iAssist, an AI coding agent in Swift: agent architecture, harness design and lessons from studying Claude Code, aider and goose. Part 1 of 11."
+series: "Building iAssist"
 ---
 
-# Building iAssist, Part 1: Why We Built Our Own Coding Agent in Swift
+# How to Build an AI Coding Agent in Swift: The iAssist Story
 
 *How a research question ("how do coding agents actually work?") became a native Swift agent, a Mac app, and an 11-part series*
 

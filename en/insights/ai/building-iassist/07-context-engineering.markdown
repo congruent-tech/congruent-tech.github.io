@@ -1,15 +1,16 @@
 ---
 layout: insight
-title: "Building iAssist, Part 7: Context Engineering — Prompts, Budgets and Compaction"
+title: "Context Engineering for Coding Agents: Prompts, Budgets, Compaction"
 permalink: /en/insights/ai/building-iassist/07-context-engineering/
 date: 2026-10-28
 part: 7
 category: AI Development
-tags: [AI, Swift, Context Engineering, Prompt Engineering, LLM Tools]
-description: "How iAssist builds its system prompt from capability-derived sections, measures context pressure honestly, and compacts long conversations without breaking them."
+tags: [Context Engineering, Context Window, Context Compaction, System Prompt, Prompt Engineering, Token Budget, Coding Agents]
+description: "Context engineering in practice: capability-derived system prompts, honest token budgets, context compaction at safe boundaries and repairing tool_use/tool_result pairs."
+series: "Building iAssist"
 ---
 
-# Building iAssist, Part 7: Context Engineering — Prompts, Budgets and Compaction
+# Context Engineering for Coding Agents: Prompts, Budgets, Compaction
 
 *Everything the model knows is in one array. Here's how iAssist keeps that array honest, small and valid.*
 

@@ -1,15 +1,16 @@
 ---
 layout: insight
-title: "Building iAssist, Part 3: Protocols and the Provider Seam"
+title: "LLM Provider Abstraction: Ollama, Anthropic and Apple Models in Swift"
 permalink: /en/insights/ai/building-iassist/03-protocols-and-providers/
 date: 2026-10-28
 part: 3
 category: AI Development
-tags: [AI, Swift, Protocol-Oriented Programming, Ollama, Anthropic, Apple Intelligence]
-description: "How one small Swift protocol lets iAssist run the same agent loop against a local Ollama model, Anthropic's API and Apple's on-device model."
+tags: [LLM Provider Abstraction, Ollama, Local LLM, Anthropic API, Apple Foundation Models, Tool Calling, Protocol-Oriented Programming, Swift]
+description: "One Swift protocol runs the same AI agent on local LLMs via Ollama, the Anthropic API and Apple Foundation Models, incl. tool calling for text-only models."
+series: "Building iAssist"
 ---
 
-# Building iAssist, Part 3: Protocols and the Provider Seam
+# LLM Provider Abstraction: Ollama, Anthropic and Apple Models in Swift
 
 *One method, three very different models, zero changes to the agent loop*
 

@@ -1,15 +1,16 @@
 ---
 layout: insight
-title: "Building iAssist, Part 6: Sub-Agents and the Live Agent Tree"
+title: "Sub-Agents and Multi-Agent Delegation: Context Isolation in Practice"
 permalink: /en/insights/ai/building-iassist/06-sub-agents-and-the-agent-tree/
 date: 2026-10-28
 part: 6
 category: AI Development
-tags: [AI, Swift, Multi-Agent, Coding Agents, SwiftUI, Data Structures]
-description: "How iAssist delegates sub-tasks to child agents with isolated context, why only the conclusion comes back, and how the agent tree is recorded and drawn."
+tags: [Sub-Agents, Multi-Agent Systems, Agent Orchestration, Context Isolation, Agent Observability, SwiftUI, Coding Agents]
+description: "How a coding agent delegates to sub-agents with isolated context windows, returns only the conclusion, guards depth and visualizes the multi-agent tree in SwiftUI."
+series: "Building iAssist"
 ---
 
-# Building iAssist, Part 6: Sub-Agents and the Live Agent Tree
+# Sub-Agents and Multi-Agent Delegation: Context Isolation in Practice
 
 *"Release execution, retain conclusion": delegating work without flooding the context*
 

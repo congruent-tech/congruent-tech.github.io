@@ -1,15 +1,16 @@
 ---
 layout: insight
-title: "Building iAssist, Part 5: A Shell the Agent Can't Abuse"
+title: "Securing an AI Agent's Shell: Command Risk Tiers and Permissions"
 permalink: /en/insights/ai/building-iassist/05-shell-safety/
 date: 2026-10-28
 part: 5
 category: AI Development
-tags: [AI, Swift, Security, Shell, Permissions, Coding Agents]
-description: "How iAssist classifies shell commands into risk tiers, learns what you trust without over-granting, and closed real exfiltration holes found in review."
+tags: [AI Agent Security, Agent Sandbox, Shell Permissions, Human-in-the-Loop, Prompt Injection, Coding Agents, Swift]
+description: "Sandboxing shell access for an AI coding agent: risk-tiered command classification, safe permission learning and the real prompt-exfiltration bypasses we fixed."
+series: "Building iAssist"
 ---
 
-# Building iAssist, Part 5: A Shell the Agent Can't Abuse
+# Securing an AI Agent's Shell: Command Risk Tiers and Permissions
 
 *Risk tiers, learned permissions, and the security holes we found in our own classifier*
 
