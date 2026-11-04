@@ -16,18 +16,20 @@ description: "How iAssist gives an AI agent long-term memory: curated facts inst
 
 {% include iassist-series-nav.html %}
 
-## Two Different Things Called "Memory"
+## We Built Memory, Deleted It, and Built It Again
 
-When people say an agent "remembers", they usually mean one of two things:
+A 200-message session might contain three facts worth keeping. It took us a deleted package to learn to store the three facts instead of the 200 messages.
+
+The confusion is an easy one, because when people say an agent "remembers", they usually mean one of two things:
 
 1. **History**: the conversation can be saved, closed and resumed later.
 2. **Learning**: the agent knows things across *all* conversations, like "this user prefers tabs" or "we decided not to use CoreData in this project".
 
-iAssist built both, and confused them once along the way. That mistake shaped the final design, so it's worth telling.
+iAssist built both, and mixed them up along the way. That mistake shaped the final design.
 
-## Step 1: A Durable, Neutral Conversation Log
+## Step 1: Never Lose a Conversation
 
-The first goal was simple: never lose a conversation. Every session is saved automatically as two files:
+The first goal was simple. Every session is saved automatically as two files:
 
 ```text
 ~/Library/Application Support/iAssist/sessions/
@@ -35,11 +37,11 @@ The first goal was simple: never lose a conversation. Every session is saved aut
   <id>.meta.json    ← title, timestamps, model, working folder
 ```
 
-JSON Lines suits this well: appending a message means appending a line, and a crash loses at most the line being written. Because the messages use the neutral model from Part 3, a session can be resumed with a different provider than it was recorded with.
+JSON Lines suits this well: appending a message means appending a line, and a crash loses at most the line being written. Because the messages use the neutral model from Part 3, a session can even be resumed with a different provider than it was recorded with.
 
 The **History** window lists all sessions, lets you resume one, and later learned to show a **recap** of what a session did before you open it. Each session also remembers its working folder, so resuming restores the right directory, not just the right messages.
 
-## Step 2: Importing Claude Code History
+## Step 2: Months of Context Already Exist
 
 Many developers already have months of context in Claude Code. iAssist notices when the folder you open has Claude Code history and offers to import it:
 
@@ -49,7 +51,7 @@ feat(inspector): preview + import Claude Code context from the banner
 perf(inspector): lazy "head" preview for large Claude Code contexts
 ```
 
-The import was harder than expected. A real session was 10 MB and froze the preview, which is why the preview now reads only the head of the file. And as Part 7 described, Claude Code stores the tool calls of one turn as separate lines, so imported histories go through the tool-pairing repair before they can be sent to a model.
+That third commit has a story behind it. A real session was 10 MB and froze the preview, so the preview now reads only the head of the file. And as Part 7 described, Claude Code stores the tool calls of one turn as separate lines, so imported histories go through the tool-pairing repair before they can be sent to a model.
 
 A separate package, `iAssistClaudeImport`, also imports Claude Code's *memory*: `CLAUDE.md` files and memory folders, with an import ledger so the same item is never imported twice.
 
@@ -63,9 +65,9 @@ Then it came back with a different purpose:
 feat(memory): re-scope iAssistMemory as the curated learning memory (not logs)
 ```
 
-The insight: **a transcript is not knowledge**. A 200-message session might contain three facts worth keeping. Memory should store those three facts, not the 200 messages.
+The insight behind that one line: **a transcript is not knowledge**.
 
-## The Shape of a Memory Fact
+## What a Fact Looks Like
 
 ```swift
 struct MemoryFact {
@@ -82,28 +84,26 @@ struct MemoryFact {
 
 Two rules keep memory clean:
 
-- **Upsert by name.** Saving a fact with an existing name *replaces* it. Re-learning a topic supersedes the old version instead of creating duplicates that contradict each other.
+- **Upsert by name.** Saving a fact with an existing name *replaces* it, so re-learning a topic supersedes the old version instead of creating duplicates that contradict each other.
 - **One JSON file per fact.** Memory is a folder you can open, read, edit and back up. Nothing is hidden in a database.
 
-## Writing Memory: Distillation
+Facts get created by **distillation**. After a turn (when memory is enabled), a model call asks: what in this exchange is a durable fact about the user or project? Most turns produce nothing, which is the point.
 
-How do facts get created? After a turn (when memory is enabled), a model call **distills** it: what in this exchange is a durable fact about the user or project? Most turns produce nothing, which is the point.
+A **Memory window** lets you browse every fact and switch memory on or off, so you can see exactly what the agent believes about you.
 
-A **Memory window** lets you browse every fact and switch memory on or off. You can see exactly what the agent believes about you.
-
-## Reading Memory: Injection vs. Tool
+## Why Not Just Put It in the Prompt?
 
 The obvious way to use memory is **injection**: before each turn, guess what's relevant and add it to the prompt. iAssist's plan rejected that as the default:
 
 > "Always-on, costs tokens every turn even when memory is irrelevant, and *we* decide relevance, not the model."
 
-Instead, memory is a **tool**, `recall_memory`, that the model calls when it decides it needs to know something. That is dynamic, pay-per-use, and the model is in control.
+Instead, memory is a **tool**, `recall_memory`, that the model calls when it decides it needs to know something. It's dynamic and pay-per-use, and the model is in control.
 
 ## The Cold-Start Problem and the Living Table of Contents
 
 Tool-based memory has one weakness: **the model can't call a tool for something it doesn't know exists**. If it has no idea you have a "prefers-tabs" fact, it won't look it up.
 
-The fix is the most elegant idea in the memory design. The tool's *description* is generated each time and contains a **table of contents** of current memory: just names and one-line summaries.
+The fix is the most elegant idea in the memory design. The tool's *description* is generated each time, and it contains a **table of contents** of current memory: just names and one-line summaries.
 
 ```swift
 public var spec: AgentToolSpec {
@@ -125,7 +125,7 @@ public var spec: AgentToolSpec {
 }
 ```
 
-The model always sees the cheap index, so it never forgets that memory exists or what's in it. It fetches the full body only when needed. This beats both pure injection (which pushes every body every turn) and pure tool use (which forgets memory exists).
+The model always sees the cheap index, so it never forgets that memory exists or what's in it, and it fetches the full body only when needed. This beats both pure injection, which pushes every body every turn, and pure tool use, which forgets memory exists.
 
 ## Teaching the Model *When* to Recall
 
@@ -144,7 +144,7 @@ The "Do NOT" line matters as much as the "WHEN". Over-calling memory makes it sl
 
 ## Memory You Can Watch
 
-Because recall is a tool call, every lookup appears in the transcript and in the agent tree. You literally see the agent consult its memory, and which fact it read. Injection hides that. For a tool that claims to be inspectable, this visibility is the whole point.
+Because recall is a tool call, every lookup appears in the transcript and in the agent tree. You literally see the agent consult its memory, and which fact it read. Injection hides that, and for a tool that claims to be inspectable, this visibility is the whole point.
 
 The current implementation keeps recall **opt-in** and **host-side**: the app provides the tool, isolated from the core loop, so the loop itself stays unaware of memory. A model-driven `remember` tool for writing facts is the planned next step.
 
@@ -152,10 +152,9 @@ The current implementation keeps recall **opt-in** and **host-side**: the app pr
 
 - Separate history (resume a conversation) from memory (durable facts across conversations).
 - Store curated facts, not transcripts, and upsert them by a stable name.
-- Prefer memory as a tool over prompt injection; let the model decide when it needs it.
-- Solve cold start with a live table of contents in the tool's description.
+- Prefer memory as a tool over prompt injection, and solve cold start with a live table of contents in its description.
 - Write explicit "call this when" and "do not call this when" rules.
 
-In Part 10 we leave the terminal behind: the Mac app Parto, MCP servers, and rendering answers as rich documents.
+The Mac app keeps showing up in this series. Part 10 tells how a debugging window turned into it, and how one HTML tag, with no JavaScript at all, could have sent your secrets to an attacker.
 
 {% include iassist-series-nav.html %}
