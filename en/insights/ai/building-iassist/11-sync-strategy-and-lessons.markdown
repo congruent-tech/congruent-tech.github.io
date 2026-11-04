@@ -16,23 +16,21 @@ description: "CloudKit sync with tombstones and hybrid logical clocks, why verif
 
 {% include iassist-series-nav.html %}
 
-## Syncing Conversations Between Devices
+## Two Macs and a Lost Message
 
-Once Parto stored every conversation (Part 9), the next request was obvious: see the same history on another Mac, and eventually on an iPhone. The `iAssistSync` package mirrors conversation history to the user's **private CloudKit database**.
+Picture two Macs. You delete a conversation on one, while the other has just added a message to it. In the first version of iAssist's sync, the plain delete won and the new message was gone.
 
-One design invariant governs everything:
+Once Parto stored every conversation (Part 9), the next request was obvious: see the same history on another Mac, and eventually on an iPhone. The `iAssistSync` package mirrors conversation history to the user's **private CloudKit database**, and one design invariant governs everything:
 
 > The local store is the **source of truth**. Sync only mirrors it.
 
-Each conversation becomes one CloudKit record, named by the conversation's id. The log travels as an opaque `CKAsset`, the exact bytes on disk with no decoding or re-encoding. Title, timestamps and metadata are separate fields.
+Each conversation becomes one CloudKit record, named by the conversation's id. The log travels as an opaque `CKAsset`, the exact bytes on disk with no decoding or re-encoding, and title, timestamps and metadata are separate fields.
 
 That sounds simple. Two data-loss bugs showed it isn't.
 
 ## Bug 1: Deletes That Destroy Newer Edits
 
-The first version deleted the cloud record when you deleted a conversation. Picture two Macs: you delete a conversation on one, while the other has just added a message to it. The plain delete wins and the new message is lost.
-
-The fix: a delete is a **tombstone**, a record with a `deletedAt` timestamp and no log. It goes through the same conflict rules as an edit:
+The fix for our two Macs: a delete becomes a **tombstone**, a record with a `deletedAt` timestamp and no log, and it goes through the same conflict rules as an edit:
 
 - A tombstone deletes locally **only if it is strictly newer** than the local edit.
 - Otherwise the edit wins and is pushed again, bringing the conversation back.
@@ -41,9 +39,9 @@ The fix: a delete is a **tombstone**, a record with a `deletedAt` timestamp and 
 
 ## Bug 2: "Same Second" Is Not "Same Time"
 
-Conflicts are resolved by **last writer wins**. But what if two devices edit within the same second? The first fix broke the tie by comparing content hashes. A second adversarial review re-opened the bug with one sentence: *hash magnitude is not recency*. The tie was broken consistently, but not correctly. An older edit could beat a newer one.
+Conflicts are resolved by **last writer wins**. But what if two devices edit within the same second? The first fix broke the tie by comparing content hashes, and a second adversarial review re-opened the bug with one sentence: *hash magnitude is not recency*. The tie was being broken consistently, but not correctly, so an older edit could beat a newer one.
 
-The real fix is a **Hybrid Logical Clock** (HLC) per conversation. An HLC combines wall-clock time with a logical counter, so it moves forward even when two events share a timestamp, or when device clocks disagree slightly. Conflicts are now ordered by:
+The real fix is a **Hybrid Logical Clock** (HLC) per conversation. An HLC combines wall-clock time with a logical counter, so it moves forward even when two events share a timestamp or device clocks disagree slightly. Conflicts are now ordered by:
 
 ```text
 OrderingKey = (hlc, isLive, contentHash)
@@ -65,13 +63,13 @@ A critical analysis concluded that the goal is sound but two pieces don't work a
 - **Idle auto-claim** (any free Mac takes the job) was replaced by explicit ownership and approval by a present human. An agent with shell access shouldn't start work nobody is watching.
 - **Using an iCloud Drive folder as the working directory** was replaced by binding the job to a local folder on the Mac when it's claimed.
 
-There was also a deeper issue. A work queue makes the cloud an authoritative upstream, which turns the local-first invariant on its head. Claiming a job needs compare-and-swap semantics ("set status to processing only if it's still pending"), not last-writer-wins. The resulting roadmap starts small: first harden Mac-to-Mac sync, then a **read-only** iPhone viewer, and only then a queue.
+There was a deeper issue too. A work queue makes the cloud an authoritative upstream, which turns the local-first invariant on its head, and claiming a job needs compare-and-swap semantics ("set status to processing only if it's still pending"), not last-writer-wins. So the roadmap starts small: first harden Mac-to-Mac sync, then a **read-only** iPhone viewer, and only then a queue.
 
 ## The Strategy: Verification, Not Speed
 
-A Mac coding agent competes with very well-funded tools. Why would anyone use Parto? A strategy analysis tested three theses on their own:
+A Mac coding agent competes with very well-funded tools, so why would anyone use Parto? A strategy analysis tested three theses on their own, and each one failed:
 
-- **Speed through self-hosted open-weight models.** Renting GPUs doesn't beat buying tokens for one developer. The best open coding models are huge and need multi-GPU servers.
+- **Speed through self-hosted open-weight models.** Renting GPUs doesn't beat buying tokens for one developer, and the best open coding models are huge and need multi-GPU servers.
 - **Workflows on cheap, fast models.** Others already ship parallel agents, and combinators are easy to copy.
 - **User-owned context and memory.** Valuable, but memory is quickly becoming a commodity.
 
@@ -79,15 +77,15 @@ None holds up alone. The intersection does:
 
 > A native Mac coding cockpit that runs cheap, fast, open-weight candidates, **verifies every one against your real local toolchain** (compile, type-check, test, lint), ranks them by real execution results, and shows the whole process as an inspectable, reproducible artifact you own.
 
-The key point is reliability. Per-step reliability compounds: an agent that is 90% reliable per step succeeds only about 59% of the time over five steps. Weaker models make each step less reliable, so adding more steps makes things *worse*, unless something catches the failures. A verifier that runs your real tests catches them. A cloud service doesn't have your toolchain. That's the one claim a local app can make that a cloud tool structurally can't.
+The argument comes down to arithmetic. Per-step reliability compounds: an agent that is 90% reliable per step succeeds only about 59% of the time over five steps. Weaker models make each step less reliable, so adding more steps makes things *worse*, unless something catches the failures. A verifier that runs your real tests catches them, and a cloud service doesn't have your toolchain. That's the one claim a local app can make that a cloud tool structurally can't.
 
-This connects directly to Part 8: the critic got good only when it judged **real execution evidence**. Verification is the same idea, scaled up into a product.
+It's also Part 8 all over again. The critic got good only when it judged **real execution evidence**, and verification is the same idea scaled up into a product.
 
 ## Auditing Ourselves
 
-In July 2026 a structured audit reviewed the codebase (the loop, security, tests, UX) with adversarial critics checking the conclusions. It found real problems, and fixing them became the August "loop resilience" work:
+In July 2026 a structured audit reviewed the codebase (the loop, security, tests, UX), with adversarial critics checking the conclusions. It found real problems, and fixing them became the August "loop resilience" work:
 
-- A failed turn used to **discard its whole transcript**, while its file edits stayed on disk. The conversation was silently out of sync with the filesystem. Turns now preserve their work on failure and report an honest outcome.
+- A failed turn used to **discard its whole transcript** while its file edits stayed on disk, leaving the conversation silently out of sync with the filesystem. Turns now preserve their work on failure and report an honest outcome.
 - The loop couldn't be **stopped**. Now `Esc` stops it cleanly (Part 2).
 - Compaction counted **messages**, not tokens, and could only run after a turn. It moved into the loop, measured in tokens (Part 7).
 - A local-model request had **no timeout set**, so slow generation was cut off by the 60-second default.
@@ -98,7 +96,7 @@ The audit also corrected itself: one supposed gap (tool-call pairing after compa
 
 1. **The loop is small; the guards are the product.** Non-progress detection, truncation handling and honest outcomes matter more than the loop itself.
 2. **Never pretend.** Unknown context windows, estimated tokens and failed sub-agents must be reported as such.
-3. **Write error messages for the model.** Naming the likely cause halves the number of retries.
+3. **Write error messages for the model.** Name the likely cause, and it stops guessing.
 4. **Context is the scarcest resource.** Sub-agents, compaction and tool-based memory all exist to protect it.
 5. **Derive the prompt from reality.** Build it from the agent's real capabilities, and tell a limited agent what it can't do.
 6. **Treat everything the model produces as untrusted.** Shell commands, HTML and paths alike.
