@@ -16,9 +16,13 @@ series: "Building iAssist"
 
 {% include iassist-series-nav.html %}
 
-## A Tool Is Three Things
+## Models Are Not Malicious, They Are Literal
 
-To the model, a tool is just a name, a description and a JSON schema for its arguments. To iAssist, a tool is a small Swift type:
+Show a model a file with line numbers, and it may paste those line numbers straight back into its next edit. Tell it "not found", and it will guess blindly and try again. Give it a tool that reads `glob .` as "nothing", and it will walk in circles.
+
+None of this is a sign of a bad model. A model takes your tools exactly at their word, so building tools for one means thinking hard about what those words say.
+
+To the model, a tool is just a name, a description and a JSON schema for its arguments. To iAssist, it is a small Swift type:
 
 ```swift
 public protocol AgentTool: Sendable {
@@ -28,11 +32,11 @@ public protocol AgentTool: Sendable {
 }
 ```
 
-The `capability` property is required, with no default. Every tool has to declare explicitly what it grants: `.readFiles`, `.searchFiles`, `.editFiles`, `.runShell`, `.webSearch`, `.delegate` or `.askUser`. As we'll see in Part 7, the system prompt is built from these capabilities, so the prompt can never promise the model a power it doesn't have.
+The `capability` property is required and has no default, so every tool must declare what it grants: `.readFiles`, `.searchFiles`, `.editFiles`, `.runShell`, `.webSearch`, `.delegate` or `.askUser`. Part 7 builds the system prompt from these, which means the prompt can never promise the model a power it doesn't have.
 
-## The Toolset, Built in Five Iterations
+## Five Iterations, and One Tool We Took Back
 
-The file tools were added in a deliberate sequence, visible in the commit log as "iter 1/5" to "iter 5/5":
+The file tools arrived in a deliberate sequence, visible in the commit log as "iter 1/5" to "iter 5/5":
 
 | Iteration | Tool | What it does |
 |---|---|---|
@@ -42,11 +46,11 @@ The file tools were added in a deliberate sequence, visible in the commit log as
 | 4 | `glob` | Find files by pattern |
 | 5 | Bash allow-list + `write_file` diff | Safe read-only commands run without asking; new files show a diff too |
 
-Before these, the agent had `read_file` and `write_file`. A `list_dir` tool was added and reverted the same day, because `glob` covered it. Fewer, sharper tools make small models choose better.
+Before these, the agent had `read_file` and `write_file`. A `list_dir` tool was added and reverted the same day, because `glob` already covered it. Fewer, sharper tools make small models choose better.
 
-## The Workspace: A Sandbox With an Allow-List
+## A Sandbox That Canonicalizes First
 
-Every file tool resolves paths through a shared `Workspace`. It holds the allowed directories, with the launch directory first:
+Every file tool resolves paths through a shared `Workspace`, which holds the allowed directories with the launch directory first:
 
 ```swift
 public final class Workspace: @unchecked Sendable {
@@ -63,24 +67,19 @@ public final class Workspace: @unchecked Sendable {
 }
 ```
 
-Two details matter:
+Paths are **canonicalized** (symlinks and `..` resolved) before any comparison. On macOS, `/var` and `/private/var` are the same place, so comparing raw strings would let paths slip through or wrongly refuse them.
 
-- **Paths are canonicalized** (symlinks and `..` resolved) before comparison. On macOS, `/var` and `/private/var` are the same place. Comparing raw strings would let paths slip through or wrongly refuse them.
-- **The allow-list is live.** `/add-dir ../shared-lib` adds a directory mid-session, and the system prompt reflects it on the very next turn.
+The allow-list is also **live**: `/add-dir ../shared-lib` adds a directory mid-session, and the system prompt reflects it on the very next turn. A refused path comes back as a plain message, `refused: '/etc/hosts' is outside the allowed directory`, which the model reads and adapts to.
 
-A refused path returns a plain message, `refused: '/etc/hosts' is outside the allowed directory`, which the model reads and adapts to.
-
-## Edits the User Can See
+## Approve What You See, Not a Description of It
 
 `edit_file` works like Claude Code's Edit tool: find an exact `old_string`, replace it with `new_string`. It refuses when the match is missing, or appears several times without `replace_all`.
 
-Before writing, it asks for permission and shows a **colored diff** of the change. The user approves what they see, not a description of it. `write_file` got the same treatment for new files.
-
-This is the core of human-in-the-loop design: the person approves a concrete, inspectable change.
+Before writing, it asks for permission and shows a **colored diff** of the change, and `write_file` got the same treatment for new files. This is the core of human-in-the-loop design: the person approves a concrete, inspectable change, not the agent's summary of what it intends.
 
 ## Error Messages Written for the Model
 
-The most effective improvement to coding accuracy wasn't a better model. It was better error messages.
+One of the most effective improvements to coding accuracy had nothing to do with a better model. It was better error messages.
 
 When `edit_file` can't find `old_string`, a bare "not found" makes the model guess blindly. iAssist diagnoses the most likely cause instead:
 
@@ -103,9 +102,9 @@ static func diagnoseMiss(old: String, in file: String) -> String {
 }
 ```
 
-The behaviour doesn't change (the edit is still refused), only the message. But the model now usually fixes its mistake on the next try instead of the third.
+The behaviour doesn't change, since the edit is still refused. Only the message does, yet the model now usually fixes its mistake on the next try instead of the third.
 
-The same thinking applies to `read_file`, which shows line numbers (`12→ let x = 1`) so the model can refer to specific lines, and to the case where the model asks for a tool that doesn't exist:
+The same thinking covers `read_file`, which shows line numbers (`12→ let x = 1`) so the model can refer to specific lines, and the case where the model asks for a tool that doesn't exist:
 
 ```swift
 guard let tool = tools[call.name] else {
@@ -114,11 +113,11 @@ guard let tool = tools[call.name] else {
 }
 ```
 
-This came from a real bug. A resumed conversation referenced an MCP tool that wasn't connected any more. The model kept calling it. Listing the available tools and saying "don't retry" ended the loop.
+That one came from a real bug. A resumed conversation referenced an MCP tool that wasn't connected any more, and the model kept calling it. Listing the available tools and saying "don't retry" ended the loop.
 
-## Small Fixes That Made a Big Difference
+## One-Line Fixes, Whole Classes of Failure
 
-The commit log is full of one-line fixes that each removed a whole class of failures:
+The commit log is full of tiny fixes that each removed an entire category of problem:
 
 ```text
 fix(read_file): actionable message for a directory or missing path
@@ -127,11 +126,11 @@ fix(tools): glob matches directories, not just files
 fix(core): stop large write_file truncating at the output-token limit
 ```
 
-Each one came from watching a real session go wrong. Models are not malicious, they are literal. A tool that reads `glob .` as "nothing" will send a model in circles.
+Each one came from watching a real session go wrong. If you build tools for agents, this is the job: read transcripts, find where the model took you literally, and fix the tool.
 
-## Capping Tool Output
+## Silently Truncated Output Looks Complete
 
-A single `grep` across a large repo can produce megabytes of text. That would consume the whole context window in one call. The loop caps every tool result (at 120,000 characters) and tells the model how much was omitted:
+A single `grep` across a large repo can produce megabytes of text and swallow the whole context window in one call. So the loop caps every tool result at 120,000 characters and tells the model how much was omitted:
 
 ```swift
 static func capToolOutput(_ output: String, maxChars: Int = 120_000) -> String {
@@ -142,22 +141,21 @@ static func capToolOutput(_ output: String, maxChars: Int = 120_000) -> String {
 }
 ```
 
-The note matters. Silently truncated output looks complete, and the model will draw wrong conclusions from it.
+The note is the important part. Without it, the model sees what looks like complete output and draws wrong conclusions from it.
 
 ## Asking the User Is a Tool Too
 
-One tool doesn't touch files: `ask_user`. It lets the model put a question to the human mid-task, for example "Which of these two config files is the real one?"
+One tool doesn't touch files at all. `ask_user` lets the model put a question to the human mid-task: "Which of these two config files is the real one?"
 
-Later the system prompt was tuned to **investigate vague requests before asking**. If the user says "fix the build", the agent should run the build first, not ask "which build?". `ask_user` is for real ambiguity, not a way to avoid work.
+It also needed a leash. The system prompt was later tuned to **investigate vague requests before asking**, so "fix the build" means run the build first, not reply "which build?". `ask_user` is for real ambiguity, not a way to avoid work.
 
 ## Key Takeaways
 
-- Make every tool declare its capability explicitly, so the prompt can be derived from reality.
+- Make every tool declare its capability, so the prompt can be derived from reality.
 - Resolve all paths through one canonicalizing sandbox with a live allow-list.
 - Show diffs before writes; humans should approve concrete changes.
-- Write error messages for the model: name the likely cause and the fix.
-- Cap tool output and say what was cut.
+- Write error messages for the model, and when you cap output, say what was cut.
 
-In Part 5 we tackle the most powerful and dangerous tool of all: the shell.
+Files are the easy part, because a sandbox can contain them. Part 5 hands the agent a shell, which can delete your home directory, push to production or send your SSH key to a server, and shows the security holes we found in our own defences.
 
 {% include iassist-series-nav.html %}
