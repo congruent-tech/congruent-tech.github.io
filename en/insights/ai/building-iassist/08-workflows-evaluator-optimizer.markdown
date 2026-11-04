@@ -16,18 +16,20 @@ description: "Agents vs. workflows: type-safe workflow combinators in Swift (cha
 
 {% include iassist-series-nav.html %}
 
-## Agents vs. Workflows
+## The Critic That Graded Prose
 
-Anthropic's guidance on building effective agents draws a useful line:
+The answer was correct: "Built and ran, output is Hello World." The critic sent it back anyway, for "not showing the output". Meanwhile, a confident but wrong answer could pass.
+
+That failure is the heart of this article, and we'll get to the fix. First, the distinction it depends on. Anthropic's guidance on building effective agents draws a useful line:
 
 - In an **agent**, the model decides the next step. It picks tools, reads results and chooses what to do next.
 - In a **workflow**, the code decides the next step. The model does the work inside each step, but the path is fixed by the program.
 
-Everything in Parts 2 to 7 was an agent. That's the right choice for open-ended tasks like "fix this bug". But some tasks have a known shape: draft, review, revise. Letting the model improvise that shape wastes tokens and makes results less predictable. iAssist's workflow engine expresses those shapes in code.
+Everything in Parts 2 to 7 was an agent, which is the right choice for open-ended tasks like "fix this bug". But some tasks have a known shape: draft, review, revise. Letting the model improvise that shape wastes tokens and makes results less predictable, so iAssist's workflow engine expresses those shapes in code.
 
-## One Abstraction: A Typed Step
+## If the Types Don't Line Up, It Doesn't Compile
 
-The whole engine is built on a single protocol:
+The whole engine rests on a single protocol:
 
 ```swift
 public protocol WorkflowStep<Input, Output>: Sendable {
@@ -48,11 +50,11 @@ func then<Next: WorkflowStep>(_ next: Next) -> Chain<Self, Next>
     where Next.Input == Output
 ```
 
-Pipelines can carry strings, structured findings or numbers, not only text. If you connect a step producing `[Finding]` to one expecting `String`, the code doesn't compile. Mistakes that would be runtime surprises in a dynamic framework are caught by the type checker.
+Pipelines can carry strings, structured findings or numbers. Connect a step producing `[Finding]` to one expecting `String` and the code won't compile, so a mistake that would be a runtime surprise in a dynamic framework gets caught by the type checker.
 
-## The Five Building Blocks
+## A Leaf and Five Combinators
 
-The core ships five combinators, which map onto the common workflow patterns:
+The core ships one leaf step and five combinators, which map onto the common workflow patterns:
 
 | Combinator | Pattern | What it does |
 |---|---|---|
@@ -63,7 +65,7 @@ The core ships five combinators, which map onto the common workflow patterns:
 | `Router` | Routing | Classifies the input and runs only the matching branch |
 | `Refine` | Evaluator-optimizer | Generate, evaluate, repeat until it passes |
 
-Every step reports start, finish and failure events as it runs, through `runReporting`. Because combinators emit their own node, a UI can draw the actual **composition** as a tree: `a.then(b).then(c)` shows up as `Chain(Chain(a, b), c)`.
+Every step reports start, finish and failure events through `runReporting`. Because combinators emit their own node, a UI can draw the actual **composition** as a tree: `a.then(b).then(c)` shows up as `Chain(Chain(a, b), c)`.
 
 ## Refine: Generate, Critique, Revise
 
@@ -85,7 +87,7 @@ flowchart LR
 
 ## The Critic Must See the Evidence
 
-The first version of the critic only saw the task and the final answer. It failed in a predictable way: it judged the **prose**. A terse but correct answer ("Built and ran, output is Hello World") got sent back for "not showing the output". A confident but wrong answer could pass.
+Back to our Hello World. The first critic saw only the task and the final answer, so all it could judge was the **prose**. A terse, correct answer looked incomplete, and a confident, wrong one looked fine.
 
 The fix was to give the critic the generate round's actual tool transcript:
 
@@ -93,7 +95,7 @@ The fix was to give the critic the generate round's actual tool transcript:
 fix(workflow): give the critic the generate round's tool EVIDENCE
 ```
 
-The critic's system prompt now says exactly how to treat it:
+Its system prompt now says exactly how to treat it:
 
 ```text
 You are a strict reviewer judging whether a candidate fully and correctly
@@ -109,9 +111,9 @@ Judge against the EVIDENCE, not the prose.
 
 This is the key idea of the whole pattern. An LLM judging another LLM's text is weak. An LLM judging a **real execution transcript** (did the build actually succeed? did the test actually run?) is much stronger. It's also why "verification" becomes the strategic theme of Part 11.
 
-## Not Every Question Is a Failure
+## Sometimes the Right Answer Is a Question
 
-Another bug: the generator sometimes correctly asked a clarifying question ("Which of the two targets should I build?"). The critic treated that as an incomplete answer and demanded a revision, wasting a whole round.
+The generator would sometimes correctly ask a clarifying question: "Which of the two targets should I build?" The critic treated that as an incomplete answer and demanded a revision, wasting a whole round.
 
 ```text
 fix(workflow): critic PASSes a legitimate clarifying question (no wasted round)
@@ -119,9 +121,9 @@ fix(workflow): critic PASSes a legitimate clarifying question (no wasted round)
 
 A good evaluator knows when the right answer is a question.
 
-## Keeping the Conversation Clean
+## Six Rounds of Work, One Clean Message
 
-A refine turn may run three generate rounds and three critiques. None of that belongs in the conversation history. Like sub-agents in Part 6, only the **final, clean prompt → answer pair** is saved. The rounds are shown in the agent tree and in a dedicated **Flow panel**, but they don't pollute future turns.
+A refine turn may run three generate rounds and three critiques, and none of that belongs in the conversation history. As with the sub-agents in Part 6, only the **final, clean prompt → answer pair** is saved. The rounds appear in the agent tree and in a dedicated **Flow panel**, but they don't pollute future turns.
 
 ## Bugs That Only Workflows Find
 
@@ -131,11 +133,11 @@ Running the same agent several times in a row exposed state that leaked between 
 fix(workflow): stop persistent-shell cwd leaking across rounds
 ```
 
-Round 2 started in whatever directory round 1 had `cd`'d into. Each round now gets a clean, anchored working directory. And the context window view had to learn to show round contexts in **temporal order**, so you can follow what each round saw.
+Round 2 was starting in whatever directory round 1 had `cd`'d into. Each round now gets a clean, anchored working directory. The context window view also had to learn to show round contexts in **temporal order**, so you can follow what each round saw.
 
-## Turn Strategies: One Harness, Two Shapes
+## One Harness, Two Shapes
 
-As the workflow became a real feature, the code that started a turn grew two near-copies: one for a normal agent turn, one for a refine turn. The refactor lifted both into values of one protocol:
+As the workflow became a real feature, the code that started a turn grew two near-copies: one for a normal agent turn, one for a refine turn. A refactor lifted both into values of one protocol:
 
 ```swift
 // AgentTurn  = "run one agent (it may spawn sub-agents); persist the transcript".
@@ -147,11 +149,11 @@ public struct RefineTurn: TurnStrategy {
 }
 ```
 
-This layer moved from the app into `iAssistCore`, so any host (GUI, terminal, a headless test harness) can run either kind of turn. It reports progress through a neutral observer: the core says "a refine round produced this verdict", and the host decides whether that's a badge, a panel or a log line.
+This layer moved from the app into `iAssistCore`, so any host (GUI, terminal, a headless test harness) can run either kind of turn. The core only says "a refine round produced this verdict", and the host decides whether that's a badge, a panel or a log line.
 
-## Workflow Explorer: Dogfooding the Engine
+## Dogfooding the Engine, Mistakes Included
 
-To make sure the abstraction stands on its own, a separate SwiftUI app, **Workflow Explorer**, builds all five patterns from the same combinators and animates the resulting graph live from the event stream.
+To prove the abstraction stands on its own, a separate SwiftUI app, **Workflow Explorer**, builds all five patterns from the same combinators and animates the resulting graph live from the event stream.
 
 Its benchmark is a small IT help desk: 12 support tickets with known correct categories. Each pattern processes the same ticket ("The VPN keeps dropping every few minutes"):
 
@@ -167,12 +169,11 @@ The Router honestly gets one ticket wrong: ticket 12 mentions both "password" an
 
 ## Key Takeaways
 
-- Use agents for open-ended tasks and workflows for tasks with a known shape.
-- Make workflow steps typed, so the compiler checks how they connect.
+- Use agents for open-ended tasks and workflows for tasks with a known shape, and type the steps so the compiler checks how they connect.
 - In evaluator-optimizer loops, let the critic judge real execution evidence, not the answer's wording.
 - Accept a legitimate clarifying question as a valid outcome.
 - Keep workflow rounds out of the conversation history; save only the clean result.
 
-In Part 9 we give the agent a long-term memory, and explain why we made memory a tool instead of stuffing it into every prompt.
+So far, everything the agent learns dies with the session. Part 9 gives it a long-term memory, starting with a mistake: we built the wrong kind of memory, deleted it, and brought it back as something else.
 
 {% include iassist-series-nav.html %}
