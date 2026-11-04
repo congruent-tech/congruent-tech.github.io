@@ -16,11 +16,13 @@ series: "Building iAssist"
 
 {% include iassist-series-nav.html %}
 
-## The Most Useful, Most Dangerous Tool
+## Two Quote Marks Away From `/etc/passwd`
 
-With a shell, a coding agent can build, test, run git and install packages. It can also delete your home directory, push to production or send your SSH key to a server.
+`cat /etc/passwd` asked for permission, exactly as designed. `cat "/etc/passwd"` ran immediately, with no prompt at all. The only difference was a pair of quote marks.
 
-Asking for approval on every command makes the agent unusable. Asking on none makes it dangerous. iAssist uses a **graduated approval model**, the same idea Claude Code uses: reads are less sensitive than writes, and writes are less sensitive than dangerous actions.
+A shell is the most useful tool a coding agent has, and the most dangerous. With it, the agent can build, test, run git and install packages. It can also delete your home directory, push to production or send your SSH key to a server.
+
+Ask for approval on every command and the agent is unusable. Ask on none and it's dangerous. iAssist uses a **graduated approval model**, the same idea Claude Code uses: reads are less sensitive than writes, and writes are less sensitive than dangerous actions.
 
 ## Four Risk Tiers
 
@@ -45,24 +47,24 @@ public static func risk(of command: String, workspace: Workspace) -> CommandRisk
 }
 ```
 
-Note the order. *Dangerous* is checked first, and *write* is the default. Anything the classifier doesn't positively recognize as safe falls into a tier that asks.
+The order is the design. *Dangerous* is checked first and *write* is the default, so anything the classifier doesn't positively recognize as safe lands in a tier that asks.
 
 The code is honest about its limits: "Classification is heuristic — a shell is impossible to parse perfectly — so the per-command prompt remains the real backstop."
 
-## What Counts as "Read-Only"
+## What It Takes to Run Without Asking
 
-A command is auto-run only if **all** of these hold:
+A command auto-runs only if **all** of these hold:
 
 - it is a single program from an allow-list (`ls`, `cat`, `grep`, `git status`, `git log`, `git diff`, …)
 - it contains no shell operators: no pipes, redirects, `;`, `&&`, backticks or `$(…)`
 - it contains no `$`, backtick or backslash at all
 - no argument points outside the workspace (`/…`, `~`, `..`), even inside quotes
 
-That list is longer than it was at first. Each rule closed a real hole.
+That list is longer than it used to be, and every rule on it closed a real hole.
 
 ## The Holes We Found
 
-After a review of the classifier, one commit closed four bypasses at once. Its message reads like a security advisory:
+A review of the classifier ended in one commit that closed four bypasses at once. Its message reads like a security advisory, because that's what it is:
 
 ```text
 fix(security): close ShellPolicy command-classifier bypasses
@@ -75,11 +77,11 @@ fix(security): close ShellPolicy command-classifier bypasses
 - Learned-pattern privilege jump: a dangerous command is no longer learnable.
 ```
 
-Each deserves a closer look, because these are mistakes anyone writing a shell policy will make.
+These are the mistakes anyone writing a shell policy will make, so they're worth walking through.
 
 ### 1. Quotes and variables hide paths
 
-The out-of-workspace check looked for arguments starting with `/`. So `cat /etc/passwd` asked, but `cat "/etc/passwd"` didn't, because the argument started with a quote. And `cat $HOME/.ssh/id_rsa` didn't start with `/` at all.
+The out-of-workspace check looked for arguments starting with `/`. In `cat "/etc/passwd"` the argument starts with a quote, and `cat $HOME/.ssh/id_rsa` doesn't contain a leading slash at all. Both walked straight past.
 
 The fix strips quotes before checking, and treats **any** variable expansion as unsafe:
 
@@ -92,11 +94,11 @@ for hazard in ["$", "`", "\\"] where trimmed.contains(hazard) { return false }
 
 ### 2. Some "read" programs execute things
 
-`env` looks harmless: it prints environment variables. But `env some-program` *runs* `some-program`. It is an execution primitive and was removed from the allow-list.
+`env` looks harmless, since it prints environment variables. But `env some-program` *runs* `some-program`. It is an execution primitive wearing a read-only costume, and it came off the allow-list.
 
 ### 3. Whitespace evades string matching
 
-The dangerous marker `"rm -rf"` didn't match `rm⇥-rf` (with a tab) or `rm  -rf` (two spaces). The fix normalizes all whitespace before matching:
+The dangerous marker `"rm -rf"` didn't match `rm⇥-rf` (with a tab) or `rm  -rf` (two spaces). One extra keystroke was enough to dodge it, so all whitespace is now normalized before matching:
 
 ```swift
 // Match against a whitespace-normalised form so tabs / extra spaces can't
@@ -106,9 +108,9 @@ let lowered = normalizedForMatching(command)
 
 ### 4. "Always allow" can over-grant
 
-This is the subtlest one, and it needs its own section.
+The subtlest of the four needs its own section.
 
-## Learning Permissions Without Over-Granting
+## When "Always Allow" Means More Than You Approved
 
 When the user approves a command, they can choose **allow once** or **always allow**. "Always" learns a pattern and saves it to `.iassist/permissions.json`, so it survives restarts:
 
@@ -119,7 +121,7 @@ When the user approves a command, they can choose **allow once** or **always all
 public static func pattern(for command: String) -> String
 ```
 
-The danger is generalizing too far. If you approve `git push origin main` once with "always", the learned pattern `git push *` would later auto-approve `git push --force`. Approving `chmod 644 file` would learn `chmod *`, which covers `chmod -R 777 /`.
+The danger is generalizing too far. Approve `git push origin main` once with "always", and the learned pattern `git push *` will later auto-approve `git push --force`. Approve `chmod 644 file`, and you've learned `chmod *`, which covers `chmod -R 777 /`.
 
 So two kinds of commands can **never** be learned:
 
@@ -130,16 +132,16 @@ public static func learnablePattern(for command: String) -> String? {
 }
 ```
 
-- **Dangerous commands**: they always ask, no matter what you approved before.
-- **Compound commands**: `cd x && rm -rf y` would reduce to `cd *`, a rule that whitelists far more than the user saw.
+- **Dangerous commands** always ask, no matter what you approved before.
+- **Compound commands** are excluded because `cd x && rm -rf y` would reduce to `cd *`, a rule that whitelists far more than the user saw.
 
 When `learnablePattern` returns `nil`, the UI simply doesn't offer "always allow".
 
 ## A Shell That Remembers `cd`
 
-The first bash tool started a new process per command. That meant `cd src` followed by `ls` listed the wrong directory, and `export` did nothing.
+The first bash tool started a new process per command, so `cd src` followed by `ls` listed the wrong directory, and `export` did nothing.
 
-iAssist moved to a **persistent shell**: one long-lived `zsh` per session, so `cd` and `export` persist. It sits behind a transport protocol:
+iAssist moved to a **persistent shell**, one long-lived `zsh` per session, behind a transport protocol:
 
 ```swift
 /// The byte channel to a long-lived shell.
@@ -154,7 +156,7 @@ public protocol ShellTransport: Sendable {
 
 Today's transport uses pipes, not a terminal, so interactive programs like `vim` don't work. A real pseudo-terminal (PTY) is planned as just another `ShellTransport`, with everything else reused.
 
-A persistent shell brought new bugs, and fixing them shaped the design:
+Persistence solved one problem and created new ones:
 
 ```text
 fix(shell): anchored cwd policy + deterministic teardown + lifecycle readout
@@ -162,26 +164,23 @@ fix(workflow): stop persistent-shell cwd leaking across rounds
 fix(bash): out-of-workspace reads no longer auto-run
 ```
 
-If the agent `cd`s outside the workspace, later "relative" commands would run there. The working directory is now anchored and checked, and each shell is torn down deterministically when its session ends.
+Once the shell remembers `cd`, an agent that wanders outside the workspace takes all its later "relative" commands with it. The working directory is now anchored and checked, and each shell is torn down deterministically when its session ends.
 
 ## Auto Mode With a Veto Window
 
-Manual approval for every `swift build` gets tiring. The Mac app has an **Auto** mode: write-tier actions show the permission prompt with a **countdown** and approve automatically unless you click "deny".
+Approving every `swift build` by hand gets tiring. The Mac app's **Auto** mode shows write-tier actions in the permission prompt with a **countdown**, and approves them unless you click "deny". Dangerous commands still always ask, in every mode.
 
-This is deliberately implemented at the prompter layer, not in the shell policy, because that is the one place that also sees file edits. The policy comment warns future maintainers:
+This lives at the prompter layer rather than in the shell policy, because that is the one place that also sees file edits. A comment in the policy warns future maintainers not to get clever:
 
 > "Do NOT wire the footer mode into `.auto` below: that path auto-approves writes SILENTLY (no prompt, no countdown), bypassing the GUI's veto window."
-
-Dangerous commands still always ask, in every mode.
 
 ## Key Takeaways
 
 - Use risk tiers, and make "ask" the default for anything not positively known to be safe.
 - Treat quotes, variables, escapes and whitespace as attack surface; normalize before matching.
 - Never learn permissions for dangerous or compound commands.
-- Persistent shells need an anchored working directory and deterministic teardown.
 - Give the human a veto window, even in auto mode.
 
-In Part 6 we look at how one agent delegates work to another without filling its own context with the details.
+An agent with tools can now do real work, and that creates a new problem. Reading 30 files to answer one question leaves 30 files' worth of text in the conversation for the rest of the session. Part 6 is about how an agent gets that work done without having to remember any of it.
 
 {% include iassist-series-nav.html %}
