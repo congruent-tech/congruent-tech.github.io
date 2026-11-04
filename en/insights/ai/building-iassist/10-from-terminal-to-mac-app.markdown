@@ -18,15 +18,13 @@ description: "How a terminal coding agent became Parto, a native macOS app: live
 
 ## The Inspector That Became the Product
 
-Part 6 ended with a SwiftUI window that showed the agent tree live. It started as a debugging tool, a way to see what the agents were doing. Over a few weeks, it gained a terminal-style input, permission dialogs, a model picker and a context viewer. At some point it was clearly no longer a debugger. It was the app.
+Part 6 ended with a SwiftUI window that showed the agent tree live, a way to see what the agents were doing. Over a few weeks it gained a terminal-style input, permission dialogs, a model picker and a context viewer. At some point it was clearly no longer a debugger. It was the app.
 
-In July 2026 it got a name: **Parto** (پرتو), Persian for "ray of light". Before choosing it, we checked the App Store for collisions. No AI or developer tool used the name, only unrelated apps sharing the bare word.
-
-This article covers what it took to turn a terminal agent into a native Mac app.
+In July 2026 it got a name: **Parto** (پرتو), Persian for "ray of light". Before settling on it we checked the App Store for collisions. No AI or developer tool used the name, only unrelated apps sharing the bare word.
 
 ## One Engine, Many Front-Ends
 
-The most important architectural decision paid off here. Because the loop, tools, prompts and turn strategies live in `iAssistCore` with zero UI dependencies, the Mac app reuses all of it. A shared **composition root** builds providers and prompts the same way for the terminal and the GUI:
+This is where the zero-dependency core from Part 1 paid off. The loop, tools, prompts and turn strategies live in `iAssistCore` with no UI dependencies, so the Mac app reuses all of it. A shared **composition root** builds providers and prompts the same way for the terminal and the GUI:
 
 ```text
 feat(core): shared composition root for provider + prompt wiring
@@ -48,13 +46,13 @@ feat(inspector): shared context — multiple windows on ONE context (⌘⇧N)
 - **AppServices** holds what's shared: MCP connections, metrics, settings.
 - **ContextSession** holds one conversation: its engine, its own provider, its own theme.
 
-Each window gets its own context, which means one window can talk to Claude while another runs a local model. Utility windows (context viewer, metrics) follow the **frontmost** context using SwiftUI's `@FocusedValue`. One bug here is a good lesson in multi-window apps: utility windows first followed the *primary* window instead of the last active one, and permission prompts from MCP tools went to a fixed window instead of the focused one.
+Each window gets its own context, so one window can talk to Claude while another runs a local model. Utility windows (context viewer, metrics) follow the **frontmost** context using SwiftUI's `@FocusedValue`, though they didn't at first. They followed the *primary* window instead of the last active one, and permission prompts from MCP tools went to a fixed window instead of the focused one. If you build a multi-window app, expect to hit this.
 
 ## MCP: Any Tool, Without Writing Code
 
-The **Model Context Protocol** lets an agent use tools provided by external servers: databases, browsers, issue trackers, design tools. iAssist's `iAssistMCP` package wraps every MCP tool as a normal `AgentTool`, so the loop doesn't know or care where a tool comes from.
+The **Model Context Protocol** lets an agent use tools provided by external servers: databases, browsers, issue trackers, design tools. iAssist's `iAssistMCP` package wraps every MCP tool as a normal `AgentTool`, so the loop neither knows nor cares where a tool comes from.
 
-The work happened in a few steps:
+The work arrived in steps:
 
 ```text
 feat(mcp): scaffold iAssistMCP — MCP tools as AgentTools (TDD seam)
@@ -63,17 +61,17 @@ refactor(mcp): generalize transport behind MCPConnection; add HTTP connection
 feat(mcp): auto-refresh tools on tools/list_changed — no manual reconnect
 ```
 
-Three details were harder than they look:
+The commit log makes that look easier than it was. Three problems stood out:
 
-**Async connect, sync tools.** Connecting to a server is slow (spawn a process, handshake). But a turn asks for its tool list synchronously. The `MCPHost` connects ahead of time and hands out a snapshot of ready tools. A turn that starts mid-connect simply doesn't have that server's tools yet, and gets them on the next turn.
+**Async connect, sync tools.** Connecting to a server is slow (spawn a process, handshake), yet a turn asks for its tool list synchronously. The `MCPHost` connects ahead of time and hands out a snapshot of ready tools. A turn that starts mid-connect simply doesn't have that server's tools yet, and gets them on the next turn.
 
 **Cancelled connects.** If you disable a server while it's still connecting, the slow connect must not publish itself afterwards. Each server has a generation counter, bumped on every connect and disconnect, so a superseded connect knows to back off.
 
-**The GUI app PATH problem.** Many MCP servers are launched via `npx` or `uvx`. A Mac app started from the Dock doesn't inherit your shell's `PATH`, so those commands aren't found. The host copies the login shell's `PATH` into the environment of spawned servers. The add-server dialog also explains the difference between a wrong path and a command that isn't on `PATH`.
+**The GUI app PATH problem.** Many MCP servers are launched via `npx` or `uvx`, but a Mac app started from the Dock doesn't inherit your shell's `PATH`, so those commands aren't found. The host copies the login shell's `PATH` into the environment of spawned servers, and the add-server dialog explains the difference between a wrong path and a command that isn't on `PATH`.
 
 ## Every Token Counted
 
-The metering seam from Part 3 feeds a SwiftData store in `iAssistMetrics`. Every model call records model, tokens and duration. The app shows:
+The metering seam from Part 3 feeds a SwiftData store in `iAssistMetrics`, where every model call records its model, tokens and duration. The app shows:
 
 - a **token usage dashboard** with cost per model and per day
 - **per-context usage**, so you see what each conversation cost
@@ -81,16 +79,16 @@ The metering seam from Part 3 feeds a SwiftData store in `iAssistMetrics`. Every
 
 ## Answers as Documents, Not Just Text
 
-Model answers are markdown. Rendering them well turned into its own pair of packages:
+Model answers are markdown, and rendering them well turned into its own pair of packages:
 
 - **iAssistRender** renders markdown blocks natively: headings, tables, lists, quotes and **syntax-highlighted code** with line numbers. Themes are selectable per window.
 - **iAssistShaping** can **reshape** an answer for display: summarize it, simplify it, show a short version first with details below, or apply your own prompt. The original answer and the conversation are never modified; shaping is a display layer only.
 
 The most ambitious step was **Rich HTML rendering**: an HTML "shaper" turns an answer into a magazine-style page with CSS and SVG diagrams, shown in a WebView beside the transcript and exportable as PDF.
 
-## Sandboxing the WebView
+## The HTML Tag That Could Steal Your Secrets
 
-Rendering model-generated HTML is a security problem. The model's output may contain content from files it read, including secrets. The render pane disables JavaScript and applies a strict Content Security Policy, so the page can't fetch anything.
+Rendering model-generated HTML is a security problem, because the model's output may contain content from files it read, including secrets. So the render pane disables JavaScript and applies a strict Content Security Policy, and the page can't fetch anything.
 
 An adversarial review still found a hole, and the commit message describes it precisely:
 
@@ -101,13 +99,13 @@ Without it the model's HTML could exfiltrate context data (file contents,
 secrets) by refreshing to https://attacker/?d=<payload>, no JS required.
 ```
 
-A `<meta http-equiv="refresh">` tag needs no JavaScript. The fix allows only the initial in-memory load and also strips meta refresh tags as defense in depth.
+A `<meta http-equiv="refresh">` tag needs no JavaScript. The fix allows only the initial in-memory load, and strips meta refresh tags as defense in depth.
 
 > **Lesson:** Whatever the model produces is untrusted input, including HTML you asked it to write.
 
 ## Small Things That Make It Feel Native
 
-A lot of commits are about feel, and they matter for a tool you use all day:
+A lot of commits are about feel, which matters in a tool you use all day:
 
 - **Type-ahead queue**: type your next message while a turn is running; it's queued and shown stacked below.
 - **Esc to stop**, with an honest summary of what already happened (Part 2).
@@ -117,9 +115,9 @@ A lot of commits are about feel, and they matter for a tool you use all day:
 - A **recap card** at the end of work: what was done, and a model-written "you're doing X, next Y" summary.
 - Inline rendering of images and **SVG diagrams** the model draws, and previews of markdown, HTML and SVG files it writes.
 
-## Packaging a SwiftPM App
+## A Real `.app` Without an Xcode Project
 
-The app is built with Swift Package Manager, not an Xcode project. A small script turns it into a real `.app`:
+The app is built with Swift Package Manager, and a small script turns it into a real `.app`:
 
 ```text
 Packaging/make-app.sh:
@@ -129,16 +127,15 @@ Packaging/make-app.sh:
   4. codesign, then codesign --verify
 ```
 
-The icon is generated from an SVG by a Swift script into all Retina sizes. It uses the **Congruent Tech congruence mark** in cyan. TestFlight and notarization need an Apple Distribution certificate and an archivable Xcode target, so those are the next distribution steps.
+A Swift script generates the icon from an SVG into all Retina sizes, using the **Congruent Tech congruence mark** in cyan. TestFlight and notarization need an Apple Distribution certificate and an archivable Xcode target, so those are the next distribution steps.
 
 ## Key Takeaways
 
 - Keep the engine UI-free so a GUI can reuse it completely.
 - Model windows as contexts: shared services, per-window sessions.
-- Wrap MCP tools as ordinary tools; handle async connects, cancellation and `PATH` carefully.
+- Wrap MCP tools as ordinary tools, and handle async connects, cancellation and `PATH` carefully.
 - Treat model-generated HTML as hostile: no JavaScript, strict CSP, no navigation.
-- Polish matters in a tool people live in all day.
 
-In the final part we cover syncing history across devices with CloudKit and hybrid logical clocks, the strategy behind Parto, and what we learned overall.
+Parto now lives on one Mac. The final part takes it to a second one, where a simple delete can destroy newer work and "same second" turns out not to mean "same time", and then asks the harder question: why would anyone use this at all?
 
 {% include iassist-series-nav.html %}
