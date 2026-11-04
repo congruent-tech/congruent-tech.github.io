@@ -152,6 +152,6 @@ One small default says a lot. Sampling temperature became configurable, with a *
 - Add cross-cutting features like metering as decorators around the protocol.
 - Introduce a protocol when the concept is stable, not before.
 
-The agent can now think on any model. It still can't touch anything. Part 4 gives it hands, and discovers that the biggest lever on tool quality is the wording of its error messages.
+The agent can now think on any model. It still can't touch anything. Part 4 gives it hands, and shows how much a well-worded error message can do.
 
 {% include iassist-series-nav.html %}
